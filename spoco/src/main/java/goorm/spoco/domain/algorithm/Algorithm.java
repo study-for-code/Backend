@@ -1,2 +1,19 @@
-package goorm.spoco.domain.algorithm;public class Algorithm {
+package goorm.spoco.domain.algorithm;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Data
+@Entity
+public class Algorithm {
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ALGORITHM_ID")
+    private Long algorithmId;
+
+    private String title;
+    private String explanation;
+
+    public Algorithm() {
+    }
 }
