@@ -1,4 +1,4 @@
-package goorm.spoco.domain.algorithm;
+package goorm.spoco.domain.algorithm.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
