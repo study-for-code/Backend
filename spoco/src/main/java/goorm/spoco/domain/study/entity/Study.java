@@ -15,12 +15,12 @@ public class Study {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long study_id;
+    private Long studyId;
 
     @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
-    private LocalDateTime create_at;
+    private LocalDateTime createAt;
 
 }
