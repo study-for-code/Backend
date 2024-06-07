@@ -1,4 +1,4 @@
-package goorm.spoco.domain.study.entity;
+package goorm.spoco.domain.study.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
