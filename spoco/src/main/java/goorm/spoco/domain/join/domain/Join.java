@@ -1,4 +1,4 @@
-package goorm.spoco.domain.join;
+package goorm.spoco.domain.join.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -14,5 +14,5 @@ public class Join {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "JOIN_ID")
     private Long joinId;
-    
+
 }
