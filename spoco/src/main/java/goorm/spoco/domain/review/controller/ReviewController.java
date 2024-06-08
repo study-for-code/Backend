@@ -40,4 +40,13 @@ public class ReviewController {
                 .results(List.of(review))
                 .build();
     }
+
+    @GetMapping("/review/{codeId}")
+    public ReviewResponse reviewList(@PathVariable Long codeId) {
+        return ReviewResponse.<ReviewResponseDto>builder()
+                .code(HttpStatus.OK.value())
+                .message("리뷰 리스트 조회 성공")
+                .results(reviewService.getAllByCodeId(codeId))
+                .build();
+    }
 }

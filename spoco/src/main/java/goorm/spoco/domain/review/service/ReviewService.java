@@ -45,4 +45,10 @@ public class ReviewService {
 
         return new ReviewResponseDto(review.getCodeLine(), review.getReviewStatus().name());
     }
+
+    public List<ReviewResponseDto> getAllByCodeId(Long codeId) {
+        return reviewRepository.findAllByCodeIdAndReviewStatus(codeId, ReviewStatus.OPEN)
+                .stream().map(review -> new ReviewResponseDto(review.getCodeLine(), null))
+                .collect(Collectors.toList());
+    }
 }
