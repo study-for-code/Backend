@@ -26,6 +26,7 @@ public class ReviewController {
         ReviewResponseDto review = reviewService.createReview(codeId, codeLine);
         return ReviewResponse.builder()
                 .code(HttpStatus.OK.value())
+                .httpStatus(HttpStatus.OK)
                 .message("리뷰 생성 성공")
                 .results(List.of(review))
                 .build();
@@ -36,6 +37,7 @@ public class ReviewController {
         ReviewResponseDto review = reviewService.deleteReview(reviewId);
         return ReviewResponse.builder()
                 .code(HttpStatus.OK.value())
+                .httpStatus(HttpStatus.OK)
                 .message("리뷰 삭제 성공")
                 .results(List.of(review))
                 .build();
@@ -45,6 +47,7 @@ public class ReviewController {
     public ReviewResponse reviewList(@PathVariable Long codeId) {
         return ReviewResponse.<ReviewResponseDto>builder()
                 .code(HttpStatus.OK.value())
+                .httpStatus(HttpStatus.OK)
                 .message("리뷰 리스트 조회 성공")
                 .results(reviewService.getAllByCodeId(codeId))
                 .build();
