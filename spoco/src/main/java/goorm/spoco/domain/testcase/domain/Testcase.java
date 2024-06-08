@@ -1,15 +1,12 @@
 package goorm.spoco.domain.testcase.domain;
 
 import goorm.spoco.domain.algorithm.domain.Algorithm;
-import goorm.spoco.domain.category.domain.Category;
-import goorm.spoco.domain.study.domain.Study;
-import goorm.spoco.domain.subscribe.domain.Subscribe;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
-public class TestCase {
+public class Testcase {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TESTCASE_ID")
@@ -22,7 +19,7 @@ public class TestCase {
     @JoinColumn(name = "ALGORITHM_ID")
     private Algorithm algorithm;
 
-    public TestCase() {
+    public Testcase() {
     }
 
     //== 연관관계 메서드 ==//
@@ -32,8 +29,8 @@ public class TestCase {
     }
 
     //== 생성 메서드 ==//
-    public static TestCase testCase(TestCase testCaseRequest) {
-        TestCase testCase = new TestCase();
+    public static Testcase testCase(Testcase testCaseRequest) {
+        Testcase testCase = new Testcase();
         testCase.input = testCaseRequest.input;
         testCase.output = testCaseRequest.output;
         return testCase;

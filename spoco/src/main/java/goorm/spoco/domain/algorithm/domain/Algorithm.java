@@ -1,10 +1,8 @@
 package goorm.spoco.domain.algorithm.domain;
 
 import goorm.spoco.domain.code.domain.Code;
-import goorm.spoco.domain.member.domain.Grade;
-import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.subscribe.domain.Subscribe;
-import goorm.spoco.domain.testcase.domain.TestCase;
+import goorm.spoco.domain.testcase.domain.Testcase;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -26,7 +24,7 @@ public class Algorithm {
     private List<Subscribe> subscribes = new ArrayList<>();
 
     @OneToMany(mappedBy = "algorithm", cascade = CascadeType.ALL)
-    private List<TestCase> testCases = new ArrayList<>();
+    private List<Testcase> testCases = new ArrayList<>();
 
     @OneToMany(mappedBy = "algorithm", cascade = CascadeType.ALL)
     private List<Code> codes = new ArrayList<>();
