@@ -54,6 +54,11 @@ public class Review {
         return review;
     }
 
+    //== 비즈니스 로직 ==//
+    public void delete() {
+        this.reviewStatus = ReviewStatus.CLOSE;
+    }
+
     //== 중복 검증 메서드 ==//
     private static void reviewValidateDuplicate(Code code, Integer codeLine) {
         if (code.getReviews().stream().anyMatch(review -> review.getCodeLine().equals(codeLine))) {

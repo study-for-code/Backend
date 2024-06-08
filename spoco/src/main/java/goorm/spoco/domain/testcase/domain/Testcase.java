@@ -1,5 +1,6 @@
 package goorm.spoco.domain.testcase.domain;
 
+import goorm.spoco.domain.algorithm.domain.Algorithm;
 import jakarta.persistence.*;
 import lombok.Data;
 
