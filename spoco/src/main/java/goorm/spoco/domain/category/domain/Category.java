@@ -41,7 +41,7 @@ public class Category {
 
     //== 생성 메서드 ==//
     public static Category category(String title, Study study) {
-        categoryCheckMaxValue(study);
+        // categoryCheckMaxValue(study);
         Category category = new Category();
         category.title = title;
         category.addStudy(study);
