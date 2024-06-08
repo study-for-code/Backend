@@ -15,5 +15,5 @@ public class ReviewResponse<T> {
     private String message;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<T> results = null;
+    private List<T> results;
 }

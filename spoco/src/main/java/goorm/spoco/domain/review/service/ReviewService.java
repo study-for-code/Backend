@@ -36,7 +36,7 @@ public class ReviewService {
         Review review = Review.review(code, codeLine);
         reviewRepository.save(review);
 
-        return new ReviewResponseDto(review.getCodeLine(), review.getReviewStatus().name());
+        return new ReviewResponseDto(review.getReviewId(), review.getCodeLine(), review.getReviewStatus().name());
     }
 
     @Transactional
@@ -46,12 +46,12 @@ public class ReviewService {
 
         review.delete();
 
-        return new ReviewResponseDto(review.getCodeLine(), review.getReviewStatus().name());
+        return new ReviewResponseDto(review.getReviewId(), review.getCodeLine(), review.getReviewStatus().name());
     }
 
     public List<ReviewResponseDto> getAllByCodeId(Long codeId) {
-        return reviewRepository.findAllByCodeIdAndReviewStatus(codeId, ReviewStatus.OPEN)
-                .stream().map(review -> new ReviewResponseDto(review.getCodeLine(), null))
+        return reviewRepository.findAllByCode_CodeIdAndReviewStatus(codeId, ReviewStatus.OPEN)
+                .stream().map(review -> new ReviewResponseDto(review.getReviewId(), review.getCodeLine(), null))
                 .collect(Collectors.toList());
     }
 }

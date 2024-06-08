@@ -40,4 +40,10 @@ public class Algorithm {
         algorithm.explanation = algorithmRequest.explanation;
         return algorithm;
     }
+
+    // 테스트 용 생성자
+    public Algorithm(String title, String explanation) {
+        this.title = title;
+        this.explanation = explanation;
+    }
 }
