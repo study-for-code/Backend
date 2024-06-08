@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class TestCase {
+public class Testcase {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TESTCASE_ID")
@@ -14,6 +14,6 @@ public class TestCase {
     private String input;
     private String output;
 
-    public TestCase() {
+    public Testcase() {
     }
 }
