@@ -2,6 +2,7 @@ package goorm.spoco.domain.review.service;
 
 import goorm.spoco.domain.code.domain.Code;
 import goorm.spoco.domain.code.repository.CodeRepository;
+import goorm.spoco.domain.member.domain.Grade;
 import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.member.repository.MemberRepository;
 import goorm.spoco.domain.message.domain.Message;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +28,8 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final CodeRepository codeRepository;
+
+    private final MemberRepository memberRepository;
 
     @Transactional
     public ReviewResponseDto createReview(Long codeId, Integer codeLine) {
@@ -40,11 +44,21 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewResponseDto deleteReview(Long reviewId) {
+    public ReviewResponseDto deleteReview(Long reviewId, Long memberId) {
         Review review = reviewRepository.findByReviewId(reviewId)
                 .orElseThrow(() -> new CustomException(ReviewErrorCode.RESOURCE_NOT_FOUND, "해당 리뷰(" + reviewId + ")가 존재하지 않습니다."));
 
-        review.delete();
+        //== 추후 스프링 시큐리티로 처리
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new CustomException(ReviewErrorCode.DUPLICATE_OBJECT, "해당 멤버(" + memberId + ")가 존재하지 않습니다."));
+
+
+        if (review.getCode().getMember().equals(member) || member.getGrade().equals(Grade.ADMIN)) {
+            review.delete();
+        } else {
+            throw new CustomException(ReviewErrorCode.DUPLICATE_OBJECT, "코드 작성자가 아닙니다.");
+        }
+        //==
 
         return new ReviewResponseDto(review.getReviewId(), review.getCodeLine(), review.getReviewStatus().name());
     }

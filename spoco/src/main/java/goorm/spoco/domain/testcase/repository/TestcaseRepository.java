@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-@Transactional
 public interface TestcaseRepository extends JpaRepository<Testcase, Long> {
     @Query("select t.input from Testcase t")
     public List<String> findAllInput();
