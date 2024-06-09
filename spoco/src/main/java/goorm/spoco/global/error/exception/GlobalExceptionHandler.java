@@ -1,18 +1,18 @@
 package goorm.spoco.global.error.exception;
 
-import goorm.spoco.domain.review.controller.response.ReviewResponse;
-import goorm.spoco.domain.review.exception.CustomException;
+import goorm.spoco.global.common.BaseResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    public ReviewResponse customExceptionHandler(CustomException e) {
-        return ReviewResponse.builder()
-                .code(e.getReviewErrorCode().getCode())
-                .httpStatus(e.getReviewErrorCode().getHttpStatus())
+    public BaseResponse customExceptionHandler(CustomException e) {
+        return BaseResponse.builder()
+                .code(e.getErrorCode().getCode())
+                .httpStatus(e.getErrorCode().getHttpStatus())
                 .message(e.getMessage())
                 .build();
     }

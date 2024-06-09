@@ -1,13 +1,10 @@
 package goorm.spoco.domain.review.domain;
 
-import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.code.domain.Code;
-import goorm.spoco.domain.join.domain.Join;
-import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.message.domain.Message;
-import goorm.spoco.domain.review.exception.CustomException;
+import goorm.spoco.global.error.exception.CustomException;
 import goorm.spoco.domain.review.exception.ReviewErrorCode;
-import goorm.spoco.domain.study.domain.Study;
+import goorm.spoco.global.error.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -64,7 +61,7 @@ public class Review {
     //== 중복 검증 메서드 ==//
     private static void reviewValidateDuplicate(Code code, Integer codeLine) {
         if (code.getReviews().stream().anyMatch(review -> review.getCodeLine().equals(codeLine))) {
-            throw new CustomException(ReviewErrorCode.DUPLICATE_OBJECT, "해당 코드 라인에 리뷰가 존재합니다.");
+            throw new CustomException(ErrorCode.DUPLICATE_OBJECT, "해당 코드 라인에 리뷰가 존재합니다.");
         }
     }
 }

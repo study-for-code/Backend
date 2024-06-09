@@ -2,6 +2,7 @@ package goorm.spoco.domain.message.domain;
 
 import goorm.spoco.domain.join.domain.Join;
 import goorm.spoco.domain.member.domain.Member;
+import goorm.spoco.domain.message.controller.request.MessageRequestDto;
 import goorm.spoco.domain.review.domain.Review;
 import goorm.spoco.domain.study.domain.Study;
 import jakarta.persistence.*;
@@ -51,12 +52,12 @@ public class Message {
 
     //== 생성 메서드 ==//
     // 해당 매개변수는 request 객체로 변경
-    public static Message message(Member member, Review review, Message messageRequest) {
+    public static Message message(Member member, Review review, MessageRequestDto messageRequestDto) {
         Message message = new Message();
         message.addMember(member);
         message.addReview(review);
-        message.detail = messageRequest.detail;
-        message.createAt = messageRequest.createAt;
+        message.detail = messageRequestDto.detail();
+        message.createAt = messageRequestDto.createAt();
         message.messageStatus = MessageStatus.OPEN;
         return message;
     }
