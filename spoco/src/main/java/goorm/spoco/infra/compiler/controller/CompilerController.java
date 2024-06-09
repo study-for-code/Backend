@@ -4,6 +4,7 @@ import goorm.spoco.infra.compiler.compiler.JavaCompilerService;
 import goorm.spoco.infra.compiler.controller.request.CompileRequest;
 import goorm.spoco.infra.compiler.controller.response.CompileResponse;
 import goorm.spoco.infra.compiler.dto.Result;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,10 +17,10 @@ import java.util.List;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class CompilerController {
 
-    @Autowired
-    JavaCompilerService javaCompiler;
+    private final JavaCompilerService javaCompiler;
 
     @PostMapping("/api/compiler")
     public ResponseEntity<CompileResponse> compileCode(@RequestBody CompileRequest request) {
