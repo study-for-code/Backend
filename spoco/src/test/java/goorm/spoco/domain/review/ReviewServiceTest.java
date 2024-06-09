@@ -78,7 +78,7 @@ class ReviewServiceTest {
         ReviewResponseDto reviewDto = reviewService.createReview(code.getCodeId(), 1);
 
         //when
-        reviewDto = reviewService.deleteReview(reviewDto.reviewId());
+        reviewDto = reviewService.deleteReview(reviewDto.reviewId(), member1.getMemberId());
 
         //then
         assertEquals(reviewDto.reviewStatus(), ReviewStatus.CLOSE.name());

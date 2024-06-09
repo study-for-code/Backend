@@ -33,8 +33,11 @@ public class ReviewController {
     }
 
     @DeleteMapping("/review/{reviewId}")
-    public ReviewResponse delete(@PathVariable Long reviewId) {
-        ReviewResponseDto review = reviewService.deleteReview(reviewId);
+    public ReviewResponse delete(
+            @PathVariable Long reviewId,
+            @RequestParam Long memberId
+    ) {
+        ReviewResponseDto review = reviewService.deleteReview(reviewId, memberId);
         return ReviewResponse.builder()
                 .code(HttpStatus.OK.value())
                 .httpStatus(HttpStatus.OK)
