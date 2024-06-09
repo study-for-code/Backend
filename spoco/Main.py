@@ -1,6 +1,0 @@
-strig1 = input()
-string2 = input()
-print(string1 + string2)
-int1 = int(input())
-int2 = int(input())
-print(int1 + int2 * int2)

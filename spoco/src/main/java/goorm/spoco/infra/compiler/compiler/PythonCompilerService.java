@@ -64,6 +64,7 @@ public class PythonCompilerService {
                 }
                 if (errorOutput.length() > 0) {
                     results.add(new Result(errorOutput.toString(), ResultStatus.ERROR));
+                    pythonFile.delete();
                     return results;
                 }
 
