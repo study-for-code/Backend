@@ -8,14 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CppCompilerService {
+public class PythonCompilerService {
 
     private final TestcaseRepository testcaseRepository;
 
@@ -31,33 +29,15 @@ public class CppCompilerService {
 
             try {
                 // 임시 파일 생성
-                File cppFile = new File("Main.cpp");
-                try (FileWriter writer = new FileWriter(cppFile)) {
+                File pythonFile = new File("Main.py");
+                try (FileWriter writer = new FileWriter(pythonFile)) {
                     writer.write(code);
                 }
 
-                // 컴파일 및 Main 파일 생성
-                String cppCompiler = "/usr/bin/g++";
-                ProcessBuilder compilePb = new ProcessBuilder(cppCompiler, cppFile.getAbsolutePath(), "-o", "Main");
-                Process compileProcess = compilePb.start();
-                compileProcess.waitFor();
-
-                // 컴파일에러 발생 시 에러 처리
-                if (compileProcess.exitValue() != 0) {
-                    BufferedReader errorReader = new BufferedReader(new InputStreamReader(compileProcess.getErrorStream()));
-                    String errorLine;
-                    while ((errorLine = errorReader.readLine()) != null) {
-                        output.append(errorLine).append("\n");
-                    }
-                    results.add(new Result(i + 1, inputs.get(i), outputs.get(i), "ERROR", ResultStatus.ERROR));
-                    cppFile.delete();
-                    continue;
-                }
-
                 // 실행 파일 실행
-                ProcessBuilder runPb = new ProcessBuilder("./Main");
-                runPb.directory(cppFile.getParentFile()); // 실행 파일이 있는 디렉토리 설정
-                Process runProcess = runPb.start();
+                String pythonInterpreter = "/usr/bin/python3";
+                ProcessBuilder compilePb = new ProcessBuilder(pythonInterpreter, pythonFile.getAbsolutePath());
+                Process runProcess = compilePb.start();
 
                 // 테스트 케이스 입력 전달
                 try (BufferedWriter processInput = new BufferedWriter(new OutputStreamWriter(runProcess.getOutputStream()))) {
@@ -76,8 +56,7 @@ public class CppCompilerService {
                     output.append(line).append("\n");
                 }
 
-                cppFile.delete();
-                new File(cppFile.getAbsolutePath().replace(".cpp", "")).delete();
+                pythonFile.delete();
 
             } catch (Exception e) {
                 output.append("🚨ERROR : ").append(e.getMessage()).append("\n");
@@ -108,4 +87,3 @@ public class CppCompilerService {
         return Arrays.equals(actualTokens, expectedTokens);
     }
 }
-

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -91,7 +92,10 @@ public class JavaCompilerService {
             }
 
             // 통과 여부
-            boolean isPass = output.toString().trim().equals(expectedOutput.trim());
+            // 아래의 코드는 결과값에 스페이스바가 들어가거나 엔터키가 하나 더 들어가는 등 양식에 조금의 오차가 생기면 FAIL이 되는 문제가 발생함.
+            // 양식의 사소한 오차가 있을 때에도 FAIL 로 할 것이라면 주석친 코드를 사용하면 됌.
+//            boolean isPass = output.toString().trim().equals(expectedOutput.trim());
+            boolean isPass = compareOutput(output.toString(), expectedOutput);
 
             Result result = Result.builder()
                     .testNum(i + 1)
@@ -104,5 +108,11 @@ public class JavaCompilerService {
             results.add(result);
         }
         return results;
+    }
+
+    private boolean compareOutput(String actual, String expected) {
+        String[] actualTokens = actual.trim().split("\\s+");
+        String[] expectedTokens = expected.trim().split("\\s+");
+        return Arrays.equals(actualTokens, expectedTokens);
     }
 }
