@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -57,5 +58,13 @@ public class Member {
         member.password = signUpRequest.password;
         member.grade = Grade.MEMBER;
         return member;
+    }
+
+    // 테스트 용 생성자
+    public Member(String email, String nickname, String password) {
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
+        this.grade = Grade.MEMBER;
     }
 }
