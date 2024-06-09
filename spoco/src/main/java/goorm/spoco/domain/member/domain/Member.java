@@ -1,10 +1,9 @@
 package goorm.spoco.domain.member.domain;
 
-import goorm.spoco.domain.category.domain.Category;
 import goorm.spoco.domain.code.domain.Code;
 import goorm.spoco.domain.join.domain.Join;
+import goorm.spoco.domain.member.controller.response.MemberDTO;
 import goorm.spoco.domain.message.domain.Message;
-import goorm.spoco.domain.study.domain.Study;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -46,6 +45,16 @@ public class Member {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Message> messages = new ArrayList<>();
+
+// 차후에 물어볼 사안
+    public static Member toMember(MemberDTO memberDTO) {
+        Member member = new Member();
+        member.email = memberDTO.getEmail();
+        member.nickname = memberDTO.getNickname();
+        member.password =  memberDTO.getPassword();
+        member.grade = Grade.MEMBER;
+        return member;
+    }
 
     //== 생성 메서드 ==//
     // 해당 매개변수는 request 객체도 변경
