@@ -1,5 +1,6 @@
 package goorm.spoco.infra.compiler.controller;
 
+import goorm.spoco.infra.compiler.compiler.CppCompilerService;
 import goorm.spoco.infra.compiler.compiler.JavaCompilerService;
 import goorm.spoco.infra.compiler.controller.request.CompileRequest;
 import goorm.spoco.infra.compiler.controller.response.CompileResponse;
@@ -21,6 +22,7 @@ import java.util.List;
 public class CompilerController {
 
     private final JavaCompilerService javaCompiler;
+    private final CppCompilerService cppCompiler;
 
     @PostMapping("/api/compiler")
     public ResponseEntity<CompileResponse> compileCode(@RequestBody CompileRequest request) {
@@ -33,6 +35,11 @@ public class CompilerController {
         List<Result> results = null;
         if (language.equals("java")) {
             results = javaCompiler.runCode(code);
+        } else if (language.equals("c++")) {
+            results = cppCompiler.runCode(code);
+        } else if (language.equals("python")) {
+            // python 은 인터프리터라 다른 방식으로 개발할 예정
+//            results = pythonCompiler.runCode(code);
         }
         return results;
     }

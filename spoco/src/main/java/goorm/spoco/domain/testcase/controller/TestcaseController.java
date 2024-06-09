@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/testcase")
+@RequestMapping("/api/testcases")
 public class TestcaseController {
 
     private final TestcaseService testcaseService;
@@ -23,10 +23,10 @@ public class TestcaseController {
     ) {
         Testcase saveedTestcase = testcaseService.save(testcase, algorithmId);
         TestcaseDTO testcaseDTO = new TestcaseDTO(testcase.getInput(), testcase.getOutput());
-        return ResponseEntity.status(HttpStatus.OK).body(testcaseDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(testcaseDTO);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<Void> deleteTestcase(@PathVariable Long id) {
 
 //        Testcase deleted = testcaseService.delete(id);
@@ -35,7 +35,7 @@ public class TestcaseController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/update/{id}")
+    @PatchMapping("/{id}/update")
     public ResponseEntity<TestcaseDTO> updateTestcase(
             @PathVariable("id") Long testcaseId,
             @RequestBody TestcaseDTO testcaseDTO
