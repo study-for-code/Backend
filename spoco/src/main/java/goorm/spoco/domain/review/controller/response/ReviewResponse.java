@@ -11,8 +11,9 @@ import java.util.List;
 public class ReviewResponse<T> {
 
     private Integer code;
+    private HttpStatus httpStatus;
     private String message;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<T> results = null;
+    private List<T> results;
 }

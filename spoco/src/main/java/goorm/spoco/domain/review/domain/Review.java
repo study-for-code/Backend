@@ -5,6 +5,8 @@ import goorm.spoco.domain.code.domain.Code;
 import goorm.spoco.domain.join.domain.Join;
 import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.message.domain.Message;
+import goorm.spoco.domain.review.exception.CustomException;
+import goorm.spoco.domain.review.exception.ReviewErrorCode;
 import goorm.spoco.domain.study.domain.Study;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -54,10 +56,15 @@ public class Review {
         return review;
     }
 
+    //== 비즈니스 로직 ==//
+    public void delete() {
+        this.reviewStatus = ReviewStatus.CLOSE;
+    }
+
     //== 중복 검증 메서드 ==//
     private static void reviewValidateDuplicate(Code code, Integer codeLine) {
         if (code.getReviews().stream().anyMatch(review -> review.getCodeLine().equals(codeLine))) {
-            // "해당 코드 라인에는 이미 리뷰 생성되어 있습니다."
+            throw new CustomException(ReviewErrorCode.DUPLICATE_OBJECT, "해당 코드 라인에 리뷰가 존재합니다.");
         }
     }
 }
