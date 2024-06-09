@@ -42,16 +42,16 @@ public class CppCompilerService {
                 Process compileProcess = compilePb.start();
                 compileProcess.waitFor();
 
-                // 컴파일에러 발생 시 에러 처리
+                // 컴파일에러 발생 시 에러 및 종료
                 if (compileProcess.exitValue() != 0) {
                     BufferedReader errorReader = new BufferedReader(new InputStreamReader(compileProcess.getErrorStream()));
                     String errorLine;
                     while ((errorLine = errorReader.readLine()) != null) {
                         output.append(errorLine).append("\n");
                     }
-                    results.add(new Result(i + 1, inputs.get(i), outputs.get(i), "ERROR", ResultStatus.ERROR));
+                    results.add(new Result(output.toString(), ResultStatus.ERROR));
                     cppFile.delete();
-                    continue;
+                    return results;
                 }
 
                 // 실행 파일 실행

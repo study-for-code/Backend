@@ -35,7 +35,7 @@ public class PythonCompilerService {
                 }
 
                 // 실행 파일 실행
-                String pythonInterpreter = "/usr/bin/python3";
+                String pythonInterpreter = "python3";
                 ProcessBuilder compilePb = new ProcessBuilder(pythonInterpreter, pythonFile.getAbsolutePath());
                 Process runProcess = compilePb.start();
 
@@ -55,6 +55,18 @@ public class PythonCompilerService {
                 while ((line = reader.readLine()) != null) {
                     output.append(line).append("\n");
                 }
+
+                // 문법적 오류 발생시 에러 및 종료
+                BufferedReader errorReader = new BufferedReader(new InputStreamReader(runProcess.getErrorStream()));
+                StringBuilder errorOutput = new StringBuilder();
+                while ((line = errorReader.readLine()) != null) {
+                    errorOutput.append("ERROR: ").append(line).append("\n");
+                }
+                if (errorOutput.length() > 0) {
+                    results.add(new Result(errorOutput.toString(), ResultStatus.ERROR));
+                    return results;
+                }
+
 
                 pythonFile.delete();
 
