@@ -1,5 +1,6 @@
 package goorm.spoco.domain.testcase.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import goorm.spoco.domain.algorithm.domain.Algorithm;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -17,6 +18,7 @@ public class Testcase {
 
     @ManyToOne
     @JoinColumn(name = "ALGORITHM_ID")
+    @JsonIgnore
     private Algorithm algorithm;
 
     public Testcase() {
