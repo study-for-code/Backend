@@ -22,4 +22,9 @@ public class Result {
         this.actualResult = actualResult;
         this.status = status;
     }
+
+    public Result(String actualResult, ResultStatus status) {
+        this.actualResult = actualResult;
+        this.status = status;
+    }
 }

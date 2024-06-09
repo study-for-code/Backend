@@ -37,25 +37,25 @@ public class JavaCompilerService {
                 }
 
                 // 컴파일. javaCompiler 경로 맞게 설정해야함.
-                String javaCompiler = "/usr/bin/javac";
+                String javaCompiler = "javac";
                 ProcessBuilder compilePb = new ProcessBuilder(javaCompiler, javaFile.getAbsolutePath());
                 Process compileProcess = compilePb.start();
                 compileProcess.waitFor();
 
-                // 컴파일에러 발생 시 에러 처리
+                // 컴파일에러 발생 시 에러 및 종료
                 if (compileProcess.exitValue() != 0) {
                     BufferedReader errorReader = new BufferedReader(new InputStreamReader(compileProcess.getErrorStream()));
                     String errorLine;
                     while ((errorLine = errorReader.readLine()) != null) {
                         output.append(errorLine).append("\n");
                     }
-                    results.add(new Result(i + 1, inputs.get(i), outputs.get(i), "ERROR", ResultStatus.ERROR));
+                    results.add(new Result(output.toString(), ResultStatus.ERROR));
                     javaFile.delete();
-                    continue;
+                    return results;
                 }
 
                 // 자바 파일 실행
-                String javaRunner = "/usr/bin/java";
+                String javaRunner = "java";
                 ProcessBuilder javaProcess = new ProcessBuilder(javaRunner, "Main");
                 javaProcess.directory(javaFile.getParentFile()); // 클래스 파일이 있는 디렉토리 설정
                 Process runProcess = javaProcess.start();
