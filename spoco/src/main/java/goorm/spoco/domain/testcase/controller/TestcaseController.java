@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/api/testcase")
 public class TestcaseController {
 
     private final TestcaseService testcaseService;
 
-    @PostMapping("/api/addTestcase")
+    @PostMapping("/add")
     public ResponseEntity<TestcaseDTO> addTestcase(
             @RequestBody Testcase testcase,
             @RequestParam Long algorithmId
@@ -25,13 +26,21 @@ public class TestcaseController {
         return ResponseEntity.status(HttpStatus.OK).body(testcaseDTO);
     }
 
-    @DeleteMapping("/api/delete/{id}")
-    public ResponseEntity<Testcase> deleteTestcase(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteTestcase(@PathVariable Long id) {
+
 //        Testcase deleted = testcaseService.delete(id);
         testcaseService.delete(id);
 //        return ResponseEntity.status(HttpStatus.OK).body(deleted);
         return ResponseEntity.noContent().build();
     }
 
-
+    @PutMapping("/update/{id}")
+    public ResponseEntity<TestcaseDTO> updateTestcase(
+            @PathVariable("id") Long testcaseId,
+            @RequestBody TestcaseDTO testcaseDTO
+    ) {
+        testcaseService.update(testcaseId, testcaseDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(testcaseDTO);
+    }
 }
