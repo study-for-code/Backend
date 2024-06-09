@@ -21,4 +21,10 @@ public class TestcaseService {
         testcase.addAlgorithm(algorithm); // 알고리즘에 testcase 추가
         return testcaseRepository.save(testcase); // testcase DB에 testcase 추가
     }
+
+    public void delete(Long testcaseId) {
+        Testcase testcase = testcaseRepository.findById(testcaseId)
+                .orElseThrow(() -> new IllegalArgumentException(testcaseId + "에 해당하는 테스트케이스가 존재하지 않습니다."));
+        testcaseRepository.delete(testcase);
+    }
 }
