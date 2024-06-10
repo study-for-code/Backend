@@ -2,36 +2,43 @@ package goorm.spoco.domain.algorithm.controller;
 
 import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.algorithm.dto.AlgorithmDTO;
-import goorm.spoco.domain.algorithm.repository.AlgorithmRepository;
 import goorm.spoco.domain.algorithm.service.AlgorithmService;
+import goorm.spoco.global.common.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/algorithm")
 @Slf4j
 public class AlgorithmController {
 
     private final AlgorithmService algorithmService;
-    private final AlgorithmRepository algorithmRepository;
 
     @PostMapping("/create")
-    public ResponseEntity<AlgorithmDTO> createAlgorithm(@RequestBody AlgorithmDTO algorithmDTO) {
+    public BaseResponse createAlgorithm(@RequestBody AlgorithmDTO algorithmDTO) {
         Algorithm algorithm = new Algorithm(algorithmDTO.getTitle(), algorithmDTO.getExplanation());
         algorithmService.save(algorithm);
         // 문제에 고유번호 부여
         algorithm.setTitle(algorithm.getAlgorithmId() + "-" + algorithm.getTitle());
         algorithmService.save(algorithm);
-        return ResponseEntity.status(HttpStatus.CREATED).body(algorithmDTO);
+        return BaseResponse.builder()
+                .message("알고리즘 문제 생성")
+                .httpStatus(HttpStatus.CREATED)
+                .results(List.of(algorithm))
+                .build();
+    }
+
+    @DeleteMapping("/{id}/delete")
+    public BaseResponse deleteAlgorithm(@PathVariable Long id) {
+        algorithmService.delete(id);
+        return BaseResponse.builder()
+                .message("알고리즘 삭제")
+                .build();
     }
 
 }
