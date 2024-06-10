@@ -2,7 +2,6 @@ package goorm.spoco.global.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import goorm.spoco.global.error.exception.ErrorCode;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
