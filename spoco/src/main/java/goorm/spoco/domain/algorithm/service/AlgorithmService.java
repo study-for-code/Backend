@@ -14,4 +14,5 @@ public class AlgorithmService {
     public Algorithm save(Algorithm algorithm) {
         return algorithmRepository.save(algorithm);
     }
+
 }

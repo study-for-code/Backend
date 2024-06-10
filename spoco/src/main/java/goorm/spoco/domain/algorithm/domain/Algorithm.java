@@ -19,6 +19,8 @@ public class Algorithm {
 
     private String title;
     private String explanation;
+
+    @Enumerated(EnumType.STRING)
     private AlgorithmStatus algorithmStatus;
 
     @OneToMany(mappedBy = "algorithm", cascade = CascadeType.ALL)
