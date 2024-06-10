@@ -14,6 +14,7 @@ import static lombok.Builder.*;
 @Builder
 public class BaseResponse<T> {
 
+
     @Default
     private Integer code = ErrorCode.OK.getCode();
     @Default

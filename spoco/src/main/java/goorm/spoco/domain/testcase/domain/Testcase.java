@@ -16,12 +16,16 @@ public class Testcase {
     private String input;
     private String output;
 
+    @Enumerated(EnumType.STRING)
+    private TestcaseStatus testcaseStatus;
+
     @ManyToOne
     @JoinColumn(name = "ALGORITHM_ID")
     @JsonIgnore
     private Algorithm algorithm;
 
     public Testcase() {
+        this.testcaseStatus = TestcaseStatus.ACTIVE;
     }
 
     //== 연관관계 메서드 ==//
@@ -35,6 +39,16 @@ public class Testcase {
         Testcase testCase = new Testcase();
         testCase.input = testCaseRequest.input;
         testCase.output = testCaseRequest.output;
+        testCase.testcaseStatus = TestcaseStatus.ACTIVE;
         return testCase;
     }
+
+    public void delete() {
+        this.testcaseStatus = TestcaseStatus.DELETE;
+    }
+
+    //== 복구 기능 ==//
+//    public void restore() {
+//        this.testcaseStatus = TestcaseStatus.ACTIVE;
+//    }
 }

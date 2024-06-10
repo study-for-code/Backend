@@ -37,7 +37,7 @@ public class CppCompilerService {
                 }
 
                 // 컴파일 및 Main 파일 생성
-                String cppCompiler = "/usr/bin/g++";
+                String cppCompiler = "g++";
                 ProcessBuilder compilePb = new ProcessBuilder(cppCompiler, cppFile.getAbsolutePath(), "-o", "Main");
                 Process compileProcess = compilePb.start();
                 compileProcess.waitFor();
