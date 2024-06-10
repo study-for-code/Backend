@@ -23,9 +23,6 @@ public class AlgorithmController {
     public BaseResponse createAlgorithm(@RequestBody AlgorithmDTO algorithmDTO) {
         Algorithm algorithm = new Algorithm(algorithmDTO.getTitle(), algorithmDTO.getExplanation());
         algorithmService.save(algorithm);
-        // 문제에 고유번호 부여
-        algorithm.setTitle(algorithm.getAlgorithmId() + "-" + algorithm.getTitle());
-        algorithmService.save(algorithm);
         return BaseResponse.builder()
                 .message("알고리즘 문제 생성")
                 .httpStatus(HttpStatus.CREATED)

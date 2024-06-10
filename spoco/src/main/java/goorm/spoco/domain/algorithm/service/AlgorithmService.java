@@ -8,14 +8,23 @@ import goorm.spoco.global.error.exception.CustomException;
 import goorm.spoco.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AlgorithmService {
 
     private final AlgorithmRepository algorithmRepository;
 
     public Algorithm save(Algorithm algorithm) {
+        Optional<Algorithm> optionalAlgorithm = algorithmRepository.findByTitle(algorithm.getTitle());
+        if(optionalAlgorithm.isPresent()){
+            throw new CustomException(ErrorCode.DUPLICATE_OBJECT, algorithm.getTitle()+"은/는 이미 존재하는 타이틀입니다. ");
+        }
+
         return algorithmRepository.save(algorithm);
     }
 
@@ -34,7 +43,8 @@ public class AlgorithmService {
         algorithm.setTitle(algorithmDTO.getTitle());
         algorithm.setExplanation(algorithmDTO.getExplanation());
 
-        return algorithmRepository.save(algorithm);
+//        return algorithmRepository.save(algorithm);
+        return algorithm;
     }
 
 }
