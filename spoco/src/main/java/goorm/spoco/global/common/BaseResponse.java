@@ -13,8 +13,11 @@ import java.util.List;
 @Builder
 public class BaseResponse<T> {
 
+    @Builder.Default
     private Integer code = ErrorCode.OK.getCode();
+    @Builder.Default
     private HttpStatus httpStatus = HttpStatus.OK;
+
     private String message;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
