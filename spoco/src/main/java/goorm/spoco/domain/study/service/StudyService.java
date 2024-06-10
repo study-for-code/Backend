@@ -15,9 +15,7 @@ public class StudyService {
     private final StudyRepository studyRepository;
 
     public Study createStudy(String title) {
-        Study study = Study.builder()
-                .title(title)
-                .build();
+        Study study = Study.study(title);
 
         return studyRepository.save(study);
     }
