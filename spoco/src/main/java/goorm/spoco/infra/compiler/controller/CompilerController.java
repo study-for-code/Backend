@@ -35,14 +35,12 @@ public class CompilerController {
 //        return ResponseEntity.status(HttpStatus.OK).body(response);
 //    }
 
-    // "message": "No static resource api/api/compiler."
-    // http://localhost:8080/api/compiler
     @PostMapping("/api/compiler")
     public BaseResponse compileCode(@RequestBody CompileRequest request) {
         List<Result> results_ = compile(request.getLanguage(), request.getCode());
 //        CompileResponse response = new CompileResponse(results_);
         return BaseResponse.<Result>builder()
-                .message("컴파일 성공")
+                .message("컴파일 실행")
                 .results(results_)
                 .build();
     }
