@@ -4,10 +4,10 @@ import goorm.spoco.domain.category.domain.Category;
 import goorm.spoco.domain.join.domain.Join;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
