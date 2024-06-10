@@ -9,13 +9,15 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+import static lombok.Builder.*;
+
 @Getter
 @Builder
 public class BaseResponse<T> {
 
-    @Builder.Default
+    @Default
     private Integer code = ErrorCode.OK.getCode();
-    @Builder.Default
+    @Default
     private HttpStatus httpStatus = HttpStatus.OK;
 
     private String message;

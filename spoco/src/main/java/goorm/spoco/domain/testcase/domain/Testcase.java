@@ -47,8 +47,4 @@ public class Testcase {
         this.testcaseStatus = TestcaseStatus.DELETE;
     }
 
-    //== 복구 기능 ==//
-//    public void restore() {
-//        this.testcaseStatus = TestcaseStatus.ACTIVE;
-//    }
 }

@@ -19,6 +19,7 @@ public class Algorithm {
 
     private String title;
     private String explanation;
+    private AlgorithmStatus algorithmStatus;
 
     @OneToMany(mappedBy = "algorithm", cascade = CascadeType.ALL)
     private List<Subscribe> subscribes = new ArrayList<>();
@@ -30,6 +31,7 @@ public class Algorithm {
     private List<Code> codes = new ArrayList<>();
 
     public Algorithm() {
+        this.algorithmStatus = AlgorithmStatus.ACTIVE;
     }
 
     //== 생성 메서드 ==//
@@ -38,6 +40,7 @@ public class Algorithm {
         Algorithm algorithm = new Algorithm();
         algorithm.title = algorithmRequest.title;
         algorithm.explanation = algorithmRequest.explanation;
+        algorithm.algorithmStatus = algorithmRequest.algorithmStatus;
         return algorithm;
     }
 
@@ -45,5 +48,11 @@ public class Algorithm {
     public Algorithm(String title, String explanation) {
         this.title = title;
         this.explanation = explanation;
+        this.algorithmStatus = AlgorithmStatus.ACTIVE;
     }
+
+    public void delete() {
+        this.algorithmStatus = AlgorithmStatus.DELETE;
+    }
+
 }
