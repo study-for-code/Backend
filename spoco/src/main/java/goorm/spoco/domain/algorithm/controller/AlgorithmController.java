@@ -41,4 +41,16 @@ public class AlgorithmController {
                 .build();
     }
 
+    @PatchMapping("/{id}/update")
+    public BaseResponse updateAlgorithm(
+            @PathVariable Long id,
+            @RequestBody AlgorithmDTO algorithmDTO
+    ) {
+        algorithmService.update(id, algorithmDTO);
+        return BaseResponse.builder()
+                .message("알고리즘 업데이트")
+                .results(List.of(algorithmDTO))
+                .build();
+    }
+
 }
