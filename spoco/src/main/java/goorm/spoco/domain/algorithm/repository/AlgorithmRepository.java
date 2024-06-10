@@ -3,6 +3,7 @@ package goorm.spoco.domain.algorithm.repository;
 import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.algorithm.domain.AlgorithmStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -11,4 +12,6 @@ import java.util.Optional;
 public interface AlgorithmRepository extends JpaRepository<Algorithm, Long> {
 
     Optional<Algorithm> findAlgorithmByAlgorithmIdAndAlgorithmStatus(Long id, AlgorithmStatus status);
+
+    Optional<Algorithm> findByTitle(String title);
 }
