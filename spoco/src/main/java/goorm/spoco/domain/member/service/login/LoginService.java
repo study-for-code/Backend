@@ -1,5 +1,6 @@
 package goorm.spoco.domain.member.service.login;
 
+import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,15 @@ import org.springframework.stereotype.Service;
 public class LoginService {
 
     private final MemberRepository memberRepository;
+    /**
+     *
+     @return null이면 로그인 실패
+     */
+    public Member login(Long memberId, String password) {
+        return memberRepository.findByMemberId(memberId)
+                .filter(m -> m.getPassword().equals(password))
+                .orElse(null);
+    }
 
 
 }
