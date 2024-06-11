@@ -24,8 +24,8 @@ public class AlgorithmController {
         Algorithm algorithm = new Algorithm(algorithmDTO.getTitle(), algorithmDTO.getExplanation());
         algorithmService.save(algorithm);
         // == num + title 으로 바꾸는 경우에는 ID의 생성원칙도 바꿔야 하므로 추후 논의가 필요하다... == //
-        algorithm.setTitle(algorithm.getAlgorithmId()+"-"+algorithm.getTitle());
-
+        algorithm.setTitle(algorithm.getAlgorithmId() + "-" + algorithm.getTitle());
+        algorithmService.save(algorithm);
         return BaseResponse.builder()
                 .message("알고리즘 문제 생성")
                 .httpStatus(HttpStatus.CREATED)
@@ -53,4 +53,21 @@ public class AlgorithmController {
                 .build();
     }
 
+    @GetMapping("/searchAlgorithms")
+    public BaseResponse getAlgorithmsListByTitle(@RequestParam String title) {
+        List<Algorithm> algorithms = algorithmService.searchAlgorithms(title);
+        return BaseResponse.<Algorithm>builder()
+                .message("알고리즘 리스트 검색 by title")
+                .results(algorithms)
+                .build();
+    }
+
+    @GetMapping("/{id}/getAlgorithm")
+    public BaseResponse getAlgorithm(@PathVariable Long id) {
+        Algorithm algorithm = algorithmService.get(id);
+        return BaseResponse.builder()
+                .message("알고리즘 검색")
+                .results(List.of(algorithm))
+                .build();
+    }
 }
