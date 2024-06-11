@@ -1,15 +1,13 @@
 package goorm.chat.domain;
 
-import goorm.chat.dto.request.MessageRequestDto;
+import goorm.chat.dto.MessageDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,14 +25,14 @@ public class Message {
     private LocalDateTime createAt;
     private MessageStatus messageStatus;
 
-    public static Message create(MessageRequestDto messageRequestDto) {
+    public static Message create(MessageDto messageDto) {
         Message message = new Message();
-        message.memberId = messageRequestDto.memberId();
-        message.codeId = messageRequestDto.codeId();
-        message.reviewId = messageRequestDto.reviewId();
-        message.codeLine = messageRequestDto.codeLine();
-        message.nickname = messageRequestDto.nickname();
-        message.content = messageRequestDto.content();
+        message.memberId = messageDto.memberId();
+        message.codeId = messageDto.codeId();
+        message.reviewId = messageDto.reviewId();
+        message.codeLine = messageDto.codeLine();
+        message.nickname = messageDto.nickname();
+        message.content = messageDto.content();
         message.createAt = LocalDateTime.now();
         message.messageStatus = MessageStatus.ACTIVE;
         return message;
