@@ -2,6 +2,7 @@ package goorm.spoco.domain.member.controller;
 
 import goorm.spoco.domain.member.controller.response.MemberDTO;
 import goorm.spoco.domain.member.service.MemberService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,4 +29,5 @@ public class MemberController {
         memberService.save(memberDTO);
         return "login";
     }
+
 }

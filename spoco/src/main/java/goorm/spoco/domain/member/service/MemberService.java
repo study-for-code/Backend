@@ -3,10 +3,14 @@ package goorm.spoco.domain.member.service;
 import goorm.spoco.domain.member.controller.response.MemberDTO;
 import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.member.repository.MemberRepository;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+
+
 @Service
+@Data
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -21,4 +25,5 @@ public class MemberService {
         memberRepository.save(member);
 
     }
+
 }

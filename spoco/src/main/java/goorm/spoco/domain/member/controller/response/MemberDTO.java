@@ -25,8 +25,48 @@ public class MemberDTO {
     @NotEmpty(message = "비밀번호는 필수 항목입니다.")
     private String password;
 
-    // 이부분 한번 물어보기
-    // confirmPassword를 DTO에 넣어야 하는지, 만약 넣어야 한다면 memberController에 DTO를 데이터베이스에 연동하기위해서 세분화 시키는게 맞는지
     @NotEmpty(message = "비밀번호 확인은 필수 항목입니다.")
     private String confirmPassword;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
+    @Override
+    public String toString() {
+        return "MemberDTO{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", password='" + password + '\'' +
+                ", confirmPassword='" + confirmPassword + '\'' + '}';
+    }
 }
