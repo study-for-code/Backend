@@ -19,7 +19,6 @@ public class Message {
     private Long memberId;
     private Long codeId;
     private Long reviewId;
-    private Integer codeLine;
     private String nickname;
     private String content;
     private LocalDateTime createAt;
@@ -30,7 +29,6 @@ public class Message {
         message.memberId = messageDto.memberId();
         message.codeId = messageDto.codeId();
         message.reviewId = messageDto.reviewId();
-        message.codeLine = messageDto.codeLine();
         message.nickname = messageDto.nickname();
         message.content = messageDto.content();
         message.createAt = LocalDateTime.now();
