@@ -18,10 +18,10 @@ public class TestcaseController {
 
     private final TestcaseService testcaseService;
 
-    @PostMapping("/create")
+    @PostMapping("/{algorithmId}/create")
     public BaseResponse createTestcase(
             @RequestBody Testcase testcase,
-            @RequestParam Long algorithmId
+            @PathVariable Long algorithmId
     ) {
         testcase.setTestcaseStatus(TestcaseStatus.ACTIVE);
         testcaseService.save(testcase, algorithmId);

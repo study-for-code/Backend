@@ -1,5 +1,6 @@
 package goorm.spoco.domain.category.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import goorm.spoco.domain.join.domain.Join;
 import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.study.domain.Study;
@@ -25,9 +26,12 @@ public class Category {
     private Long categoryId;
 
     private String title;
+    @Enumerated(EnumType.STRING)
+    private CategoryStatus categoryStatus = CategoryStatus.ACTIVE;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "STUDY_ID")
+    @JsonIgnore
     private Study study;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
@@ -54,5 +58,9 @@ public class Category {
         if (study.getCategories().size() >= maxSize) {
             // "카테고리는 " + maxSize + "개 이상 만들 수 없습니다."
         }
+    }
+
+    public void delete() {
+        this.categoryStatus = CategoryStatus.DELETE;
     }
 }
