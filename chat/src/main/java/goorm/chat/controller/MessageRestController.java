@@ -17,6 +17,6 @@ public class MessageRestController {
 
     @GetMapping("/message/{reviewId}")
     public List<MessageDto> getReviewMessage(@PathVariable Long reviewId) {
-        return messageService.getReviewIdMessage(reviewId);
+        return messageService.findMessageWithReviewId(reviewId);
     }
 }
