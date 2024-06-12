@@ -30,8 +30,15 @@ public class Message {
         message.codeId = messageDto.codeId();
         message.reviewId = messageDto.reviewId();
         message.nickname = messageDto.nickname();
+
+        // 테스트 용 if
         message.content = messageDto.content();
-        message.createAt = LocalDateTime.now();
+        if (messageDto.timestamp() == null) {
+            message.createAt = LocalDateTime.now();
+        } else {
+            message.createAt = messageDto.timestamp();
+        }
+
         message.messageStatus = MessageStatus.ACTIVE;
         return message;
     }

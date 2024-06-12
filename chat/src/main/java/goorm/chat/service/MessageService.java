@@ -6,6 +6,7 @@ import goorm.chat.dto.MessageDto;
 import goorm.chat.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -34,19 +35,25 @@ public class MessageService {
     }
 
     public List<MessageDto> findMessageWithReviewId(Long reviewId) {
-        return messageRepository.findAllByReviewIdAndMessageStatusOrderByCreateAtAsc(reviewId, MessageStatus.ACTIVE)
+        return messageRepository.findAllByReviewIdAndMessageStatusOrderByCreateAtDescIdDesc(reviewId, MessageStatus.ACTIVE)
+                .stream().map(MessageDto::from).collect(Collectors.toList());
+    }
+
+    public List<MessageDto> findMessageWithCodeId(Long codeId) {
+        return messageRepository.findAllByCodeIdAndMessageStatusOrderByCreateAtDescIdDesc(codeId, MessageStatus.ACTIVE)
                 .stream().map(MessageDto::from).collect(Collectors.toList());
     }
 
     public List<MessageDto> findWithCursorPagination(Long reviewId, LocalDateTime lastTimestamp, String lastId) {
 
         Criteria criteria = Criteria.where("reviewId").is(reviewId)
-                .and("status").is(MessageStatus.ACTIVE);
+                .and("MessageStatus").is(MessageStatus.ACTIVE);
 
         if (lastId != null && lastTimestamp != null) {
             // 타임스탬프와 _id를 이용한 페이징
-            Criteria timeCriteria = Criteria.where("createAt").lte(lastTimestamp)
-                    .and("_id").lte(new ObjectId(lastId));
+            Criteria timeCriteria = new Criteria().where("createAt").lte(lastTimestamp)
+                    .and("_id").lt(lastId);
+
             criteria = new Criteria().andOperator(criteria, timeCriteria);
         }
 
