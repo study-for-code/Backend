@@ -41,4 +41,21 @@ public class CategoryService {
 
         category.delete();
     }
+
+    public Category update(Long id, String title) {
+        Category category = categoryRepository.findByCategoryIdAndCategoryStatus(id, CategoryStatus.ACTIVE)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, id + "에 해당하는 카테고리가 존재하지 않습니다."));
+
+        if (category.getTitle().equals(title)) {
+            return category;
+        }
+
+        Optional<Category> optionalCategory = categoryRepository.findCategoryByTitleAndCategoryStatus(title, CategoryStatus.ACTIVE);
+        if (optionalCategory.isPresent()) {
+            throw new CustomException(ErrorCode.DUPLICATE_OBJECT, title + "은 이미 존재하는 카테고리입니다.");
+        }
+
+        category.setTitle(title);
+        return category;
+    }
 }
