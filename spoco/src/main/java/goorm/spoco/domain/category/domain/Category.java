@@ -1,13 +1,11 @@
 package goorm.spoco.domain.category.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import goorm.spoco.domain.join.domain.Join;
-import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.study.domain.Study;
 import goorm.spoco.domain.subscribe.domain.Subscribe;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -16,7 +14,7 @@ import java.util.List;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
-@Getter
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category {
 

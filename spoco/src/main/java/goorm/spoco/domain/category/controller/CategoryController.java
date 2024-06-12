@@ -38,4 +38,16 @@ public class CategoryController {
                 .message("카테고리 삭제")
                 .build();
     }
+
+    @PatchMapping("/{id}/update")
+    public BaseResponse updateCategory(
+            @PathVariable Long id,
+            @RequestBody Category category
+    ) {
+        categoryService.update(id, category.getTitle());
+        return BaseResponse.builder()
+                .message("카테고리 이름 업데이트")
+                .results(List.of(category))
+                .build();
+    }
 }
