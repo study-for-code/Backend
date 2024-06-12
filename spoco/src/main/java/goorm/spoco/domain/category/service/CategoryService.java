@@ -1,6 +1,7 @@
 package goorm.spoco.domain.category.service;
 
 import goorm.spoco.domain.category.domain.Category;
+import goorm.spoco.domain.category.domain.CategoryStatus;
 import goorm.spoco.domain.category.repository.CategoryRepository;
 import goorm.spoco.domain.study.domain.Study;
 import goorm.spoco.domain.study.repository.StudyRepository;
@@ -26,11 +27,18 @@ public class CategoryService {
 
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, studyId + "에 해당하는 스터디가 존재하지 않습니다."));
-        Optional<Category> optionalCategory = categoryRepository.findByTitleAndStudy(category.getTitle(), study);
+        Optional<Category> optionalCategory = categoryRepository.findByTitleAndCategoryStatusAndStudy(category.getTitle(), CategoryStatus.ACTIVE, study);
         if (optionalCategory.isPresent()) {
             throw new CustomException(ErrorCode.DUPLICATE_OBJECT, optionalCategory.get().getTitle() + "와 같은 이름의 카테고리가 존재합니다.");
         }
         category.addStudy(study);
         return categoryRepository.save(category);
+    }
+
+    public void delete(Long id) {
+        Category category = categoryRepository.findByCategoryIdAndCategoryStatus(id, CategoryStatus.ACTIVE)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, id + "에 해당하는 카테고리가 존재하지 않습니다."));
+
+        category.delete();
     }
 }

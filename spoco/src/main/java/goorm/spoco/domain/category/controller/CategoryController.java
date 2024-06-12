@@ -28,4 +28,14 @@ public class CategoryController {
                 .results(List.of(category))
                 .build();
     }
+
+    @DeleteMapping("{id}/delete")
+    public BaseResponse deleteCategory(
+            @PathVariable Long id
+    ) {
+        categoryService.delete(id);
+        return BaseResponse.builder()
+                .message("카테고리 삭제")
+                .build();
+    }
 }
