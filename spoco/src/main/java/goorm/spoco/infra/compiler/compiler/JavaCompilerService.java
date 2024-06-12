@@ -11,6 +11,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.*;
 
 @Service
 @RequiredArgsConstructor
@@ -56,7 +57,7 @@ public class JavaCompilerService {
 
                 // 자바 파일 실행
                 String javaRunner = "java";
-                ProcessBuilder javaProcess = new ProcessBuilder(javaRunner, "Main");
+                ProcessBuilder javaProcess = new ProcessBuilder(javaRunner, "-Xmx64m", "Main");
                 javaProcess.directory(javaFile.getParentFile()); // 클래스 파일이 있는 디렉토리 설정
                 Process runProcess = javaProcess.start();
 
@@ -70,31 +71,56 @@ public class JavaCompilerService {
                     processInput.flush();
                 }
 
-                // 실행 결과 받아오기
-                BufferedReader reader = new BufferedReader(new InputStreamReader(runProcess.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    output.append(line).append("\n");
+                // 타이머 시작 및 실행 결과 받아오기
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                Future<String> future = executor.submit(() -> {
+                    StringBuilder result = new StringBuilder();
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(runProcess.getInputStream()))) {
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            result.append(line).append("\n");
+                        }
+                    }
+                    return result.toString();
+                });
+
+                // 타임아웃 설정 (default 는 테스트케이스마다 2초)
+                String result;
+                try {
+                    result = future.get(2, TimeUnit.SECONDS);
+                } catch (TimeoutException e) {
+                    runProcess.destroy();
+                    future.cancel(true);  // Future 강제 취소
+                    result = "⌛️[ 시간 초과 ]\n";
+                    results.add(new Result(result, ResultStatus.FAIL));
+                    break; // 타임아웃 발생 시 전체 테스트 중단
+                } catch (ExecutionException e) {
+                    if (e.getCause() instanceof OutOfMemoryError) {
+                        runProcess.destroy();
+                        future.cancel(true);  // Future 강제 취소
+                        result = "🚫[ 메모리 초과 ]\n";
+                        results.add(new Result(result, ResultStatus.FAIL));
+                        break; // 메모리 오버플로우 발생 시 전체 테스트 중단
+                    } else {
+                        runProcess.destroy();
+                        result = "🚨[ 오류 : " + e.getMessage() + " ]\n";
+                        output.append(result); // 다른 예외 발생 시에도 결과 추가
+                    }
+                } finally {
+                    executor.shutdown();
+                    javaFile.delete();
+                    new File(javaFile.getAbsolutePath().replace(".java", ".class")).delete();
                 }
 
-//                // 실행 중 에러 읽기, 에러 코드가 필요할 경우 사용
-//                BufferedReader errorReader = new BufferedReader(new InputStreamReader(runProcess.getErrorStream()));
-//                String errorLine;
-//                while ((errorLine = errorReader.readLine()) != null) {
-//                    output.append(errorLine).append("\n");
-//                }
-
-                javaFile.delete();
-                new File(javaFile.getAbsolutePath().replace(".java", ".class")).delete();
+                output.append(result);
 
             } catch (Exception e) {
-                output.append("🚨ERROR : ").append(e.getMessage()).append("\n");
+                output.append("🚨ERROR: ").append(e.getMessage()).append("\n");
             }
 
             // 통과 여부
             // 아래의 코드는 결과값에 스페이스바가 들어가거나 엔터키가 하나 더 들어가는 등 양식에 조금의 오차가 생기면 FAIL이 되는 문제가 발생함.
             // 양식의 사소한 오차가 있을 때에도 FAIL 로 할 것이라면 주석친 코드를 사용하면 됌.
-//            boolean isPass = output.toString().trim().equals(expectedOutput.trim());
             boolean isPass = compareOutput(output.toString(), expectedOutput);
 
             Result result = Result.builder()
