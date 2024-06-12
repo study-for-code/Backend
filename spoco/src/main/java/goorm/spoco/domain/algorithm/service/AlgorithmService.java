@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -44,6 +46,30 @@ public class AlgorithmService {
         algorithm.setExplanation(algorithmDTO.getExplanation());
 
         return algorithm;
+    }
+
+    public Algorithm get(Long id) {
+        return algorithmRepository.findAlgorithmByAlgorithmIdAndAlgorithmStatus(id, AlgorithmStatus.ACTIVE)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, id + "에 해당하는 알고리즘이 존재하지 않습니다."));
+    }
+
+    //== 숫자로 면 문제번호로 검색. 제목이면 제목% 검색 이후 없다면, %제목% 으로 검색 ==//
+    public List<Algorithm> searchAlgorithms(String title) {
+        // 들어온 title 이 숫자로만 이루어져 있으면 true
+        if (title.matches("\\d+")) {
+            return algorithmRepository.findAlgorithmsByTitleLikeAndAlgorithmStatus(title + "%", AlgorithmStatus.ACTIVE);
+        } else {
+            // title% 이 존재하지 않는다면 %title% 로 반환. 그래도 없으면 빈 List 반환
+            if (algorithmRepository.findAlgorithmsByOnlyTitle(title + "%", "ACTIVE").isEmpty()) {
+                return algorithmRepository.findAlgorithmsByTitleLikeAndAlgorithmStatus("%" + title + "%", AlgorithmStatus.ACTIVE);
+            } else {
+                return algorithmRepository.findAlgorithmsByOnlyTitle(title + "%", "ACTIVE");
+            }
+        }
+    }
+
+    public List<Algorithm> searchAlgorithmsByNum(String num) {
+        return algorithmRepository.findAlgorithmsByTitleLikeAndAlgorithmStatus(num + "%", AlgorithmStatus.ACTIVE);
     }
 
 }
