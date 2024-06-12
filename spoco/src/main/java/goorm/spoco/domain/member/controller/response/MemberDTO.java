@@ -1,22 +1,21 @@
 package goorm.spoco.domain.member.controller.response;
 
+import goorm.spoco.domain.member.domain.Grade;
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 public class MemberDTO {
 
     private Long id;
 
     @Email(message = "유효한 이메일을 입력하세요.")
-    @NotEmpty(message = "이메일은 필수 항목입니다.")
+    @NotEmpty(message = "이메일은 필수 항목입니다.") // => @NotEmpty를 변경해야할 것 같다.
     private String email;
 
     @NotEmpty(message = "사용자 이름은 필수 항목입니다.")
@@ -27,6 +26,8 @@ public class MemberDTO {
 
     @NotEmpty(message = "비밀번호 확인은 필수 항목입니다.")
     private String confirmPassword;
+
+    private Grade grade;
 
     public String getEmail() {
         return email;
