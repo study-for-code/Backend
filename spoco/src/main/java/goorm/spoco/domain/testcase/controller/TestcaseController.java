@@ -23,7 +23,6 @@ public class TestcaseController {
             @RequestBody Testcase testcase,
             @PathVariable Long algorithmId
     ) {
-        testcase.setTestcaseStatus(TestcaseStatus.ACTIVE);
         testcaseService.save(testcase, algorithmId);
         TestcaseDTO testcaseDTO = new TestcaseDTO(testcase.getInput(), testcase.getOutput());
         return BaseResponse.builder()

@@ -17,7 +17,7 @@ public class Testcase {
     private String output;
 
     @Enumerated(EnumType.STRING)
-    private TestcaseStatus testcaseStatus;
+    private TestcaseStatus testcaseStatus = TestcaseStatus.ACTIVE;
 
     @ManyToOne
     @JoinColumn(name = "ALGORITHM_ID")
@@ -25,7 +25,6 @@ public class Testcase {
     private Algorithm algorithm;
 
     public Testcase() {
-        this.testcaseStatus = TestcaseStatus.ACTIVE;
     }
 
     //== 연관관계 메서드 ==//
@@ -39,7 +38,6 @@ public class Testcase {
         Testcase testCase = new Testcase();
         testCase.input = testCaseRequest.input;
         testCase.output = testCaseRequest.output;
-        testCase.testcaseStatus = TestcaseStatus.ACTIVE;
         return testCase;
     }
 
