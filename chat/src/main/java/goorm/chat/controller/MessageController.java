@@ -6,8 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,10 +17,13 @@ public class MessageController {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    @MessageMapping("/chat.send")
+    @MessageMapping("/sendMessage")
     public void sendMessage(@Payload MessageDto messageDto) {
         MessageDto saveMessage = messageService.saveMessage(messageDto);
 
-        simpMessagingTemplate.convertAndSend("/topic/chat/" + saveMessage.reviewId() + "/" + saveMessage.codeLine(), saveMessage);
+        simpMessagingTemplate.convertAndSend("/topic/" + saveMessage.reviewId(), saveMessage);
+
+//        simpMessagingTemplate.convertAndSend(
+//                "/topic/" + messageDto.reviewId(), messageDto);
     }
 }

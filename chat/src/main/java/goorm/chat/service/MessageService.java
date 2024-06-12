@@ -26,10 +26,6 @@ public class MessageService {
         );
 
     }
-    public List<MessageDto> getCodeIdMessage(Long codeId) {
-        return messageRepository.findAllByCodeIdAndMessageStatus(codeId, MessageStatus.ACTIVE)
-                .stream().map(MessageDto::from).collect(Collectors.toList());
-    }
 
     public List<MessageDto> getReviewIdMessage(Long reviewId) {
         return messageRepository.findAllByReviewIdAndMessageStatus(reviewId, MessageStatus.ACTIVE)
