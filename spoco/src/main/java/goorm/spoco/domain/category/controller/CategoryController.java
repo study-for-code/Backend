@@ -50,4 +50,15 @@ public class CategoryController {
                 .results(List.of(category))
                 .build();
     }
+
+    @GetMapping("/{id}")
+    public BaseResponse get(
+            @PathVariable Long id
+    ) {
+        Category category = categoryService.find(id);
+        return BaseResponse.builder()
+                .message("카테고리 반환")
+                .results(List.of(category))
+                .build();
+    }
 }

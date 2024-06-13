@@ -1,19 +1,20 @@
 package goorm.spoco.domain.subscribe.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.category.domain.Category;
-import goorm.spoco.domain.join.domain.Join;
-import goorm.spoco.domain.member.domain.Member;
-import goorm.spoco.domain.study.domain.Study;
+import goorm.spoco.global.error.exception.CustomException;
+import goorm.spoco.global.error.exception.ErrorCode;
+import goorm.spoco.global.status.Status;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
-@Getter
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Subscribe {
 
@@ -24,16 +25,22 @@ public class Subscribe {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "CATEGORY_ID")
+    @JsonIgnore
     private Category category;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "ALGORITHM_ID")
+    @JsonIgnore
     private Algorithm algorithm;
+
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.ACTIVE;
 
     //== 연관관계 메서드 ==//
     public void addCategory(Category category) {
         this.category = category;
         category.getSubscribes().add(this);
+        System.out.println("category subscribe size : " + category.getSubscribes().size());
     }
 
     public void addAlgorithm(Algorithm algorithm) {
@@ -52,8 +59,12 @@ public class Subscribe {
 
     //== 중복 검증 메서드 ==//
     private static void subscribeValidateDuplicate(Category category, Algorithm algorithm) {
-        if (category.getSubscribes().stream().anyMatch(subscribe -> subscribe.getAlgorithm().equals(algorithm))) {
-            // "카테고리에 이미 해당 알고리즘이 구독되어 있습니다."
+
+        boolean isDuplicate = category.getSubscribes().stream()
+                .anyMatch(subscribe -> subscribe.getAlgorithm().getAlgorithmId().equals(algorithm.getAlgorithmId()));
+
+        if (isDuplicate) {
+            throw new CustomException(ErrorCode.DUPLICATE_OBJECT, "이미 구독되어 있는 알고리즘 입니다.");
         }
     }
 }
