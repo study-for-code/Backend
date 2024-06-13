@@ -1,25 +1,28 @@
-package goorm.spoco.domain.message.service;
+package goorm.spoco.domain.message;
 
-import goorm.spoco.domain.message.config.MessageTestConfig;
 import goorm.spoco.domain.message.controller.request.CursorRequestDto;
 import goorm.spoco.domain.message.controller.request.MessageRequestDto;
 import goorm.spoco.domain.message.controller.response.MessageResponseDto;
 import goorm.spoco.domain.message.repository.MessageRepository;
+import goorm.spoco.domain.message.service.MessageService;
+import goorm.spoco.global.config.JpaConfig;
+import goorm.spoco.global.config.MongoConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ActiveProfiles("mongo")
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 class MessageServiceTest {

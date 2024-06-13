@@ -1,19 +1,12 @@
 package goorm.spoco.domain.message.service;
 
-import goorm.spoco.domain.member.domain.Member;
-import goorm.spoco.domain.member.repository.MemberRepository;
-import goorm.spoco.domain.message.controller.request.CursorRequestDto;
 import goorm.spoco.domain.message.controller.request.MessageRequestDto;
-import goorm.spoco.domain.message.controller.response.MessageResponseDto;
 import goorm.spoco.domain.message.domain.Message;
 import goorm.spoco.domain.message.repository.MessageRepository;
-import goorm.spoco.domain.review.domain.Review;
+import goorm.spoco.domain.message.controller.request.CursorRequestDto;
+import goorm.spoco.domain.message.controller.response.MessageResponseDto;
 import goorm.spoco.global.common.Status;
-import goorm.spoco.global.error.exception.CustomException;
-import goorm.spoco.domain.review.repository.ReviewRepository;
-import goorm.spoco.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

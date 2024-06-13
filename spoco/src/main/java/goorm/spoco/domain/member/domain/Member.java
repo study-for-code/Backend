@@ -3,12 +3,10 @@ package goorm.spoco.domain.member.domain;
 import goorm.spoco.domain.code.domain.Code;
 import goorm.spoco.domain.join.domain.Join;
 import goorm.spoco.domain.member.controller.response.MemberDTO;
-import goorm.spoco.domain.message.domain.Message;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

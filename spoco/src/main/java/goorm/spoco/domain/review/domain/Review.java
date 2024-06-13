@@ -1,17 +1,12 @@
 package goorm.spoco.domain.review.domain;
 
 import goorm.spoco.domain.code.domain.Code;
-import goorm.spoco.domain.message.domain.Message;
 import goorm.spoco.global.error.exception.CustomException;
-import goorm.spoco.domain.review.exception.ReviewErrorCode;
 import goorm.spoco.global.error.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
 

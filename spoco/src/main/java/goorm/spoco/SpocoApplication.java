@@ -10,8 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = ["com.example.mysqlmongo.model.jpa"])
-@EnableMongoRepositories(basePackages = ["com.example.mysqlmongo.model.mongo"])
 public class SpocoApplication {
 
 	public static void main(String[] args) {

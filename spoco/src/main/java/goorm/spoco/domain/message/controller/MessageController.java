@@ -1,15 +1,11 @@
 package goorm.spoco.domain.message.controller;
 
 import goorm.spoco.domain.message.controller.request.CursorRequestDto;
-import goorm.spoco.domain.message.controller.request.MessageRequestDto;
 import goorm.spoco.domain.message.controller.response.MessageResponseDto;
 import goorm.spoco.domain.message.service.MessageService;
 import goorm.spoco.global.common.BaseResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

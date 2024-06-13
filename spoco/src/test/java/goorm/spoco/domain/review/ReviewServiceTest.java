@@ -1,5 +1,6 @@
 package goorm.spoco.domain.review;
 
+import goorm.spoco.SpocoApplication;
 import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.algorithm.repository.AlgorithmRepository;
 import goorm.spoco.domain.code.domain.Code;
@@ -13,14 +14,19 @@ import goorm.spoco.domain.review.domain.ReviewStatus;
 import goorm.spoco.domain.review.repository.ReviewRepository;
 import goorm.spoco.domain.review.service.ReviewService;
 import goorm.spoco.domain.testcase.domain.Testcase;
+import goorm.spoco.global.config.JpaConfig;
+import goorm.spoco.global.config.MongoConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +34,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
+@ActiveProfiles("h2")
 @SpringBootTest
+@ExtendWith(SpringExtension.class)
 @Transactional
 class ReviewServiceTest {
 

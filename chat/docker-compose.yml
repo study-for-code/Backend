@@ -56,3 +56,20 @@ services:
     # 볼륨 설정
     volumes:
       - ./docker-log/mongo-data:/data/mongodb
+
+  mongotestdb:
+    # 사용할 이미지
+    image: mongo:latest
+    # 컨테이너명 설정
+    container_name: mongotestdb
+    # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
+    ports:
+      - "27019:27017"
+    # 환경 변수 설정
+    environment:
+      # MongoDB 계정 및 패스워드 설정 옵션
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    # 볼륨 설정
+    volumes:
+      - ./docker-log/mongotest-data:/data/mongotestdb
