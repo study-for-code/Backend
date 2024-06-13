@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
+//@ToString
 public class MemberDTO {
 
     private Long id;
