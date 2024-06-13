@@ -7,10 +7,7 @@ import goorm.spoco.domain.subscribe.domain.Subscribe;
 import goorm.spoco.domain.subscribe.service.SubscribeService;
 import goorm.spoco.global.common.BaseResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,7 +25,17 @@ public class SubscribeController {
         Subscribe subscribe = subscribeService.subscribe(request.getCategoryId(), request.getAlgorithmId());
         return BaseResponse.builder()
                 .message("구독 서비스 실행")
-                .results(List.of(subscribe,subscribe.getCategory(),subscribe.getAlgorithm()))
+                .results(List.of(subscribe, subscribe.getCategory(), subscribe.getAlgorithm()))
+                .build();
+    }
+
+    @DeleteMapping("/{id}")
+    public BaseResponse cancelSubscribe(
+            @PathVariable Long id
+    ) {
+        subscribeService.cancelSubscribe(id);
+        return BaseResponse.builder()
+                .message("구독 취소 실행")
                 .build();
     }
 }

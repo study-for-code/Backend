@@ -3,6 +3,7 @@ package goorm.spoco.domain.algorithm.domain;
 import goorm.spoco.domain.code.domain.Code;
 import goorm.spoco.domain.subscribe.domain.Subscribe;
 import goorm.spoco.domain.testcase.domain.Testcase;
+import goorm.spoco.global.status.Status;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -55,6 +56,9 @@ public class Algorithm {
 
     public void delete() {
         this.algorithmStatus = AlgorithmStatus.DELETE;
+        for (Subscribe subscribe : subscribes) {
+            subscribe.setStatus(Status.DELETE);
+        }
     }
 
 }
