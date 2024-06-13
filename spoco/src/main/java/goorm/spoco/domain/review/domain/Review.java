@@ -34,9 +34,6 @@ public class Review {
     @JoinColumn(name = "CODE_ID")
     private Code code;
 
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
-    private List<Message> messages = new ArrayList<>();
-
     //== 연관관계 메서드 ==//
     public void addCode(Code code) {
         this.code = code;

@@ -44,10 +44,6 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Code> codes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Message> messages = new ArrayList<>();
-
-
     public static Member toMember(MemberDTO memberDTO) {
         Member member = new Member();
         member.email = memberDTO.getEmail();

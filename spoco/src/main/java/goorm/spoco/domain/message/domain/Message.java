@@ -1,64 +1,60 @@
 package goorm.spoco.domain.message.domain;
 
-import goorm.spoco.domain.join.domain.Join;
-import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.message.controller.request.MessageRequestDto;
-import goorm.spoco.domain.review.domain.Review;
-import goorm.spoco.domain.study.domain.Study;
-import jakarta.persistence.*;
+import goorm.spoco.global.common.Status;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
-import static jakarta.persistence.FetchType.*;
-
-@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Document(collection = "messages")
 public class Message {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MESSAGE_ID")
-    private Long messageId;
-
-    private String detail;
-
+    private String id;
+    private Long memberId;
+    private Long codeId;
+    private Long reviewId;
+    private String nickname;
+    private String content;
     private LocalDateTime createAt;
+    private Status messageStatus;
 
-    @Enumerated(EnumType.STRING)
-    private MessageStatus messageStatus;
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "MEMBER_ID")
-    private Member member;
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "REVIEW_ID")
-    private Review review;
-
-    //== 연관관계 메서드 ==//
-    public void addMember(Member member) {
-        this.member = member;
-        member.getMessages().add(this);
-    }
-
-    public void addReview(Review review) {
-        this.review = review;
-        review.getMessages().add(this);
-    }
+//    @ManyToOne(fetch = LAZY)
+//    @JoinColumn(name = "MEMBER_ID")
+//    private Member member;
+//
+//    @ManyToOne(fetch = LAZY)
+//    @JoinColumn(name = "REVIEW_ID")
+//    private Review review;
+//
+//    //== 연관관계 메서드 ==//
+//    public void addMember(Member member) {
+//        this.member = member;
+//        member.getMessages().add(this);
+//    }
+//
+//    public void addReview(Review review) {
+//        this.review = review;
+//        review.getMessages().add(this);
+//    }
 
     //== 생성 메서드 ==//
     // 해당 매개변수는 request 객체로 변경
-    public static Message message(Member member, Review review, MessageRequestDto messageRequestDto) {
+    public static Message create(MessageRequestDto messageRequestDto) {
         Message message = new Message();
-        message.addMember(member);
-        message.addReview(review);
-        message.detail = messageRequestDto.detail();
-        message.createAt = messageRequestDto.createAt();
-        message.messageStatus = MessageStatus.OPEN;
+        message.memberId = messageRequestDto.memberId();
+        message.codeId = messageRequestDto.codeId();
+        message.reviewId = messageRequestDto.reviewId();
+        message.nickname = messageRequestDto.nickname();
+        message.content = messageRequestDto.content();
+        message.createAt = LocalDateTime.now();
+        message.messageStatus = Status.ACTIVE;
         return message;
     }
 }
