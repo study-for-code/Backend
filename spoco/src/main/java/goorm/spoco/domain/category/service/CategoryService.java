@@ -58,4 +58,9 @@ public class CategoryService {
         category.setTitle(title);
         return category;
     }
+
+    public Category find(Long id) {
+        return categoryRepository.findByCategoryIdAndCategoryStatus(id, CategoryStatus.ACTIVE)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, id + "에 해당하는 카테고리가 존재하지 않습니다."));
+    }
 }
