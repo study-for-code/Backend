@@ -3,7 +3,6 @@ package goorm.spoco.domain.member.domain;
 import goorm.spoco.domain.code.domain.Code;
 import goorm.spoco.domain.join.domain.Join;
 import goorm.spoco.domain.member.controller.response.MemberDTO;
-import goorm.spoco.domain.message.domain.Message;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -37,10 +36,6 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Code> codes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Message> messages = new ArrayList<>();
-
-
     public static Member toMember(MemberDTO memberDTO) {
         Member member = new Member();
         member.email = memberDTO.getEmail();
@@ -60,5 +55,13 @@ public class Member {
         member.password = signUpRequest.password;
         member.grade = Grade.MEMBER;
         return member;
+    }
+
+    // 테스트 용 생성자
+    public Member(String email, String nickname, String password) {
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
+        this.grade = Grade.MEMBER;
     }
 }

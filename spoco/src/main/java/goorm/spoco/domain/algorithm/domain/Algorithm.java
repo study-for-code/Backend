@@ -1,10 +1,9 @@
 package goorm.spoco.domain.algorithm.domain;
 
 import goorm.spoco.domain.code.domain.Code;
-import goorm.spoco.domain.member.domain.Grade;
-import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.subscribe.domain.Subscribe;
-import goorm.spoco.domain.testcase.domain.TestCase;
+import goorm.spoco.domain.testcase.domain.Testcase;
+import goorm.spoco.global.status.Status;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,16 +21,20 @@ public class Algorithm {
     private String title;
     private String explanation;
 
+    @Enumerated(EnumType.STRING)
+    private AlgorithmStatus algorithmStatus;
+
     @OneToMany(mappedBy = "algorithm", cascade = CascadeType.ALL)
     private List<Subscribe> subscribes = new ArrayList<>();
 
     @OneToMany(mappedBy = "algorithm", cascade = CascadeType.ALL)
-    private List<TestCase> testCases = new ArrayList<>();
+    private List<Testcase> testCases = new ArrayList<>();
 
     @OneToMany(mappedBy = "algorithm", cascade = CascadeType.ALL)
     private List<Code> codes = new ArrayList<>();
 
     public Algorithm() {
+        this.algorithmStatus = AlgorithmStatus.ACTIVE;
     }
 
     //== 생성 메서드 ==//
@@ -40,6 +43,22 @@ public class Algorithm {
         Algorithm algorithm = new Algorithm();
         algorithm.title = algorithmRequest.title;
         algorithm.explanation = algorithmRequest.explanation;
+        algorithm.algorithmStatus = algorithmRequest.algorithmStatus;
         return algorithm;
     }
+
+    // 테스트 용 생성자
+    public Algorithm(String title, String explanation) {
+        this.title = title;
+        this.explanation = explanation;
+        this.algorithmStatus = AlgorithmStatus.ACTIVE;
+    }
+
+    public void delete() {
+        this.algorithmStatus = AlgorithmStatus.DELETE;
+        for (Subscribe subscribe : subscribes) {
+            subscribe.setStatus(Status.DELETE);
+        }
+    }
+
 }

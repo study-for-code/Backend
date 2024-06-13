@@ -28,15 +28,4 @@ public class MemberDTO {
     private String confirmPassword;
 
     private Grade grade;
-
-
-    @Override
-    public String toString() {
-        return "MemberDTO{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", password='" + password + '\'' +
-                ", confirmPassword='" + confirmPassword + '\'' + '}';
-    }
 }

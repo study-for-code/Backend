@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    Optional<Member> findByEmail(String memberEmail); // 지워도 되는지 여쭤보기
-//    Optional<Member> findByMemberId(Long memberId);
+    Optional<Member> findByEmail(String memberEmail);
+    Optional<Member> findByMemberId(Long memberId);
 }
 
