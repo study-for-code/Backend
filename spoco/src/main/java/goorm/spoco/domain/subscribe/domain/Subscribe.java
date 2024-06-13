@@ -3,15 +3,12 @@ package goorm.spoco.domain.subscribe.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.category.domain.Category;
-import goorm.spoco.domain.join.domain.Join;
-import goorm.spoco.domain.member.domain.Member;
-import goorm.spoco.domain.study.domain.Study;
 import goorm.spoco.global.error.exception.CustomException;
 import goorm.spoco.global.error.exception.ErrorCode;
+import goorm.spoco.global.status.Status;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -37,7 +34,7 @@ public class Subscribe {
     private Algorithm algorithm;
 
     @Enumerated(EnumType.STRING)
-    private SubscribeStatus subscribeStatus = SubscribeStatus.ACTIVE;
+    private Status status = Status.ACTIVE;
 
     //== 연관관계 메서드 ==//
     public void addCategory(Category category) {
