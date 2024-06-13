@@ -57,6 +57,14 @@ public class Subscribe {
         return subscribe;
     }
 
+    public void delete(Category category, Algorithm algorithm) {
+        this.category = category;
+        this.algorithm = algorithm;
+        category.getSubscribes().remove(algorithm);
+        algorithm.getSubscribes().remove(category);
+        this.status = Status.DELETE;
+    }
+
     //== 중복 검증 메서드 ==//
     private static void subscribeValidateDuplicate(Category category, Algorithm algorithm) {
 
