@@ -39,7 +39,7 @@ public class MemberController {
 
         // 중복 회원 가입 방지하기
         try {
-            memberService.create(memberCreateDTO.getUsername(),
+            memberService.create(memberCreateDTO.getNickname(),
                     memberCreateDTO.getEmail(), memberCreateDTO.getPasswordA());
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
