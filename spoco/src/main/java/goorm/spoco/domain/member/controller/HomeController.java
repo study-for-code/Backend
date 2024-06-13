@@ -29,7 +29,7 @@ public class HomeController {
             return "home";
         }
         //로그인
-        Optional<Member> loginMember = memberRepository.findByMemberId(memberId);
+        Optional<Member> loginMember = memberRepository.findById(memberId);
         if (loginMember == null) {
             return "home";
         }
