@@ -49,7 +49,7 @@ public class ReviewService {
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "해당 리뷰(" + reviewId + ")가 존재하지 않습니다."));
 
         //== 추후 스프링 시큐리티로 처리
-        Member member = memberRepository.findByMemberId(memberId)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.DUPLICATE_OBJECT, "해당 멤버(" + memberId + ")가 존재하지 않습니다."));
 
 
