@@ -3,9 +3,9 @@ package goorm.spoco.domain.subscribe.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.category.domain.Category;
+import goorm.spoco.global.common.Status;
 import goorm.spoco.global.error.exception.CustomException;
 import goorm.spoco.global.error.exception.ErrorCode;
-import goorm.spoco.global.status.Status;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -34,13 +34,12 @@ public class Subscribe {
     private Algorithm algorithm;
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.ACTIVE;
+    private Status status;
 
     //== 연관관계 메서드 ==//
     public void addCategory(Category category) {
         this.category = category;
         category.getSubscribes().add(this);
-        System.out.println("category subscribe size : " + category.getSubscribes().size());
     }
 
     public void addAlgorithm(Algorithm algorithm) {
@@ -54,14 +53,11 @@ public class Subscribe {
         Subscribe subscribe = new Subscribe();
         subscribe.addCategory(category);
         subscribe.addAlgorithm(algorithm);
+        subscribe.status = Status.ACTIVE;
         return subscribe;
     }
 
-    public void delete(Category category, Algorithm algorithm) {
-        this.category = category;
-        this.algorithm = algorithm;
-        category.getSubscribes().remove(algorithm);
-        algorithm.getSubscribes().remove(category);
+    public void delete() {
         this.status = Status.DELETE;
     }
 

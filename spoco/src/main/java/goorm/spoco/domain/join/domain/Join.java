@@ -2,6 +2,7 @@ package goorm.spoco.domain.join.domain;
 
 import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.study.domain.Study;
+import goorm.spoco.global.common.Status;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,6 +33,9 @@ public class Join {
     @JoinColumn(name = "STUDY_ID")
     private Study study;
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     //== 연관관계 메서드 ==//
     public void addMember(Member member) {
         this.member = member;
@@ -46,10 +50,17 @@ public class Join {
     //== 생성 메서드 ==//
     public static Join join(Member member, Study study) {
         joinValidateDuplicate(member, study);
+
         Join join = new Join();
         join.addMember(member);
         join.addStudy(study);
+        join.status = Status.ACTIVE;
         return join;
+    }
+
+    //== 비즈니스 로직 ==//
+    public void delete() {
+        this.status = Status.DELETE;
     }
 
     //== 중복 검증 메서드 ==//

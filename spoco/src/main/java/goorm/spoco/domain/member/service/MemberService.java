@@ -62,6 +62,6 @@ public class MemberService {
 
     private void isDuplicateEmail(MemberSignUpDto memberSignUpDto) {
         memberRepository.findByEmail(memberSignUpDto.email())
-                .ifPresent(member -> new CustomException(ErrorCode.DUPLICATE_OBJECT, "이미 존재하는 이메일입니다."));
+                .ifPresent(member -> { throw new CustomException(ErrorCode.DUPLICATE_OBJECT, "이미 존재하는 이메일입니다."); });
     }
 }

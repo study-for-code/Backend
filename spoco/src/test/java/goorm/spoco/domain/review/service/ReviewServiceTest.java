@@ -1,4 +1,4 @@
-package goorm.spoco.domain.review;
+package goorm.spoco.domain.review.service;
 
 import goorm.spoco.SpocoApplication;
 import goorm.spoco.domain.algorithm.domain.Algorithm;
@@ -76,7 +76,8 @@ class ReviewServiceTest {
     @Test
     public void 리뷰_삭제() throws Exception {
         //given
-        Member member1 = new Member("leeho_@naver.com", "이호성", "1234");
+        MemberSignUpDto memberSignUpDto = new MemberSignUpDto("leeho_@naver.com", "이호성", "1234", "1234");
+        Member member1 = Member.create(memberSignUpDto);
         memberRepository.save(member1);
 
         Algorithm algorithm1 = new Algorithm("제목", "설명");
@@ -96,7 +97,8 @@ class ReviewServiceTest {
     @Test
     public void 리뷰_리스트() throws Exception {
         //given
-        Member member1 = new Member("leeho_@naver.com", "이호성", "1234");
+        MemberSignUpDto memberSignUpDto = new MemberSignUpDto("leeho_@naver.com", "이호성", "1234", "1234");
+        Member member1 = Member.create(memberSignUpDto);
         memberRepository.save(member1);
 
         Algorithm algorithm1 = new Algorithm("제목", "설명");

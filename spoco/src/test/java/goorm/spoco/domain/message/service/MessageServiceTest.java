@@ -1,4 +1,4 @@
-package goorm.spoco.domain.message;
+package goorm.spoco.domain.message.service;
 
 import goorm.spoco.domain.message.controller.request.CursorRequestDto;
 import goorm.spoco.domain.message.controller.request.MessageRequestDto;

@@ -3,7 +3,6 @@ package goorm.spoco.domain.member.domain;
 import goorm.spoco.domain.code.domain.Code;
 import goorm.spoco.domain.join.domain.Join;
 import goorm.spoco.domain.member.controller.request.MemberModifyDto;
-import goorm.spoco.domain.member.controller.request.MemberRequestDto;
 import goorm.spoco.domain.member.controller.request.MemberSignUpDto;
 import goorm.spoco.global.common.Status;
 import goorm.spoco.global.error.exception.CustomException;
@@ -24,7 +23,7 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MEMBER_ID")
-    private Long Id;
+    private Long memberId;
 
     private String email;
 
@@ -46,7 +45,7 @@ public class Member {
 
     //== 생성 메서드 ==//
     public static Member create(MemberSignUpDto memberSignUpDto) {
-        confirmPassword(memberSignUpDto.password(), memberSignUpDto.confirmPassword());
+//        confirmPassword(memberSignUpDto.password(), memberSignUpDto.confirmPassword());
 
         Member member = new Member();
         member.email = memberSignUpDto.email();
@@ -57,11 +56,11 @@ public class Member {
         return member;
     }
 
-    private static void confirmPassword(String password, String confirmPassword) {
-        if (!password.equals(confirmPassword)) {
-            throw new CustomException(ErrorCode.PASSWORD_NOT_MATCH, "비밀번호가 서로 다릅니다.");
-        }
-    }
+//    private static void confirmPassword(String password, String confirmPassword) {
+//        if (!password.equals(confirmPassword)) {
+//            throw new CustomException(ErrorCode.PASSWORD_NOT_MATCH, "비밀번호가 서로 다릅니다.");
+//        }
+//    }
 
     //== 비즈니스 메소드 ==//
     public void updateInfo(MemberModifyDto memberModifyDto) {
@@ -71,10 +70,10 @@ public class Member {
 
     public void delete() {
         this.status = Status.DELETE;
-        for (Join join : this.getJoins()) {
+        for (Join join : joins) {
             join.delete();
         }
-        for (Code code : this.getCodes()) {
+        for (Code code : codes) {
             code.delete();
         }
     }

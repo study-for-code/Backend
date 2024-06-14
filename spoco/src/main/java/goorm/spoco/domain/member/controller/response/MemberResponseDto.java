@@ -9,13 +9,16 @@ public record MemberResponseDto(
         @JsonIgnore
         String email,
         @JsonIgnore
-        String nickname
+        String nickname,
+        @JsonIgnore
+        String password
 ) {
     public static MemberResponseDto from(Member member) {
         return new MemberResponseDto(
-                member.getId(),
+                member.getMemberId(),
                 member.getEmail(),
-                member.getNickname()
+                member.getNickname(),
+                member.getPassword()
         );
     }
 }

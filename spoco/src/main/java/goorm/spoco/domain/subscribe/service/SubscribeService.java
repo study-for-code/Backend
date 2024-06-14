@@ -8,9 +8,9 @@ import goorm.spoco.domain.category.domain.CategoryStatus;
 import goorm.spoco.domain.category.repository.CategoryRepository;
 import goorm.spoco.domain.subscribe.domain.Subscribe;
 import goorm.spoco.domain.subscribe.repository.SubscribeRepository;
+import goorm.spoco.global.common.Status;
 import goorm.spoco.global.error.exception.CustomException;
 import goorm.spoco.global.error.exception.ErrorCode;
-import goorm.spoco.global.status.Status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +45,7 @@ public class SubscribeService {
         Algorithm algorithm = algorithmRepository.findAlgorithmByAlgorithmIdAndAlgorithmStatus(algorithmId, AlgorithmStatus.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, algorithmId + "에 해당하는 알고리즘이 존재하지 않습니다."));
 
-        subscribe.delete(category,algorithm);
+        subscribe.delete();
     }
 
 }
