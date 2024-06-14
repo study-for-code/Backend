@@ -50,7 +50,7 @@ public class ReviewService {
 
         //== 추후 스프링 시큐리티로 처리
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException(ErrorCode.DUPLICATE_OBJECT, "해당 멤버(" + memberId + ")가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "해당 멤버(" + memberId + ")가 존재하지 않습니다."));
 
 
         if (review.getCode().getMember().equals(member) || member.getGrade().equals(Grade.ADMIN)) {

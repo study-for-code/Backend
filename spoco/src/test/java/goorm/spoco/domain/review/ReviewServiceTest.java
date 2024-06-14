@@ -6,6 +6,7 @@ import goorm.spoco.domain.algorithm.repository.AlgorithmRepository;
 import goorm.spoco.domain.code.domain.Code;
 import goorm.spoco.domain.code.domain.CodeStatus;
 import goorm.spoco.domain.code.repository.CodeRepository;
+import goorm.spoco.domain.member.controller.request.MemberSignUpDto;
 import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.member.repository.MemberRepository;
 import goorm.spoco.domain.review.controller.response.ReviewResponseDto;
@@ -55,7 +56,8 @@ class ReviewServiceTest {
     @Test
     public void 리뷰_생성() throws Exception {
         //given
-        Member member1 = new Member("leeho_@naver.com", "이호성", "1234");
+        MemberSignUpDto memberSignUpDto = new MemberSignUpDto("leeho_@naver.com", "이호성", "1234", "1234");
+        Member member1 = Member.create(memberSignUpDto);
         memberRepository.save(member1);
 
         Algorithm algorithm1 = new Algorithm("제목", "설명");

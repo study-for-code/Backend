@@ -1,56 +1,82 @@
 package goorm.spoco.domain.member.controller;
 
-import goorm.spoco.domain.member.controller.response.MemberCreateDTO;
+import goorm.spoco.domain.member.controller.request.MemberModifyDto;
+import goorm.spoco.domain.member.controller.request.MemberSignUpDto;
+import goorm.spoco.domain.member.controller.response.MemberResponseDto;
 import goorm.spoco.domain.member.service.MemberService;
-import jakarta.validation.Valid;
+import goorm.spoco.global.common.BaseResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/member")
+import java.util.List;
+
+@RestController
 @RequiredArgsConstructor
 public class MemberController {
-    // 생성자 주입
+
     private final MemberService memberService;
 
-
-    // 회원가입 페이지 출력 요청
-    @GetMapping("/signup")
-    public String signup(MemberCreateDTO memberCreateDTO) {
-        return "signup_form";
+    /**
+     * 회원 가입
+     * @RequestBody : memberRequestDto
+     */
+    @PostMapping("/members")
+    public BaseResponse signUp(@RequestBody MemberSignUpDto memberSignUpDto) {
+        return BaseResponse.builder()
+                .message("회원 가입 성공")
+                .results(List.of(memberService.create(memberSignUpDto)))
+                .build();
     }
 
-    @PostMapping("/signup")
-    public String signup(@Valid MemberCreateDTO memberCreateDTO, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "signup_form";
-        }
+    /**
+     * 회원 수정
+     * @PathVariable : memberId
+     * @RequestBody : memberModifyDto
+     */
+    @PatchMapping("/members/{memberId}")
+    public BaseResponse memberModify(
+            @PathVariable Long memberId,
+            @RequestBody MemberModifyDto memberModifyDto
+    ) {
+        return BaseResponse.builder()
+                .message("회원 수정 성공")
+                .results(List.of(memberService.modify(memberId, memberModifyDto)))
+                .build();
+    }
 
-        if (!memberCreateDTO.getPasswordA().equals(memberCreateDTO.getPasswordB())) {
-            bindingResult.rejectValue("password2", "passwordInCorrect",
-                    "2개의 패스워드가 일치하지 않습니다.");
-            return "signup_form";
-        }
+    /**
+     * 회원 삭제
+     * @PathVariable : memberId
+     */
+    @DeleteMapping("/members/{memberId}")
+    public BaseResponse memberDelete(@PathVariable Long memberId) {
+        return BaseResponse.builder()
+                .message("회원 삭제 성공")
+                .results(List.of(memberService.delete(memberId)))
+                .build();
+    }
 
-        // 중복 회원 가입 방지하기
-        try {
-            memberService.create(memberCreateDTO.getNickname(),
-                    memberCreateDTO.getEmail(), memberCreateDTO.getPasswordA());
-        } catch (DataIntegrityViolationException e) {
-            e.printStackTrace();
-            bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
-            return "signup_form";
-        }catch(Exception e) {
-            e.printStackTrace();
-            bindingResult.reject("signupFailed", e.getMessage());
-            return "signup_form";
-        }
-        return "redirect:/";
+    /**
+     * 회원 조회
+     * @PathVariable : memberId
+     */
+    @GetMapping("/members/{memberId}")
+    public BaseResponse getMember(@PathVariable Long memberId) {
+        return BaseResponse.builder()
+                .message("회원 정보 조회 성공")
+                .results(List.of(memberService.getMemberByMemberId(memberId)))
+                .build();
+    }
+
+    /**
+     * 회원 전체 조회
+     */
+    @GetMapping("/members")
+    public BaseResponse getMembers() {
+        return BaseResponse.<MemberResponseDto>builder()
+                .message("회원 전체 조회 성공")
+                .results(memberService.getAllMembers())
+                .build();
     }
 
     // -- 로그인 부분 -- //
