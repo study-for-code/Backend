@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  spoco:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spoco
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:h2:tcp://database:1521/~/spoco
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD:
+      SPRING_DATA_MONGODB_URI: mongodb://root:root@mongodb:27017/mongodb?authSource=admin
+    depends_on:
+      - database
+      - spoco-mongodb
+    networks:
+      - shared-network
+
+  database:
+    image: oscarfonts/h2
+    container_name: database
+    ports:
+      - "1521:1521"
+    environment:
+      H2_OPTIONS: -ifNotExists
+    networks:
+      - shared-network
+
+  spoco-mongodb:
+    image: mongo:latest
+    container_name: spoco-mongodb
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - ./docker-log/mongo-data:/
