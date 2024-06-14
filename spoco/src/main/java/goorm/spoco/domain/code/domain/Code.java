@@ -5,6 +5,7 @@ import goorm.spoco.domain.join.domain.Join;
 import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.review.domain.Review;
 import goorm.spoco.domain.study.domain.Study;
+import goorm.spoco.global.common.Status;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -27,6 +28,9 @@ public class Code {
     @Enumerated(EnumType.STRING)
     @Column(name = "CODE_STATUS")
     private CodeStatus codeStatus = CodeStatus.NONE;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "MEMBER_ID")
@@ -60,6 +64,12 @@ public class Code {
         code.addAlgorithm(algorithm);
         code.detail = detail;
         code.codeStatus = codeStatus;
+        code.status = Status.ACTIVE;
         return code;
+    }
+
+    //== 비즈니스 로직 ==//
+    public void delete() {
+        this.status = Status.DELETE;
     }
 }

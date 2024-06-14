@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
+    PASSWORD_NOT_MATCH(HttpStatus.UNAUTHORIZED, 401),
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, 404),
     DUPLICATE_OBJECT(HttpStatus.CONFLICT, 409),
     OK(HttpStatus.OK, 200);

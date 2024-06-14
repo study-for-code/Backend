@@ -3,7 +3,6 @@ package goorm.spoco.domain.category.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import goorm.spoco.domain.study.domain.Study;
 import goorm.spoco.domain.subscribe.domain.Subscribe;
-import goorm.spoco.global.status.Status;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -62,7 +61,7 @@ public class Category {
     public void delete() {
         this.categoryStatus = CategoryStatus.DELETE;
         for (Subscribe subscribe : subscribes) {
-            subscribe.setStatus(Status.DELETE);
+            subscribe.delete();
         }
     }
 }

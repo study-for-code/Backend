@@ -2,7 +2,11 @@ package goorm.spoco.domain.member.domain;
 
 import goorm.spoco.domain.code.domain.Code;
 import goorm.spoco.domain.join.domain.Join;
-import goorm.spoco.domain.member.controller.response.MemberDTO;
+import goorm.spoco.domain.member.controller.request.MemberModifyDto;
+import goorm.spoco.domain.member.controller.request.MemberSignUpDto;
+import goorm.spoco.global.common.Status;
+import goorm.spoco.global.error.exception.CustomException;
+import goorm.spoco.global.error.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,7 +23,7 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MEMBER_ID")
-    private Long Id;
+    private Long memberId;
 
     private String email;
 
@@ -30,38 +34,48 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Grade grade;
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Join> joins = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Code> codes = new ArrayList<>();
 
-    public static Member toMember(MemberDTO memberDTO) {
-        Member member = new Member();
-        member.email = memberDTO.getEmail();
-        member.nickname = memberDTO.getNickname();
-        member.password =  memberDTO.getPassword();
-        member.grade = Grade.MEMBER;
-        return member;
-    }
-
     //== 생성 메서드 ==//
-    // 해당 매개변수는 request 객체도 변경
-    public static Member member(Member signUpRequest) {
+    public static Member create(MemberSignUpDto memberSignUpDto) {
+//        confirmPassword(memberSignUpDto.password(), memberSignUpDto.confirmPassword());
+
         Member member = new Member();
-        member.email = signUpRequest.email;
-        member.nickname = signUpRequest.nickname;
-        // 암호화해서 DB에 저장
-        member.password = signUpRequest.password;
+        member.email = memberSignUpDto.email();
+        member.nickname = memberSignUpDto.nickname();
+        member.password = memberSignUpDto.password();
         member.grade = Grade.MEMBER;
+        member.status = Status.ACTIVE;
         return member;
     }
 
-    // 테스트 용 생성자
-    public Member(String email, String nickname, String password) {
-        this.email = email;
-        this.nickname = nickname;
-        this.password = password;
-        this.grade = Grade.MEMBER;
+//    private static void confirmPassword(String password, String confirmPassword) {
+//        if (!password.equals(confirmPassword)) {
+//            throw new CustomException(ErrorCode.PASSWORD_NOT_MATCH, "비밀번호가 서로 다릅니다.");
+//        }
+//    }
+
+    //== 비즈니스 메소드 ==//
+    public void updateInfo(MemberModifyDto memberModifyDto) {
+        this.nickname = memberModifyDto.nickname();
+        this.password = memberModifyDto.password();
     }
+
+    public void delete() {
+        this.status = Status.DELETE;
+        for (Join join : joins) {
+            join.delete();
+        }
+        for (Code code : codes) {
+            code.delete();
+        }
+    }
+
 }
