@@ -53,6 +53,7 @@ public class MemberController {
         return "redirect:/";
     }
 
+    // -- 로그인 부분 -- //
     @GetMapping("/login")
     public String login() {
         return "login_form";
