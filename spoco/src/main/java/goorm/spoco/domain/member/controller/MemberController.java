@@ -3,9 +3,13 @@ package goorm.spoco.domain.member.controller;
 import goorm.spoco.domain.member.controller.request.MemberModifyDto;
 import goorm.spoco.domain.member.controller.request.MemberSignUpDto;
 import goorm.spoco.domain.member.controller.response.MemberResponseDto;
+import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.member.service.MemberService;
-import goorm.spoco.global.common.BaseResponse;
+import goorm.spoco.global.common.auth.SpocoUserDetails;
+import goorm.spoco.global.common.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,14 +37,14 @@ public class MemberController {
      * @PathVariable : memberId
      * @RequestBody : memberModifyDto
      */
-    @PatchMapping("/members/{memberId}")
+    @PatchMapping("/members")
     public BaseResponse memberModify(
-            @PathVariable Long memberId,
-            @RequestBody MemberModifyDto memberModifyDto
+            @RequestBody MemberModifyDto memberModifyDto,
+            Authentication authentication
     ) {
         return BaseResponse.builder()
                 .message("회원 수정 성공")
-                .results(List.of(memberService.modify(memberId, memberModifyDto)))
+                .results(List.of(memberService.modify(memberModifyDto, authentication)))
                 .build();
     }
 
@@ -49,22 +53,27 @@ public class MemberController {
      * @PathVariable : memberId
      */
     @DeleteMapping("/members/{memberId}")
-    public BaseResponse memberDelete(@PathVariable Long memberId) {
+    public BaseResponse memberDelete(
+            @PathVariable Long memberId,
+            Authentication authentication
+    ) {
         return BaseResponse.builder()
                 .message("회원 삭제 성공")
-                .results(List.of(memberService.delete(memberId)))
+                .results(List.of(memberService.delete(memberId, authentication)))
                 .build();
     }
+
 
     /**
      * 회원 조회
      * @PathVariable : memberId
      */
     @GetMapping("/members/{memberId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public BaseResponse getMember(@PathVariable Long memberId) {
         return BaseResponse.builder()
                 .message("회원 정보 조회 성공")
-                .results(List.of(memberService.getMemberByMemberId(memberId)))
+                .results(List.of(memberService.getMember(memberId)))
                 .build();
     }
 
@@ -72,6 +81,7 @@ public class MemberController {
      * 회원 전체 조회
      */
     @GetMapping("/members")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public BaseResponse getMembers() {
         return BaseResponse.<MemberResponseDto>builder()
                 .message("회원 전체 조회 성공")
@@ -79,9 +89,5 @@ public class MemberController {
                 .build();
     }
 
-    // -- 로그인 부분 -- //
-    @GetMapping("/login")
-    public String login() {
-        return "login_form";
-    }
+
 }

@@ -1,7 +1,7 @@
 package goorm.spoco.domain.subscribe.repository;
 
 import goorm.spoco.domain.subscribe.domain.Subscribe;
-import goorm.spoco.global.common.Status;
+import goorm.spoco.global.common.response.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

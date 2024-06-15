@@ -1,10 +1,9 @@
 package goorm.spoco.domain.testcase.controller;
 
 import goorm.spoco.domain.testcase.domain.Testcase;
-import goorm.spoco.domain.testcase.domain.TestcaseStatus;
 import goorm.spoco.domain.testcase.dto.TestcaseDTO;
 import goorm.spoco.domain.testcase.service.TestcaseService;
-import goorm.spoco.global.common.BaseResponse;
+import goorm.spoco.global.common.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

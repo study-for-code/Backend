@@ -1,11 +1,9 @@
 package goorm.spoco.domain.code.domain;
 
 import goorm.spoco.domain.algorithm.domain.Algorithm;
-import goorm.spoco.domain.join.domain.Join;
 import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.review.domain.Review;
-import goorm.spoco.domain.study.domain.Study;
-import goorm.spoco.global.common.Status;
+import goorm.spoco.global.common.response.Status;
 import jakarta.persistence.*;
 import lombok.Data;
 

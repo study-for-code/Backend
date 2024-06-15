@@ -1,7 +1,7 @@
 package goorm.spoco.domain.message.domain;
 
 import goorm.spoco.domain.message.controller.request.MessageRequestDto;
-import goorm.spoco.global.common.Status;
+import goorm.spoco.global.common.response.Status;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -5,7 +5,7 @@ import goorm.spoco.domain.message.domain.Message;
 import goorm.spoco.domain.message.repository.MessageRepository;
 import goorm.spoco.domain.message.controller.request.CursorRequestDto;
 import goorm.spoco.domain.message.controller.response.MessageResponseDto;
-import goorm.spoco.global.common.Status;
+import goorm.spoco.global.common.response.Status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;

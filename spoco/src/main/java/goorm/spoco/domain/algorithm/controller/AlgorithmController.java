@@ -3,7 +3,7 @@ package goorm.spoco.domain.algorithm.controller;
 import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.algorithm.dto.AlgorithmDTO;
 import goorm.spoco.domain.algorithm.service.AlgorithmService;
-import goorm.spoco.global.common.BaseResponse;
+import goorm.spoco.global.common.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

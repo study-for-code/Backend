@@ -1,4 +1,4 @@
-package goorm.spoco.global.common;
+package goorm.spoco.global.common.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import goorm.spoco.global.error.exception.ErrorCode;
