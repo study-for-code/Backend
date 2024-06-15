@@ -3,7 +3,7 @@ package goorm.spoco.domain.subscribe.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.category.domain.Category;
-import goorm.spoco.global.common.Status;
+import goorm.spoco.global.common.response.Status;
 import goorm.spoco.global.error.exception.CustomException;
 import goorm.spoco.global.error.exception.ErrorCode;
 import jakarta.persistence.*;

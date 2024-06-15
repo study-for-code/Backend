@@ -2,15 +2,11 @@ package goorm.spoco.domain.join.domain;
 
 import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.study.domain.Study;
-import goorm.spoco.global.common.Status;
+import goorm.spoco.global.common.response.Status;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import static jakarta.persistence.FetchType.*;
 

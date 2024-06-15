@@ -9,8 +9,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 public record MemberSignUpDto(
-        @NotEmpty(message = "이메일은 필수항목입니다.")
         @Email
+        @NotEmpty(message = "이메일은 필수항목입니다.")
         String email,
 
         @Size(min = 3, max = 25)

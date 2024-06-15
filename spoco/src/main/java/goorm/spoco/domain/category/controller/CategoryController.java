@@ -2,7 +2,7 @@ package goorm.spoco.domain.category.controller;
 
 import goorm.spoco.domain.category.domain.Category;
 import goorm.spoco.domain.category.service.CategoryService;
-import goorm.spoco.global.common.BaseResponse;
+import goorm.spoco.global.common.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

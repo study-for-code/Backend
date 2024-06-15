@@ -1,6 +1,6 @@
 package goorm.spoco.domain.member.domain;
 
-public enum Grade {
+public enum Role {
 
     ADMIN, MEMBER
 }

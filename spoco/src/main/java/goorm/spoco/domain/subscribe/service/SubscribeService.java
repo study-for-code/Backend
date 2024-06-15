@@ -8,7 +8,7 @@ import goorm.spoco.domain.category.domain.CategoryStatus;
 import goorm.spoco.domain.category.repository.CategoryRepository;
 import goorm.spoco.domain.subscribe.domain.Subscribe;
 import goorm.spoco.domain.subscribe.repository.SubscribeRepository;
-import goorm.spoco.global.common.Status;
+import goorm.spoco.global.common.response.Status;
 import goorm.spoco.global.error.exception.CustomException;
 import goorm.spoco.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;

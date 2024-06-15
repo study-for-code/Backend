@@ -1,18 +1,14 @@
 package goorm.spoco.domain.review.service;
 
-import goorm.spoco.domain.algorithm.domain.Algorithm;
-import goorm.spoco.domain.algorithm.repository.AlgorithmRepository;
 import goorm.spoco.domain.code.domain.Code;
-import goorm.spoco.domain.code.domain.CodeStatus;
 import goorm.spoco.domain.code.repository.CodeRepository;
-import goorm.spoco.domain.member.domain.Grade;
+import goorm.spoco.domain.member.domain.Role;
 import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.member.repository.MemberRepository;
 import goorm.spoco.domain.review.controller.response.ReviewResponseDto;
 import goorm.spoco.domain.review.domain.Review;
 import goorm.spoco.domain.review.domain.ReviewStatus;
 import goorm.spoco.global.error.exception.CustomException;
-import goorm.spoco.domain.review.exception.ReviewErrorCode;
 import goorm.spoco.domain.review.repository.ReviewRepository;
 import goorm.spoco.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +49,7 @@ public class ReviewService {
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "해당 멤버(" + memberId + ")가 존재하지 않습니다."));
 
 
-        if (review.getCode().getMember().equals(member) || member.getGrade().equals(Grade.ADMIN)) {
+        if (review.getCode().getMember().equals(member) || member.getRole().equals(Role.ADMIN)) {
             review.delete();
         } else {
             throw new CustomException(ErrorCode.DUPLICATE_OBJECT, "코드 작성자가 아닙니다.");

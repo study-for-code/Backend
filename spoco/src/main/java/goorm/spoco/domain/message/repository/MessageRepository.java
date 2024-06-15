@@ -1,7 +1,7 @@
 package goorm.spoco.domain.message.repository;
 
 import goorm.spoco.domain.message.domain.Message;
-import goorm.spoco.global.common.Status;
+import goorm.spoco.global.common.response.Status;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

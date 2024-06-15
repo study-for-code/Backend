@@ -1,6 +1,6 @@
 package goorm.spoco.infra.compiler.controller;
 
-import goorm.spoco.global.common.BaseResponse;
+import goorm.spoco.global.common.response.BaseResponse;
 import goorm.spoco.infra.compiler.compiler.CppCompilerService;
 import goorm.spoco.infra.compiler.compiler.JavaCompilerService;
 import goorm.spoco.infra.compiler.compiler.PythonCompilerService;

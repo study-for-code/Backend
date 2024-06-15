@@ -1,11 +1,9 @@
 package goorm.spoco.domain.subscribe.controller;
 
-import goorm.spoco.domain.algorithm.domain.Algorithm;
-import goorm.spoco.domain.category.domain.Category;
 import goorm.spoco.domain.subscribe.controller.request.SubscribeRequest;
 import goorm.spoco.domain.subscribe.domain.Subscribe;
 import goorm.spoco.domain.subscribe.service.SubscribeService;
-import goorm.spoco.global.common.BaseResponse;
+import goorm.spoco.global.common.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

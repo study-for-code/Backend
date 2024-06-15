@@ -4,9 +4,7 @@ import goorm.spoco.domain.code.domain.Code;
 import goorm.spoco.domain.join.domain.Join;
 import goorm.spoco.domain.member.controller.request.MemberModifyDto;
 import goorm.spoco.domain.member.controller.request.MemberSignUpDto;
-import goorm.spoco.global.common.Status;
-import goorm.spoco.global.error.exception.CustomException;
-import goorm.spoco.global.error.exception.ErrorCode;
+import goorm.spoco.global.common.response.Status;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,7 +30,7 @@ public class Member {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private Grade grade;
+    private Role role;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -45,27 +43,28 @@ public class Member {
 
     //== 생성 메서드 ==//
     public static Member create(MemberSignUpDto memberSignUpDto) {
-//        confirmPassword(memberSignUpDto.password(), memberSignUpDto.confirmPassword());
-
         Member member = new Member();
         member.email = memberSignUpDto.email();
         member.nickname = memberSignUpDto.nickname();
         member.password = memberSignUpDto.password();
-        member.grade = Grade.MEMBER;
+        if (memberSignUpDto.nickname().equals("admin")) {
+            member.role = Role.ADMIN;
+        } else {
+            member.role = Role.MEMBER;
+        }
         member.status = Status.ACTIVE;
         return member;
     }
 
-//    private static void confirmPassword(String password, String confirmPassword) {
-//        if (!password.equals(confirmPassword)) {
-//            throw new CustomException(ErrorCode.PASSWORD_NOT_MATCH, "비밀번호가 서로 다릅니다.");
-//        }
-//    }
 
     //== 비즈니스 메소드 ==//
     public void updateInfo(MemberModifyDto memberModifyDto) {
         this.nickname = memberModifyDto.nickname();
         this.password = memberModifyDto.password();
+    }
+
+    public void encoder(String password) {
+        this.password = password;
     }
 
     public void delete() {
