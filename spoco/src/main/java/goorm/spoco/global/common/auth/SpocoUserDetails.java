@@ -40,6 +40,10 @@ public class SpocoUserDetails implements UserDetails {
         return member.getMemberId().toString();
     }
 
+    public Long getMemberId() {
+        return member.getMemberId();
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         // 계정이 만료되지 않았음을 나타내기 위해 true 반환
