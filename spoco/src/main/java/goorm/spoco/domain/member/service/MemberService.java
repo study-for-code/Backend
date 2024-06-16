@@ -38,17 +38,17 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberResponseDto modify(MemberModifyDto memberModifyDto, Authentication authentication) {
-        Member member = existsByAuthentication(authentication);
+    public MemberResponseDto modify(MemberModifyDto memberModifyDto, String memberId) {
+        Member member = existsByMemberId(Long.parseLong(memberId));
 
         member.updateInfo(memberModifyDto);
         return MemberResponseDto.from(member);
     }
 
     @Transactional
-    public MemberResponseDto delete(Long memberId, Authentication authentication) {
+    public MemberResponseDto delete(Long memberId, String currentId) {
 
-        Member current = existsByAuthentication(authentication);
+        Member current = existsByMemberId(Long.parseLong(currentId));
         Member resource = existsByMemberId(memberId);
 
         if (current.getMemberId().equals(resource.getMemberId())
@@ -67,11 +67,6 @@ public class MemberService {
     public List<MemberResponseDto> getAllMembers() {
         return memberRepository.findAll()
                 .stream().map(MemberResponseDto::from).collect(Collectors.toList());
-    }
-
-    private Member existsByAuthentication(Authentication authentication) {
-        SpocoUserDetails userDetails = (SpocoUserDetails) authentication.getDetails();
-        return existsByMemberId(Long.parseLong(userDetails.getUsername()));
     }
 
     private Member existsByMemberId(Long memberId) {

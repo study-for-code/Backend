@@ -10,6 +10,7 @@ import goorm.spoco.global.common.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,11 +41,11 @@ public class MemberController {
     @PatchMapping("/members")
     public BaseResponse memberModify(
             @RequestBody MemberModifyDto memberModifyDto,
-            Authentication authentication
+            @AuthenticationPrincipal SpocoUserDetails user
     ) {
         return BaseResponse.builder()
                 .message("회원 수정 성공")
-                .results(List.of(memberService.modify(memberModifyDto, authentication)))
+                .results(List.of(memberService.modify(memberModifyDto, user.getUsername())))
                 .build();
     }
 
@@ -55,11 +56,11 @@ public class MemberController {
     @DeleteMapping("/members/{memberId}")
     public BaseResponse memberDelete(
             @PathVariable Long memberId,
-            Authentication authentication
+            @AuthenticationPrincipal SpocoUserDetails user
     ) {
         return BaseResponse.builder()
                 .message("회원 삭제 성공")
-                .results(List.of(memberService.delete(memberId, authentication)))
+                .results(List.of(memberService.delete(memberId, user.getUsername())))
                 .build();
     }
 
@@ -69,7 +70,6 @@ public class MemberController {
      * @PathVariable : memberId
      */
     @GetMapping("/members/{memberId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public BaseResponse getMember(@PathVariable Long memberId) {
         return BaseResponse.builder()
                 .message("회원 정보 조회 성공")
