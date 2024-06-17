@@ -23,6 +23,8 @@ public class Algorithm {
 
     private String title;
 
+    private String restrictions;
+
     private Integer timeLimit;
 
     private Integer submit;
@@ -55,6 +57,7 @@ public class Algorithm {
         Algorithm algorithm = new Algorithm();
         algorithm.title = algorithmRequestDto.title();
         algorithm.explanation = algorithmRequestDto.explanation();
+        algorithm.restrictions = algorithmRequestDto.restrictions();
         algorithm.timeLimit = algorithmRequestDto.timeLimit();
         algorithm.submit = 0;
         algorithm.answer = 0;
