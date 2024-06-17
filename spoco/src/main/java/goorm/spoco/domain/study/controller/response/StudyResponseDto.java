@@ -17,7 +17,8 @@ public record StudyResponseDto (
         String title,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         Long ownerId,
-
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        String joinCode,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         List<CategoryResponseDto> categories,
 
@@ -30,6 +31,7 @@ public record StudyResponseDto (
                 study.getStudyId(),
                 study.getTitle(),
                 study.getOwner().getMemberId(),
+                study.getJoinCode(),
                 study.getCategories().stream().map(CategoryResponseDto::from).collect(Collectors.toList()),
                 study.getCreateAt()
         );

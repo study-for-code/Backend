@@ -1,13 +1,9 @@
 package goorm.spoco.domain.category.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import goorm.spoco.domain.algorithm.dto.AlgorithmDTO;
 import goorm.spoco.domain.category.domain.Category;
-import goorm.spoco.domain.member.controller.response.MemberResponseDto;
-import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.subscribe.controller.response.SubscribeResponseDto;
-import goorm.spoco.domain.subscribe.domain.Subscribe;
-import jakarta.validation.constraints.Positive;
+import goorm.spoco.global.common.response.Status;
 import lombok.Builder;
 
 import java.util.List;
@@ -26,7 +22,9 @@ public record CategoryResponseDto(
         return new CategoryResponseDto(
                 category.getCategoryId(),
                 category.getTitle(),
-                category.getSubscribes().stream().map(SubscribeResponseDto::from).collect(Collectors.toList())
+                category.getSubscribes().stream()
+                        .filter(subscribe -> subscribe.getStatus().equals(Status.ACTIVE))
+                        .map(SubscribeResponseDto::from).collect(Collectors.toList())
         );
     }
 }

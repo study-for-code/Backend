@@ -37,7 +37,7 @@ public class Study {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member owner;
 
