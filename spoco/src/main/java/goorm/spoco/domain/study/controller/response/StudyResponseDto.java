@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import goorm.spoco.domain.category.controller.response.CategoryResponseDto;
 import goorm.spoco.domain.member.controller.response.MemberResponseDto;
 import goorm.spoco.domain.study.domain.Study;
+import goorm.spoco.global.common.response.Status;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -22,8 +23,8 @@ public record StudyResponseDto (
         String joinCode,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         List<CategoryResponseDto> categories,
-//        @JsonInclude(JsonInclude.Include.NON_NULL)
-//        List<MemberResponseDto> members,
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        List<MemberResponseDto> members,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalDateTime createAt
 
@@ -35,6 +36,10 @@ public record StudyResponseDto (
                 study.getOwner().getMemberId(),
                 study.getJoinCode(),
                 study.getCategories().stream().map(CategoryResponseDto::from).collect(Collectors.toList()),
+                study.getJoins().stream()
+                        .filter(join -> join.getStatus().equals(Status.ACTIVE))
+                        .map(join -> MemberResponseDto.from(join.getMember()))
+                        .collect(Collectors.toList()),
                 study.getCreateAt()
         );
     }

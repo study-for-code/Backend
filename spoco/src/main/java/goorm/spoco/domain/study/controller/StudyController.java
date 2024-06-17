@@ -52,9 +52,9 @@ public class StudyController {
                 .build();
     }
 
-    @PostMapping("/studies/{joinCode}/join")
+    @PostMapping("/studies/join")
     public BaseResponse joinStudy(
-            @PathVariable String joinCode,
+            @RequestParam String joinCode,
             @AuthenticationPrincipal SpocoUserDetails user
     ) {
         studyService.joinStudy(joinCode, user.getMemberId());
