@@ -27,7 +27,7 @@ public class AuthService {
     private final PasswordEncoder encoder;
 
     @Transactional
-    public String login(MemberSignInDto memberSignInDto) {
+    public MemberResponseDto login(MemberSignInDto memberSignInDto) {
         Member member = memberRepository.findByEmail(memberSignInDto.email())
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "존재하지 않는 회원입니다."));
 
@@ -36,7 +36,8 @@ public class AuthService {
         }
 
         MemberInfoDto memberInfoDto = MemberInfoDto.from(member);
-        return jwtUtil.createAccessToken(memberInfoDto);
+        String token = jwtUtil.createAccessToken(memberInfoDto);
+        return MemberResponseDto.signIn(member, token);
     }
 
     public MemberResponseDto getMyInfo(Authentication authentication) {

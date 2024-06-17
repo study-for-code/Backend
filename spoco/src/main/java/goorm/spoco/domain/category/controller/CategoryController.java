@@ -1,5 +1,7 @@
 package goorm.spoco.domain.category.controller;
 
+import goorm.spoco.domain.category.controller.request.CategoryRequestDto;
+import goorm.spoco.domain.category.controller.response.CategoryResponseDto;
 import goorm.spoco.domain.category.domain.Category;
 import goorm.spoco.domain.category.service.CategoryService;
 import goorm.spoco.global.common.response.BaseResponse;
@@ -11,54 +13,60 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/category")
 public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @PostMapping("/{studyId}/create")
+    @PostMapping("/categories/{studyId}")
     public BaseResponse createCategory(
-            @RequestBody Category category,
+            @RequestBody CategoryRequestDto categoryRequestDto,
             @PathVariable Long studyId
     ) {
-        categoryService.save(category, studyId);
         return BaseResponse.builder()
                 .httpStatus(HttpStatus.CREATED)
                 .message("카테고리 생성")
-                .results(List.of(category))
+                .results(List.of(categoryService.save(categoryRequestDto, studyId)))
                 .build();
     }
 
-    @DeleteMapping("{id}/delete")
+    @DeleteMapping("/categories/{categoryId}")
     public BaseResponse deleteCategory(
-            @PathVariable Long id
+            @PathVariable Long categoryId
     ) {
-        categoryService.delete(id);
+        categoryService.delete(categoryId);
         return BaseResponse.builder()
                 .message("카테고리 삭제")
                 .build();
     }
 
-    @PatchMapping("/{id}/update")
+    @PatchMapping("/categories/{categoryId}")
     public BaseResponse updateCategory(
-            @PathVariable Long id,
-            @RequestBody Category category
+            @PathVariable Long categoryId,
+            @RequestBody CategoryRequestDto categoryRequestDto
     ) {
-        categoryService.update(id, category.getTitle());
         return BaseResponse.builder()
                 .message("카테고리 이름 업데이트")
-                .results(List.of(category))
+                .results(List.of(categoryService.update(categoryId, categoryRequestDto)))
                 .build();
     }
 
-    @GetMapping("/{id}")
-    public BaseResponse get(
-            @PathVariable Long id
+    @GetMapping("/categories/{categoryId}")
+    public BaseResponse getByCategoryId(
+            @PathVariable Long categoryId
     ) {
-        Category category = categoryService.find(id);
         return BaseResponse.builder()
-                .message("카테고리 반환")
-                .results(List.of(category))
+                .message("단일 카테고리 반환 성공")
+                .results(List.of(categoryService.getByCategoryId(categoryId)))
+                .build();
+    }
+
+    @GetMapping("/categories/{studyId}/study")
+    public BaseResponse getByStudyId(
+            @PathVariable Long studyId
+    ) {
+        return BaseResponse.<CategoryResponseDto>builder()
+                .message("스터디에 해당하는 카테고리 반환 성공")
+                .results(categoryService.getAllByStudyId(studyId))
                 .build();
     }
 }

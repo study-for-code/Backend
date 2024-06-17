@@ -2,10 +2,13 @@ package goorm.spoco.domain.study.controller.response;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import goorm.spoco.domain.category.controller.response.CategoryResponseDto;
 import goorm.spoco.domain.study.domain.Study;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public record StudyResponseDto (
         @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -14,6 +17,10 @@ public record StudyResponseDto (
         String title,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         Long ownerId,
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        List<CategoryResponseDto> categories,
+
         @JsonInclude(JsonInclude.Include.NON_NULL)
         LocalDateTime createAt
 
@@ -23,6 +30,7 @@ public record StudyResponseDto (
                 study.getStudyId(),
                 study.getTitle(),
                 study.getOwner().getMemberId(),
+                study.getCategories().stream().map(CategoryResponseDto::from).collect(Collectors.toList()),
                 study.getCreateAt()
         );
     }

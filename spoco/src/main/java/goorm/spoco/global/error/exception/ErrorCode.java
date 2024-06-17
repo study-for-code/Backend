@@ -11,6 +11,7 @@ public enum ErrorCode {
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, 404),
     DUPLICATE_OBJECT(HttpStatus.CONFLICT, 409),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, 402),
+    LIMIT_CATEGORY(HttpStatus.BAD_REQUEST, 400),
     OK(HttpStatus.OK, 200);
 
 

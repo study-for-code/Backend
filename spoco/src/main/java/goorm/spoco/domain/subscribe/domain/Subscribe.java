@@ -25,12 +25,10 @@ public class Subscribe {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "CATEGORY_ID")
-    @JsonIgnore
     private Category category;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "ALGORITHM_ID")
-    @JsonIgnore
     private Algorithm algorithm;
 
     @Enumerated(EnumType.STRING)

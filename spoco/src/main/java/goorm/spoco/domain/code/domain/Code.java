@@ -5,14 +5,14 @@ import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.review.domain.Review;
 import goorm.spoco.global.common.response.Status;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.*;
 
-@Data
+@Getter
 @Entity
 public class Code {
 
@@ -23,9 +23,13 @@ public class Code {
 
     private String detail;
 
+    private String solveTime;
+
+    private String language;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "CODE_STATUS")
-    private CodeStatus codeStatus = CodeStatus.NONE;
+    private AnswerType answerType;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -56,12 +60,19 @@ public class Code {
     }
 
     //== 생성 메서드 ==//
-    public static Code code(Member member, Algorithm algorithm, String detail, CodeStatus codeStatus) {
+    public static Code code(Member member, Algorithm algorithm, String detail, AnswerType answerType) {
         Code code = new Code();
         code.addMember(member);
         code.addAlgorithm(algorithm);
         code.detail = detail;
-        code.codeStatus = codeStatus;
+        code.answerType = answerType;
+
+        // 제출 수 증가
+        algorithm.increaseSubmit();
+        if (answerType == AnswerType.PASS) {
+            algorithm.increaseAnswer();
+        }
+
         code.status = Status.ACTIVE;
         return code;
     }
@@ -70,4 +81,6 @@ public class Code {
     public void delete() {
         this.status = Status.DELETE;
     }
+
+
 }

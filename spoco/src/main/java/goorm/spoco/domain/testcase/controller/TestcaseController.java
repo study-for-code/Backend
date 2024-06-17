@@ -1,5 +1,7 @@
 package goorm.spoco.domain.testcase.controller;
 
+import goorm.spoco.domain.testcase.controller.request.TestcaseRequestDto;
+import goorm.spoco.domain.testcase.controller.response.TestcaseResponseDto;
 import goorm.spoco.domain.testcase.domain.Testcase;
 import goorm.spoco.domain.testcase.dto.TestcaseDTO;
 import goorm.spoco.domain.testcase.service.TestcaseService;
@@ -12,43 +14,47 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/testcases")
 public class TestcaseController {
 
     private final TestcaseService testcaseService;
 
-    @PostMapping("/{algorithmId}/create")
+    @PostMapping("/testcases/{algorithmId}")
     public BaseResponse createTestcase(
-            @RequestBody Testcase testcase,
+            @RequestBody TestcaseRequestDto testcaseRequestDto,
             @PathVariable Long algorithmId
     ) {
-        testcaseService.save(testcase, algorithmId);
-        TestcaseDTO testcaseDTO = new TestcaseDTO(testcase.getInput(), testcase.getOutput());
         return BaseResponse.builder()
-                .httpStatus(HttpStatus.CREATED)
                 .message("테스트 케이스 생성")
-                .results(List.of(testcaseDTO))
+                .results(List.of(testcaseService.create(testcaseRequestDto, algorithmId)))
                 .build();
     }
 
-    @DeleteMapping("/{id}/delete")
-    public BaseResponse deleteTestcase(@PathVariable Long id) {
-
-        testcaseService.delete(id);
+    @DeleteMapping("/testcases/{testcaseId}")
+    public BaseResponse deleteTestcase(@PathVariable Long testcaseId) {
+        testcaseService.delete(testcaseId);
         return BaseResponse.builder()
                 .message("테스트 케이스 삭제")
                 .build();
     }
 
-    @PatchMapping("/{id}/update")
+    @PatchMapping("/testcases/{testcaseId}")
     public BaseResponse updateTestcase(
-            @PathVariable("id") Long testcaseId,
-            @RequestBody TestcaseDTO testcaseDTO
+            @PathVariable Long testcaseId,
+            @RequestBody TestcaseRequestDto testcaseRequestDto
     ) {
-        testcaseService.update(testcaseId, testcaseDTO);
         return BaseResponse.builder()
                 .message("테스트케이스 업데이트")
-                .results(List.of(testcaseDTO))
+                .results(List.of(testcaseService.update(testcaseId, testcaseRequestDto)))
+                .build();
+    }
+
+    @GetMapping("/testcases/{algorithmId}")
+    public BaseResponse getAllByAlgorithmId(
+            @PathVariable Long algorithmId
+    ) {
+        return BaseResponse.<TestcaseResponseDto>builder()
+                .message("해당 알고리즘 테스트케이스 반환")
+                .results(testcaseService.getAllByAlgorithmId(algorithmId))
                 .build();
     }
 }

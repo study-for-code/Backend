@@ -2,6 +2,7 @@ package goorm.spoco.domain.auth.controller;
 
 import goorm.spoco.domain.auth.service.AuthService;
 import goorm.spoco.domain.auth.controller.request.MemberSignInDto;
+import goorm.spoco.domain.member.controller.response.MemberResponseDto;
 import goorm.spoco.global.common.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
