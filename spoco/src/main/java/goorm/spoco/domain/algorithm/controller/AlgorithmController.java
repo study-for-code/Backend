@@ -44,7 +44,7 @@ public class AlgorithmController {
                 .build();
     }
 
-    @GetMapping("/algorithms/")
+    @GetMapping("/algorithms")
     public BaseResponse getAllAlgorithm() {
         return BaseResponse.<AlgorithmResponseDto>builder()
                 .message("알고리즘 전체 조회")
