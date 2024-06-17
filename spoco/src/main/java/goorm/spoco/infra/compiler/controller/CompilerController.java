@@ -4,7 +4,7 @@ import goorm.spoco.global.common.response.BaseResponse;
 import goorm.spoco.infra.compiler.compiler.CppCompilerService;
 import goorm.spoco.infra.compiler.compiler.JavaCompilerService;
 import goorm.spoco.infra.compiler.compiler.PythonCompilerService;
-import goorm.spoco.infra.compiler.controller.request.CompileRequest;
+import goorm.spoco.infra.compiler.controller.request.CompileRequestDto;
 import goorm.spoco.infra.compiler.dto.Result;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,27 +30,23 @@ public class CompilerController {
 //        return ResponseEntity.status(HttpStatus.OK).body(response);
 //    }
 
-    @PostMapping("/api/compiler")
-    public BaseResponse compileCode(@RequestBody CompileRequest request) {
-        List<Result> results_ = compile(request.getLanguage(), request.getCode());
-//        CompileResponse response = new CompileResponse(results_);
+    @PostMapping("/compiler")
+    public BaseResponse compileCode(@RequestBody CompileRequestDto request) {
+        List<Result> results = null;
+        if (request.getLanguage().equals("java")) {
+            results = javaCompiler.runCode(request.getAlgorithmId(), request.getCode());
+        } else if (request.getLanguage().equals("c++")) {
+            results = cppCompiler.runCode(request.getAlgorithmId(), request.getCode());
+        } else if (request.getLanguage().equals("python")) {
+            results = pythonCompiler.runCode(request.getAlgorithmId(), request.getCode());
+        }
+
+
+
+
         return BaseResponse.<Result>builder()
                 .message("컴파일 실행")
-                .results(results_)
+                .results(results)
                 .build();
     }
-
-    private List<Result> compile(String language, String code) {
-        List<Result> results = null;
-        if (language.equals("java")) {
-            results = javaCompiler.runCode(code);
-        } else if (language.equals("c++")) {
-            results = cppCompiler.runCode(code);
-        } else if (language.equals("python")) {
-            // python 은 인터프리터라 다른 방식으로 개발할 예정
-            results = pythonCompiler.runCode(code);
-        }
-        return results;
-    }
-
 }

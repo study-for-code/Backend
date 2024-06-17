@@ -12,6 +12,7 @@ import goorm.spoco.domain.study.controller.response.StudyResponseDto;
 import goorm.spoco.domain.study.domain.Study;
 import goorm.spoco.domain.study.repository.StudyRepository;
 import goorm.spoco.global.common.auth.SpocoUserDetails;
+import goorm.spoco.global.common.response.Status;
 import goorm.spoco.global.error.exception.CustomException;
 import goorm.spoco.global.error.exception.ErrorCode;
 import goorm.spoco.global.util.RandomCodeGenerator;
@@ -39,7 +40,7 @@ public class StudyService {
         Member owner = existsByMemberId(memberId);
 
         String joinCode = RandomCodeGenerator.generateCode();
-        while (!studyRepository.findByJoinCode(joinCode).isPresent()) {
+        while (studyRepository.findByJoinCode(joinCode).isPresent()) {
             joinCode = RandomCodeGenerator.generateCode();
         }
 
@@ -116,7 +117,7 @@ public class StudyService {
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "존재하지 않는 회원입니다."));
     }
     private Study existByStudyId(Long studyId) {
-        return studyRepository.findByStudyId(studyId)
+        return studyRepository.findByStudyIdAndStatus(studyId, Status.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "해당 스터디가 존재하지 않습니다."));
     }
 }

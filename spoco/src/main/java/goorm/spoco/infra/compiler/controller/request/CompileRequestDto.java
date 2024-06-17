@@ -1,9 +1,10 @@
 package goorm.spoco.infra.compiler.controller.request;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
-public class CompileRequest {
+@Getter
+public class CompileRequestDto {
+    private Long algorithmId;
     private String language;
     private String code;
 }

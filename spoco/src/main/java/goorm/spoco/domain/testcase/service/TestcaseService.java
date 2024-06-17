@@ -2,50 +2,57 @@ package goorm.spoco.domain.testcase.service;
 
 import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.algorithm.repository.AlgorithmRepository;
+import goorm.spoco.domain.testcase.controller.request.TestcaseRequestDto;
+import goorm.spoco.domain.testcase.controller.response.TestcaseResponseDto;
 import goorm.spoco.domain.testcase.domain.Testcase;
-import goorm.spoco.domain.testcase.domain.TestcaseStatus;
-import goorm.spoco.domain.testcase.dto.TestcaseDTO;
 import goorm.spoco.domain.testcase.repository.TestcaseRepository;
+import goorm.spoco.global.common.response.Status;
 import goorm.spoco.global.error.exception.CustomException;
 import goorm.spoco.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
-//@Transactional(readOnly = true)
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class TestcaseService {
 
     private final TestcaseRepository testcaseRepository;
     private final AlgorithmRepository algorithmRepository;
 
-    public Testcase save(Testcase testcase, Long algorithmId) {
-        Algorithm algorithm = algorithmRepository.findById(algorithmId)
-                .orElseThrow(() -> new CustomException(ErrorCode.DUPLICATE_OBJECT,algorithmId + "에 해당하는 알고리즘이 존재하지 않습니다."));
+    @Transactional
+    public TestcaseResponseDto create(TestcaseRequestDto testcaseRequestDto, Long algorithmId) {
+        Algorithm algorithm = algorithmRepository.findByAlgorithmIdAndStatus(algorithmId, Status.ACTIVE)
+                .orElseThrow(() -> new CustomException(ErrorCode.DUPLICATE_OBJECT, algorithmId + "에 해당하는 알고리즘이 존재하지 않습니다."));
 
-        testcase.addAlgorithm(algorithm); // 알고리즘에 testcase 추가
-        return testcaseRepository.save(testcase); // testcase DB에 testcase 추가
+        Testcase testcase = testcaseRepository.save(Testcase.create(testcaseRequestDto, algorithm));
+        return TestcaseResponseDto.from(testcase);
     }
 
+    @Transactional
     public void delete(Long testcaseId) {
-        Testcase testcase = testcaseRepository.findByTestcaseIdAndTestcaseStatus(testcaseId, TestcaseStatus.ACTIVE)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND,testcaseId + "에 해당하는 테스트케이스가 존재하지 않습니다."));
-        // == sofe delete 로 변경해야함. ==//
-        // testcaseRepository.delete(testcase);
+        Testcase testcase = testcaseRepository.findByTestcaseIdAndStatus(testcaseId, Status.ACTIVE)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, testcaseId + "에 해당하는 테스트케이스가 존재하지 않습니다."));
 
         testcase.delete();
-        testcaseRepository.save(testcase);
     }
 
-    public Testcase update(Long testcaseId, TestcaseDTO testcaseDTO) {
-        Testcase testcase = testcaseRepository.findByTestcaseIdAndTestcaseStatus(testcaseId, TestcaseStatus.ACTIVE)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, (testcaseId + "에 해당하는 테스트케이스가 존재하지 않습니다.")));
+    @Transactional
+    public TestcaseResponseDto update(Long testcaseId, TestcaseRequestDto testcaseRequestDto) {
+        Testcase testcase = testcaseRepository.findByTestcaseIdAndStatus(testcaseId, Status.ACTIVE)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, testcaseId + "에 해당하는 테스트케이스가 존재하지 않습니다."));
 
-        testcase.setInput(testcaseDTO.getInput());
-        testcase.setOutput(testcaseDTO.getOutput());
+        testcase.updateInfo(testcaseRequestDto);
 
-        return testcaseRepository.save(testcase);
+        return TestcaseResponseDto.from(testcase);
+    }
+
+    public List<TestcaseResponseDto> getAllByAlgorithmId(Long algorithmId) {
+        return testcaseRepository.findAllByAlgorithm_AlgorithmIdAndStatus(algorithmId, Status.ACTIVE)
+                .stream().map(TestcaseResponseDto::from).collect(Collectors.toList());
     }
 }

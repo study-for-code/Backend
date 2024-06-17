@@ -1,6 +1,8 @@
 package goorm.spoco.infra.compiler.compiler;
 
+import goorm.spoco.domain.testcase.controller.response.TestcaseResponseDto;
 import goorm.spoco.domain.testcase.repository.TestcaseRepository;
+import goorm.spoco.domain.testcase.service.TestcaseService;
 import goorm.spoco.infra.compiler.dto.Result;
 import goorm.spoco.infra.compiler.dto.ResultStatus;
 import lombok.RequiredArgsConstructor;
@@ -17,16 +19,15 @@ import java.util.List;
 @Slf4j
 public class CppCompilerService {
 
-    private final TestcaseRepository testcaseRepository;
+    private final TestcaseService testcaseService;
 
-    public List<Result> runCode(String code) {
+    public List<Result> runCode(Long algorithmId, String code) {
         List<Result> results = new ArrayList<>();
-        List<String> inputs = testcaseRepository.findAllInput();
-        List<String> outputs = testcaseRepository.findAllOutput();
+        List<TestcaseResponseDto> testcase = testcaseService.getAllByAlgorithmId(algorithmId);
 
-        for (int i = 0; i < inputs.size(); i++) {
-            String testcase = inputs.get(i);
-            String expectedOutput = outputs.get(i);
+        for (int i = 0; i < testcase.size(); i++) {
+            String input = testcase.get(i).input();
+            String expectedOutput = testcase.get(i).output();
             StringBuilder output = new StringBuilder();
 
             try {
@@ -61,7 +62,7 @@ public class CppCompilerService {
 
                 // 테스트 케이스 입력 전달
                 try (BufferedWriter processInput = new BufferedWriter(new OutputStreamWriter(runProcess.getOutputStream()))) {
-                    String[] testcaseInputs = testcase.split("\\s+");
+                    String[] testcaseInputs = input.split("\\s+");
                     for (String inputLine : testcaseInputs) {
                         processInput.write(inputLine);
                         processInput.newLine();
@@ -91,7 +92,7 @@ public class CppCompilerService {
 
             Result result = Result.builder()
                     .testNum(i + 1)
-                    .input(testcase)
+                    .input(input)
                     .expectedResult(expectedOutput)
                     .actualResult(output.toString())
                     .status(isPass ? ResultStatus.PASS : ResultStatus.FAIL)
