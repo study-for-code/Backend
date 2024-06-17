@@ -104,7 +104,6 @@ public class StudyService {
         return StudyResponseDto.from(study);
     }
 
-
     public List<StudyResponseDto> getJoinStudyList(Long memberId) {
         Member member = existsByMemberId(memberId);
 
