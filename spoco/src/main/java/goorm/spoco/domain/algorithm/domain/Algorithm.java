@@ -29,8 +29,6 @@ public class Algorithm {
 
     private Integer answer;
 
-    private Integer correctPersons;
-
     private Double answerRate;
 
     private String explanation;
@@ -97,12 +95,13 @@ public class Algorithm {
         this.answer += 1;
     }
 
-    public void getAnswerRate() {
+    public Double getAnswerRate() {
         if (!this.submit.equals(0)) {
             this.answerRate = (double) this.answer / this.submit;
         } else {
             this.answerRate = 0.0;
         }
+        return this.answerRate;
     }
 
 }
