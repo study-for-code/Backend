@@ -22,7 +22,7 @@ public class Message {
     private String nickname;
     private String content;
     private LocalDateTime createAt;
-    private MessageStatus messageStatus;
+    private Status status;
 
     public static Message create(MessageDto messageDto) {
         Message message = new Message();
@@ -39,7 +39,7 @@ public class Message {
             message.createAt = messageDto.timestamp();
         }
 
-        message.messageStatus = MessageStatus.ACTIVE;
+        message.status = Status.ACTIVE;
         return message;
     }
 }
