@@ -3,8 +3,6 @@ package goorm.spoco.domain.algorithm.service;
 import goorm.spoco.domain.algorithm.controller.request.AlgorithmRequestDto;
 import goorm.spoco.domain.algorithm.controller.response.AlgorithmResponseDto;
 import goorm.spoco.domain.algorithm.domain.Algorithm;
-import goorm.spoco.domain.algorithm.domain.AlgorithmStatus;
-import goorm.spoco.domain.algorithm.dto.AlgorithmDTO;
 import goorm.spoco.domain.algorithm.repository.AlgorithmRepository;
 import goorm.spoco.global.common.response.Status;
 import goorm.spoco.global.error.exception.CustomException;
@@ -50,9 +48,9 @@ public class AlgorithmService {
         return AlgorithmResponseDto.detail(algorithm);
     }
 
-    private Algorithm existByAlgorithmId(Long algorithmId) {
-        return algorithmRepository.findByAlgorithmIdAndStatus(algorithmId, Status.ACTIVE)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, algorithmId + "에 해당하는 알고리즘이 존재하지 않습니다."));
+    public List<AlgorithmResponseDto> getAll() {
+        return algorithmRepository.findAll()
+                .stream().map(AlgorithmResponseDto::detail).collect(Collectors.toList());
     }
 
     //== 숫자로 면 문제번호로 검색. 제목이면 제목% 검색 이후 없다면, %제목% 으로 검색 ==//
@@ -75,6 +73,11 @@ public class AlgorithmService {
 
     public List<Algorithm> searchAlgorithmsByNum(String num) {
         return algorithmRepository.findAlgorithmsByTitleLikeAndStatus(num + "%", Status.ACTIVE);
+    }
+
+    private Algorithm existByAlgorithmId(Long algorithmId) {
+        return algorithmRepository.findByAlgorithmIdAndStatus(algorithmId, Status.ACTIVE)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, algorithmId + "에 해당하는 알고리즘이 존재하지 않습니다."));
     }
 
 }

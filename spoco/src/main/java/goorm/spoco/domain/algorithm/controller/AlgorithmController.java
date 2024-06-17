@@ -2,13 +2,10 @@ package goorm.spoco.domain.algorithm.controller;
 
 import goorm.spoco.domain.algorithm.controller.request.AlgorithmRequestDto;
 import goorm.spoco.domain.algorithm.controller.response.AlgorithmResponseDto;
-import goorm.spoco.domain.algorithm.domain.Algorithm;
-import goorm.spoco.domain.algorithm.dto.AlgorithmDTO;
 import goorm.spoco.domain.algorithm.service.AlgorithmService;
 import goorm.spoco.global.common.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +41,14 @@ public class AlgorithmController {
         return BaseResponse.builder()
                 .message("알고리즘 업데이트")
                 .results(List.of(algorithmService.update(algorithmId, algorithmRequestDto)))
+                .build();
+    }
+
+    @GetMapping("/algorithms/")
+    public BaseResponse getAllAlgorithm() {
+        return BaseResponse.<AlgorithmResponseDto>builder()
+                .message("알고리즘 전체 조회")
+                .results(algorithmService.getAll())
                 .build();
     }
 

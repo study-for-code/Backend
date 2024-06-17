@@ -1,7 +1,6 @@
 package goorm.spoco.domain.algorithm.repository;
 
 import goorm.spoco.domain.algorithm.domain.Algorithm;
-import goorm.spoco.domain.algorithm.domain.AlgorithmStatus;
 import goorm.spoco.global.common.response.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

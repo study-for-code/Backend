@@ -1,10 +1,8 @@
 package goorm.spoco.domain.subscribe.service;
 
 import goorm.spoco.domain.algorithm.domain.Algorithm;
-import goorm.spoco.domain.algorithm.domain.AlgorithmStatus;
 import goorm.spoco.domain.algorithm.repository.AlgorithmRepository;
 import goorm.spoco.domain.category.domain.Category;
-import goorm.spoco.domain.category.domain.CategoryStatus;
 import goorm.spoco.domain.category.repository.CategoryRepository;
 import goorm.spoco.domain.subscribe.controller.response.SubscribeResponseDto;
 import goorm.spoco.domain.subscribe.domain.Subscribe;
