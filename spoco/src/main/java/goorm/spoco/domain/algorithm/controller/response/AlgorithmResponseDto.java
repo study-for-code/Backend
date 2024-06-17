@@ -12,6 +12,9 @@ public record AlgorithmResponseDto(
         String content,
 
         @JsonInclude(JsonInclude.Include.NON_NULL)
+        String restrictions,
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         Integer submit,
 
         @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -27,6 +30,7 @@ public record AlgorithmResponseDto(
                 null,
                 null,
                 null,
+                null,
                 null
         );
     }
@@ -36,6 +40,7 @@ public record AlgorithmResponseDto(
                 algorithm.getAlgorithmId(),
                 algorithm.getTitle(),
                 algorithm.getExplanation(),
+                algorithm.getRestrictions(),
                 algorithm.getSubmit(),
                 algorithm.getAnswer(),
                 algorithm.getAnswerRate()
