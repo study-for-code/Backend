@@ -1,9 +1,11 @@
 package goorm.spoco.domain.algorithm.controller.request;
 
+import java.util.List;
+
 public record AlgorithmRequestDto(
         String title,
         String explanation,
-        String restrictions,
+        List<String> restrictions,
         Integer timeLimit
 ) {
 }

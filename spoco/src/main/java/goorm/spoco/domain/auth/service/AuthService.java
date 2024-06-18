@@ -6,6 +6,7 @@ import goorm.spoco.domain.member.controller.response.MemberResponseDto;
 import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.member.repository.MemberRepository;
 import goorm.spoco.global.common.auth.SpocoUserDetails;
+import goorm.spoco.global.common.response.Status;
 import goorm.spoco.global.error.exception.CustomException;
 import goorm.spoco.global.error.exception.ErrorCode;
 import goorm.spoco.global.util.JwtUtil;
@@ -43,7 +44,7 @@ public class AuthService {
     public MemberResponseDto getMyInfo(Authentication authentication) {
         SpocoUserDetails userDetails = (SpocoUserDetails) authentication.getDetails();
         log.info("details = {}", authentication);
-        Member member = memberRepository.findByMemberId(Long.parseLong(userDetails.getUsername()))
+        Member member = memberRepository.findByMemberIdAndStatus(Long.parseLong(userDetails.getUsername()), Status.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "존재하지 않는 회원입니다."));
         return MemberResponseDto.from(member);
     }

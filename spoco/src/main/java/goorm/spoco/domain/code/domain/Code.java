@@ -28,7 +28,6 @@ public class Code {
     private String language;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "CODE_STATUS")
     private AnswerType answerType;
 
     @Enumerated(EnumType.STRING)

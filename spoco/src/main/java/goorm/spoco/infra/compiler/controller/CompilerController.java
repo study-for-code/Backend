@@ -41,9 +41,6 @@ public class CompilerController {
             results = pythonCompiler.runCode(request.getAlgorithmId(), request.getCode());
         }
 
-
-
-
         return BaseResponse.<Result>builder()
                 .message("컴파일 실행")
                 .results(results)

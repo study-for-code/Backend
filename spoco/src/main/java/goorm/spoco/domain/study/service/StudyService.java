@@ -112,7 +112,7 @@ public class StudyService {
     }
 
     private Member existsByMemberId(Long memberId) {
-        return memberRepository.findByMemberId(memberId)
+        return memberRepository.findByMemberIdAndStatus(memberId, Status.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "존재하지 않는 회원입니다."));
     }
     private Study existByStudyId(Long studyId) {

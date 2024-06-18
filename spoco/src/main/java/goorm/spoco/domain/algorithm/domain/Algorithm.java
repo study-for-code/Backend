@@ -6,6 +6,7 @@ import goorm.spoco.domain.code.domain.Code;
 import goorm.spoco.domain.subscribe.domain.Subscribe;
 import goorm.spoco.domain.testcase.domain.Testcase;
 import goorm.spoco.global.common.response.Status;
+import goorm.spoco.global.util.StringListConverter;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -23,7 +24,8 @@ public class Algorithm {
 
     private String title;
 
-    private String restrictions;
+    @Convert(converter = StringListConverter.class)
+    private List<String> restrictions;
 
     private Integer timeLimit;
 
@@ -68,8 +70,10 @@ public class Algorithm {
 
     //== 비즈니스 로직 ==//
     public void updateInfo(AlgorithmRequestDto algorithmRequestDto) {
-        this.title = algorithmRequestDto.title();
+        this.title = this.algorithmId + "-" + algorithmRequestDto.title();
         this.explanation = algorithmRequestDto.explanation();
+        this.restrictions = algorithmRequestDto.restrictions();
+        this.timeLimit = algorithmRequestDto.timeLimit();
     }
 
     public void updateTitle(Algorithm algorithm) {

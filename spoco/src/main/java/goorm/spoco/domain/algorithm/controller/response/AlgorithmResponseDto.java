@@ -3,6 +3,8 @@ package goorm.spoco.domain.algorithm.controller.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import goorm.spoco.domain.algorithm.domain.Algorithm;
 
+import java.util.List;
+
 public record AlgorithmResponseDto(
         @JsonInclude(JsonInclude.Include.NON_NULL)
         Long algorithmId,
@@ -10,16 +12,12 @@ public record AlgorithmResponseDto(
         String algorithmTitle,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String content,
-
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        String restrictions,
-
+        List<String> restrictions,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         Integer submit,
-
         @JsonInclude(JsonInclude.Include.NON_NULL)
         Integer answer,
-
         @JsonInclude(JsonInclude.Include.NON_NULL)
         Double answerRate
 ) {
