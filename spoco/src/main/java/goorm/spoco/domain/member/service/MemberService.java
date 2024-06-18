@@ -7,6 +7,7 @@ import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.member.domain.Role;
 import goorm.spoco.domain.member.repository.MemberRepository;
 import goorm.spoco.global.common.auth.SpocoUserDetails;
+import goorm.spoco.global.common.response.Status;
 import goorm.spoco.global.error.exception.CustomException;
 import goorm.spoco.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +71,7 @@ public class MemberService {
     }
 
     private Member existsByMemberId(Long memberId) {
-        return memberRepository.findByMemberId(memberId)
+        return memberRepository.findByMemberIdAndStatus(memberId, Status.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "존재하지 않는 회원입니다."));
     }
 
