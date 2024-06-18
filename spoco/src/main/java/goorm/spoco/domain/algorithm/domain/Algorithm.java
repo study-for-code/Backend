@@ -27,6 +27,8 @@ public class Algorithm {
     @Convert(converter = StringListConverter.class)
     private List<String> restrictions;
 
+    private Integer memorySize;
+
     private Integer timeLimit;
 
     private Integer submit;
@@ -60,6 +62,7 @@ public class Algorithm {
         algorithm.title = algorithmRequestDto.title();
         algorithm.explanation = algorithmRequestDto.explanation();
         algorithm.restrictions = algorithmRequestDto.restrictions();
+        algorithm.memorySize = algorithmRequestDto.memorySize();
         algorithm.timeLimit = algorithmRequestDto.timeLimit();
         algorithm.submit = 0;
         algorithm.answer = 0;
@@ -73,6 +76,7 @@ public class Algorithm {
         this.title = this.algorithmId + "-" + algorithmRequestDto.title();
         this.explanation = algorithmRequestDto.explanation();
         this.restrictions = algorithmRequestDto.restrictions();
+        this.memorySize = algorithmRequestDto.memorySize();
         this.timeLimit = algorithmRequestDto.timeLimit();
     }
 

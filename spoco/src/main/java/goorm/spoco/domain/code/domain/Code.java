@@ -68,9 +68,9 @@ public class Code {
         code.answerType = resultStatus;
 
         // 제출 수 증가
-        algorithm.increaseSubmit();
+        code.getAlgorithm().increaseSubmit();
         if (code.answerType.equals(ResultStatus.PASS)) {
-            algorithm.increaseAnswer();
+            code.getAlgorithm().increaseAnswer();
         }
 
         code.status = Status.ACTIVE;
@@ -85,6 +85,11 @@ public class Code {
     public void update(String detail, ResultStatus resultStatus) {
         this.detail = detail;
         this.answerType = resultStatus;
+
+        this.getAlgorithm().increaseSubmit();
+        if (this.answerType.equals(ResultStatus.PASS)) {
+            this.getAlgorithm().increaseAnswer();
+        }
     }
 
 

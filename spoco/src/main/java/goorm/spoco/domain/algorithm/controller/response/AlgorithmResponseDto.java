@@ -15,6 +15,8 @@ public record AlgorithmResponseDto(
         @JsonInclude(JsonInclude.Include.NON_NULL)
         List<String> restrictions,
         @JsonInclude(JsonInclude.Include.NON_NULL)
+        Integer memorySize,
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         Integer timeLimit,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         Integer submit,
@@ -32,6 +34,7 @@ public record AlgorithmResponseDto(
                 null,
                 null,
                 null,
+                null,
                 null
         );
     }
@@ -42,6 +45,7 @@ public record AlgorithmResponseDto(
                 algorithm.getTitle(),
                 algorithm.getExplanation(),
                 algorithm.getRestrictions(),
+                algorithm.getMemorySize(),
                 algorithm.getTimeLimit(),
                 algorithm.getSubmit(),
                 algorithm.getAnswer(),

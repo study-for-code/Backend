@@ -55,13 +55,13 @@ public class CodeService {
 
         List<ResultDto> results = null;
         if (codeRequestDto.language().equals("java")) {
-            results = javaCompilerService.runCode(testcase, codeRequestDto.detail());
+            results = javaCompilerService.runCode(algorithm, testcase, codeRequestDto.detail());
 
         } else if (codeRequestDto.language().equals("c++")) {
-            results = cppCompilerService.runCode(testcase, codeRequestDto.detail());
+            results = cppCompilerService.runCode(algorithm, testcase, codeRequestDto.detail());
 
         } else if (codeRequestDto.language().equals("python")) {
-            results = pythonCompilerService.runCode(testcase, codeRequestDto.detail());
+            results = pythonCompilerService.runCode(algorithm, testcase, codeRequestDto.detail());
         }
 
         ResultStatus finalStatus = results.stream().map(ResultDto::status)
