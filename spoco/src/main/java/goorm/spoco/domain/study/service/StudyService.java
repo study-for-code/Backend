@@ -108,7 +108,7 @@ public class StudyService {
         Member member = existsByMemberId(memberId);
 
         return studyRepository.findAllByJoinStudy(member.getMemberId())
-                        .stream().map(StudyResponseDto::from).collect(Collectors.toList());
+                        .stream().map(StudyResponseDto::all).collect(Collectors.toList());
     }
 
     private Member existsByMemberId(Long memberId) {

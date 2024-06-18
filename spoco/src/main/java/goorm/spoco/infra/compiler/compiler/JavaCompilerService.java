@@ -1,10 +1,8 @@
 package goorm.spoco.infra.compiler.compiler;
 
 import goorm.spoco.domain.testcase.controller.response.TestcaseResponseDto;
-import goorm.spoco.domain.testcase.repository.TestcaseRepository;
 import goorm.spoco.domain.testcase.service.TestcaseService;
-import goorm.spoco.global.common.response.Status;
-import goorm.spoco.infra.compiler.dto.Result;
+import goorm.spoco.infra.compiler.dto.ResultDto;
 import goorm.spoco.infra.compiler.dto.ResultStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +21,8 @@ public class JavaCompilerService {
 
     private final TestcaseService testcaseService;
 
-    public List<Result> runCode(Long algorithmId, String code) {
-        List<Result> results = new ArrayList<>();
-        List<TestcaseResponseDto> testcase = testcaseService.getAllByAlgorithmId(algorithmId);
+    public List<ResultDto> runCode(List<TestcaseResponseDto> testcase, String code) {
+        List<ResultDto> results = new ArrayList<>();
 
         for (int i = 0; i < testcase.size(); i++) {
             String input = testcase.get(i).input();
@@ -52,7 +49,8 @@ public class JavaCompilerService {
                     while ((errorLine = errorReader.readLine()) != null) {
                         output.append(errorLine).append("\n");
                     }
-                    results.add(new Result(output.toString(), ResultStatus.ERROR));
+//                    results.add(new ResultDto(output.toString(), ResultStatus.ERROR));
+                    results.add(ResultDto.builder().actualResult(output.toString()).status(ResultStatus.ERROR).build());
                     javaFile.delete();
                     return results;
                 }
@@ -94,14 +92,16 @@ public class JavaCompilerService {
                     runProcess.destroy();
                     future.cancel(true);  // Future 강제 취소
                     result = "⌛️[ 시간 초과 ]\n";
-                    results.add(new Result(result, ResultStatus.FAIL));
+//                    results.add(new Result(result, ResultStatus.FAIL));
+                    results.add(ResultDto.builder().actualResult(result).status(ResultStatus.FAIL).build());
                     break; // 타임아웃 발생 시 전체 테스트 중단
                 } catch (ExecutionException e) {
                     if (e.getCause() instanceof OutOfMemoryError) {
                         runProcess.destroy();
                         future.cancel(true);  // Future 강제 취소
                         result = "🚫[ 메모리 초과 ]\n";
-                        results.add(new Result(result, ResultStatus.FAIL));
+//                        results.add(new Result(result, ResultStatus.FAIL));
+                        results.add(ResultDto.builder().actualResult(result).status(ResultStatus.FAIL).build());
                         break; // 메모리 오버플로우 발생 시 전체 테스트 중단
                     } else {
                         runProcess.destroy();
@@ -125,7 +125,7 @@ public class JavaCompilerService {
             // 양식의 사소한 오차가 있을 때에도 FAIL 로 할 것이라면 주석친 코드를 사용하면 됌.
             boolean isPass = compareOutput(output.toString(), expectedOutput);
 
-            Result result = Result.builder()
+            ResultDto result = ResultDto.builder()
                     .testNum(i + 1)
                     .input(input)
                     .expectedResult(expectedOutput)
