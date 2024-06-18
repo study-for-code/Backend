@@ -12,6 +12,9 @@ public enum ErrorCode {
     DUPLICATE_OBJECT(HttpStatus.CONFLICT, 409),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, 402),
     LIMIT_CATEGORY(HttpStatus.BAD_REQUEST, 400),
+    GENERAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500),
+    COMPILE_ERROR(HttpStatus.BAD_REQUEST, 400),
+
     OK(HttpStatus.OK, 200);
 
 

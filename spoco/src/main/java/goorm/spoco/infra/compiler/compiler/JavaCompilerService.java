@@ -3,6 +3,8 @@ package goorm.spoco.infra.compiler.compiler;
 import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.testcase.controller.response.TestcaseResponseDto;
 import goorm.spoco.domain.testcase.service.TestcaseService;
+import goorm.spoco.global.error.exception.CustomException;
+import goorm.spoco.global.error.exception.ErrorCode;
 import goorm.spoco.infra.compiler.dto.ResultDto;
 import goorm.spoco.infra.compiler.dto.ResultStatus;
 import lombok.RequiredArgsConstructor;
@@ -28,37 +30,50 @@ public class JavaCompilerService {
             String expectedOutput = testcase.get(i).output();
             StringBuilder output = new StringBuilder();
 
+            // 임시 파일 생성
+            File javaFile = new File("Main.java");
+            try (FileWriter writer = new FileWriter(javaFile)) {
+                writer.write(code);
+            } catch (IOException e) {
+                javaFile.delete();
+                results.add(ResultDto.builder()
+                        .testNum(i+1)
+                        .errorMessage("파일 쓰기 에러 : " + e.getMessage())
+                        .status(ResultStatus.ERROR).build());
+                continue;
+            }
+
+            // 컴파일. javaCompiler 경로 맞게 설정해야함.
+            String javaCompiler = "javac";
+            ProcessBuilder compilePb = new ProcessBuilder(javaCompiler, javaFile.getAbsolutePath());
             try {
-
-                // 임시 파일 생성
-                File javaFile = new File("Main.java");
-                try (FileWriter writer = new FileWriter(javaFile)) {
-                    writer.write(code);
-                }
-
-                // 컴파일. javaCompiler 경로 맞게 설정해야함.
-                String javaCompiler = "javac";
-                ProcessBuilder compilePb = new ProcessBuilder(javaCompiler, javaFile.getAbsolutePath());
                 Process compileProcess = compilePb.start();
                 compileProcess.waitFor();
 
-                // 컴파일에러 발생 시 에러 및 종료
                 if (compileProcess.exitValue() != 0) {
-                    BufferedReader errorReader = new BufferedReader(new InputStreamReader(compileProcess.getErrorStream()));
-                    String errorLine;
-                    while ((errorLine = errorReader.readLine()) != null) {
-                        output.append(errorLine).append("\n");
-                    }
-//                    results.add(new ResultDto(output.toString(), ResultStatus.ERROR));
-                    results.add(ResultDto.builder().actualResult(output.toString()).status(ResultStatus.ERROR).build());
-                    javaFile.delete();
-                    return results;
-                }
 
-                // 자바 파일 실행
-                String javaRunner = "java";
-                ProcessBuilder javaProcess = new ProcessBuilder(javaRunner, "-Xmx64m", "Main");
-                javaProcess.directory(javaFile.getParentFile()); // 클래스 파일이 있는 디렉토리 설정
+                    try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(compileProcess.getErrorStream()))) {
+                        String errorLine;
+
+                        while ((errorLine = errorReader.readLine()) != null) {
+                            output.append(errorLine).append("\n");
+                        }
+                    }
+                }
+            } catch (IOException | InterruptedException e) {
+                javaFile.delete();
+                results.add(ResultDto.builder()
+                        .testNum(i+1)
+                        .errorMessage("컴파일 에러 : " + e.getMessage())
+                        .status(ResultStatus.ERROR).build());
+                continue;
+            }
+
+            // 자바 파일 실행
+            String javaRunner = "java";
+            ProcessBuilder javaProcess = new ProcessBuilder(javaRunner, "-Xmx64m", "Main");
+            javaProcess.directory(javaFile.getParentFile()); // 클래스 파일이 있는 디렉토리 설정
+            try {
                 Process runProcess = javaProcess.start();
 
                 // 테스트 케이스 입력 전달
@@ -84,34 +99,59 @@ public class JavaCompilerService {
                     return result.toString();
                 });
 
+                long startTime = System.nanoTime();
+                long startMemory = getUsedMemory();
+
                 // 타임아웃 설정 (default 는 테스트케이스마다 2초)
                 String result;
                 try {
-                    result = future.get(2, TimeUnit.SECONDS);
+                    result = future.get(algorithm.getTimeLimit(), TimeUnit.SECONDS);
+
                 } catch (TimeoutException e) {
                     runProcess.destroy();
                     future.cancel(true);  // Future 강제 취소
-                    result = "⌛️[ 시간 초과 ]\n";
-//                    results.add(new Result(result, ResultStatus.FAIL));
-                    results.add(ResultDto.builder().actualResult(result).status(ResultStatus.FAIL).build());
-                    break; // 타임아웃 발생 시 전체 테스트 중단
+                    results.add(ResultDto.builder()
+                            .testNum(i+1)
+                            .errorMessage("시간 초과 : : " + e.getMessage())
+                            .status(ResultStatus.FAIL).build());
+                   continue;
+
                 } catch (ExecutionException e) {
                     if (e.getCause() instanceof OutOfMemoryError) {
                         runProcess.destroy();
                         future.cancel(true);  // Future 강제 취소
-                        result = "🚫[ 메모리 초과 ]\n";
-//                        results.add(new Result(result, ResultStatus.FAIL));
-                        results.add(ResultDto.builder().actualResult(result).status(ResultStatus.FAIL).build());
-                        break; // 메모리 오버플로우 발생 시 전체 테스트 중단
+                        results.add(ResultDto.builder()
+                                .testNum(i+1)
+                                .errorMessage("메모리 초과 : : " + e.getMessage())
+                                .status(ResultStatus.FAIL).build());
+                        continue;
+
                     } else {
                         runProcess.destroy();
-                        result = "🚨[ 오류 : " + e.getMessage() + " ]\n";
-                        output.append(result); // 다른 예외 발생 시에도 결과 추가
+                        results.add(ResultDto.builder()
+                                .testNum(i+1)
+                                .errorMessage("오류 : : " + e.getMessage())
+                                .status(ResultStatus.FAIL).build());
+                        continue;
                     }
+
                 } finally {
+                    long endTime = System.nanoTime();
+                    long endMemory = getUsedMemory();
+
                     executor.shutdown();
                     javaFile.delete();
                     new File(javaFile.getAbsolutePath().replace(".java", ".class")).delete();
+
+                    long executionTime = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
+                    long usedMemory = endMemory - startMemory;
+
+                    if (usedMemory > algorithm.getMemorySize() * 1024 * 1204) {
+                        results.add(ResultDto.builder()
+                                .testNum(i+1)
+                                .errorMessage("메모리 초과")
+                                .status(ResultStatus.FAIL).build());
+                    }
                 }
 
                 output.append(result);
@@ -136,6 +176,11 @@ public class JavaCompilerService {
             results.add(result);
         }
         return results;
+    }
+
+    private long getUsedMemory() {
+        Runtime runtime = Runtime.getRuntime();
+        return runtime.totalMemory() - runtime.freeMemory();
     }
 
     private boolean compareOutput(String actual, String expected) {
