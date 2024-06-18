@@ -1,9 +1,8 @@
 package goorm.spoco.infra.compiler.compiler;
 
 import goorm.spoco.domain.testcase.controller.response.TestcaseResponseDto;
-import goorm.spoco.domain.testcase.repository.TestcaseRepository;
 import goorm.spoco.domain.testcase.service.TestcaseService;
-import goorm.spoco.infra.compiler.dto.Result;
+import goorm.spoco.infra.compiler.dto.ResultDto;
 import goorm.spoco.infra.compiler.dto.ResultStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +18,8 @@ public class PythonCompilerService {
 
     private final TestcaseService testcaseService;
 
-    public List<Result> runCode(Long algorithmId, String code) {
-        List<Result> results = new ArrayList<>();
-        List<TestcaseResponseDto> testcase = testcaseService.getAllByAlgorithmId(algorithmId);
+    public List<ResultDto> runCode(List<TestcaseResponseDto> testcase, String code) {
+        List<ResultDto> results = new ArrayList<>();
 
         for (int i = 0; i < testcase.size(); i++) {
             String input = testcase.get(i).input();
@@ -64,7 +62,8 @@ public class PythonCompilerService {
                     errorOutput.append("ERROR: ").append(line).append("\n");
                 }
                 if (errorOutput.length() > 0) {
-                    results.add(new Result(errorOutput.toString(), ResultStatus.ERROR));
+//                    results.add(new Result(errorOutput.toString(), ResultStatus.ERROR));
+                    results.add(ResultDto.builder().actualResult(output.toString()).status(ResultStatus.ERROR).build());
                     pythonFile.delete();
                     return results;
                 }
@@ -82,7 +81,7 @@ public class PythonCompilerService {
 //            boolean isPass = output.toString().trim().equals(expectedOutput.trim());
             boolean isPass = compareOutput(output.toString(), expectedOutput);
 
-            Result result = Result.builder()
+            ResultDto result = ResultDto.builder()
                     .testNum(i + 1)
                     .input(input)
                     .expectedResult(expectedOutput)

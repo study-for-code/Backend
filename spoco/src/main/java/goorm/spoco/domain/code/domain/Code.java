@@ -4,6 +4,7 @@ import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.review.domain.Review;
 import goorm.spoco.global.common.response.Status;
+import goorm.spoco.infra.compiler.dto.ResultStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -28,7 +29,7 @@ public class Code {
     private String language;
 
     @Enumerated(EnumType.STRING)
-    private AnswerType answerType;
+    private ResultStatus answerType;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -59,16 +60,16 @@ public class Code {
     }
 
     //== 생성 메서드 ==//
-    public static Code code(Member member, Algorithm algorithm, String detail, AnswerType answerType) {
+    public static Code create(Member member, Algorithm algorithm, String detail, ResultStatus resultStatus) {
         Code code = new Code();
         code.addMember(member);
         code.addAlgorithm(algorithm);
         code.detail = detail;
-        code.answerType = answerType;
+        code.answerType = resultStatus;
 
         // 제출 수 증가
         algorithm.increaseSubmit();
-        if (answerType == AnswerType.PASS) {
+        if (code.answerType.equals(ResultStatus.PASS)) {
             algorithm.increaseAnswer();
         }
 
@@ -79,6 +80,11 @@ public class Code {
     //== 비즈니스 로직 ==//
     public void delete() {
         this.status = Status.DELETE;
+    }
+
+    public void update(String detail, ResultStatus resultStatus) {
+        this.detail = detail;
+        this.answerType = resultStatus;
     }
 
 

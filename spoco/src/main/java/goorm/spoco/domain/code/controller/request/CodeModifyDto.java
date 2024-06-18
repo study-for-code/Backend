@@ -1,6 +1,6 @@
 package goorm.spoco.domain.code.controller.request;
 
-public record CodeRequestDto(
+public record CodeModifyDto(
         Long codeId,
         String language,
         String detail

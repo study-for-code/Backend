@@ -38,6 +38,7 @@ public class Testcase {
         testCase.input = testcaseRequestDto.input();
         testCase.output = testcaseRequestDto.output();
         testCase.addAlgorithm(algorithm);
+        testCase.status = Status.ACTIVE;
         return testCase;
     }
 

@@ -43,4 +43,16 @@ public record StudyResponseDto (
                 study.getCreateAt()
         );
     }
+
+    public static StudyResponseDto all(Study study) {
+        return new StudyResponseDto(
+                study.getStudyId(),
+                study.getTitle(),
+                study.getOwner().getMemberId(),
+                study.getJoinCode(),
+                study.getCategories().stream().map(CategoryResponseDto::from).collect(Collectors.toList()),
+                null,
+                study.getCreateAt()
+        );
+    }
 }
