@@ -1,5 +1,6 @@
 package goorm.spoco.infra.compiler.compiler;
 
+import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.testcase.controller.response.TestcaseResponseDto;
 import goorm.spoco.domain.testcase.service.TestcaseService;
 import goorm.spoco.infra.compiler.dto.ResultDto;
@@ -19,9 +20,7 @@ import java.util.concurrent.*;
 @Slf4j
 public class JavaCompilerService {
 
-    private final TestcaseService testcaseService;
-
-    public List<ResultDto> runCode(List<TestcaseResponseDto> testcase, String code) {
+    public List<ResultDto> runCode(Algorithm algorithm, List<TestcaseResponseDto> testcase, String code) {
         List<ResultDto> results = new ArrayList<>();
 
         for (int i = 0; i < testcase.size(); i++) {
@@ -30,6 +29,7 @@ public class JavaCompilerService {
             StringBuilder output = new StringBuilder();
 
             try {
+
                 // 임시 파일 생성
                 File javaFile = new File("Main.java");
                 try (FileWriter writer = new FileWriter(javaFile)) {

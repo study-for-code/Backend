@@ -6,6 +6,7 @@ public record AlgorithmRequestDto(
         String title,
         String explanation,
         List<String> restrictions,
+        Integer memorySize,
         Integer timeLimit
 ) {
 }

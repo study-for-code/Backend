@@ -1,5 +1,6 @@
 package goorm.spoco.infra.compiler.compiler;
 
+import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.testcase.controller.response.TestcaseResponseDto;
 import goorm.spoco.domain.testcase.service.TestcaseService;
 import goorm.spoco.infra.compiler.dto.ResultDto;
@@ -18,9 +19,7 @@ import java.util.List;
 @Slf4j
 public class CppCompilerService {
 
-    private final TestcaseService testcaseService;
-
-    public List<ResultDto> runCode(List<TestcaseResponseDto> testcase, String code) {
+    public List<ResultDto> runCode(Algorithm algorithm, List<TestcaseResponseDto> testcase, String code) {
 
         List<ResultDto> results = new ArrayList<>();
 
