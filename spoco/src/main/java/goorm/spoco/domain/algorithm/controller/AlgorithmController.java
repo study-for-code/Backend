@@ -1,6 +1,7 @@
 package goorm.spoco.domain.algorithm.controller;
 
 import goorm.spoco.domain.algorithm.controller.request.AlgorithmRequestDto;
+import goorm.spoco.domain.algorithm.controller.request.AlgorithmSearchDto;
 import goorm.spoco.domain.algorithm.controller.response.AlgorithmResponseDto;
 import goorm.spoco.domain.algorithm.service.AlgorithmService;
 import goorm.spoco.global.common.response.BaseResponse;
@@ -45,10 +46,10 @@ public class AlgorithmController {
     }
 
     @GetMapping("/algorithms")
-    public BaseResponse getAllAlgorithm() {
+    public BaseResponse getAllAlgorithm(@RequestBody AlgorithmSearchDto algorithmSearchDto) {
         return BaseResponse.<AlgorithmResponseDto>builder()
                 .message("알고리즘 전체 조회")
-                .results(algorithmService.getAll())
+                .results(algorithmService.getAllAlgorithmWithSubmitMember(algorithmSearchDto))
                 .build();
     }
 

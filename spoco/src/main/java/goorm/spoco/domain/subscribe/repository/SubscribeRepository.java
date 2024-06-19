@@ -15,4 +15,6 @@ public interface SubscribeRepository extends JpaRepository<Subscribe, Long> {
     Optional<Subscribe> findBySubscribeIdAndStatus(Long subscribeId, Status status);
 
     List<Subscribe> findAllByCategory_CategoryIdAndStatus(Long categoryId, Status status);
+
+    List<Subscribe> findAllByCategory_Study_StudyIdAndStatus(Long studyId, Status status);
 }
