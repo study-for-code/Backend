@@ -5,6 +5,7 @@ import goorm.spoco.domain.algorithm.repository.AlgorithmRepository;
 import goorm.spoco.domain.category.domain.Category;
 import goorm.spoco.domain.category.repository.CategoryRepository;
 import goorm.spoco.domain.subscribe.controller.response.SubscribeResponseDto;
+import goorm.spoco.domain.subscribe.controller.response.SubscribeSubmitMemberDto;
 import goorm.spoco.domain.subscribe.domain.Subscribe;
 import goorm.spoco.domain.subscribe.repository.SubscribeRepository;
 import goorm.spoco.global.common.response.Status;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class SubscribeService {
 
@@ -26,6 +27,7 @@ public class SubscribeService {
     private final CategoryRepository categoryRepository;
     private final AlgorithmRepository algorithmRepository;
 
+    @Transactional
     public void subscribe(Long categoryId, Long algorithmId) {
         Category category = categoryRepository.findByCategoryIdAndStatus(categoryId, Status.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, categoryId + "에 해당하는 카테고리가 존재하지 않습니다."));
@@ -36,6 +38,7 @@ public class SubscribeService {
         subscribeRepository.save(Subscribe.subscribe(category, algorithm));
     }
 
+    @Transactional
     public void cancel(Long subscribeId) {
         Subscribe subscribe = subscribeRepository.findBySubscribeIdAndStatus(subscribeId, Status.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, subscribeId + "에 해당하는 구독이 존재하지 않습니다."));

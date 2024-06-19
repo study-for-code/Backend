@@ -15,26 +15,36 @@ import java.util.List;
 public class CodeController {
 
     private final CodeService codeService;
-    @PostMapping("/submit/{algorithmId}")
+    @PutMapping("/submit")
     public BaseResponse submit(
-            @PathVariable Long algorithmId,
             @RequestBody CodeRequestDto codeRequestDto,
             @AuthenticationPrincipal SpocoUserDetails user
     ) {
         return BaseResponse.builder()
                 .message("제출 성공")
-                .results(List.of(codeService.submit(codeRequestDto, algorithmId, user.getMemberId())))
+                .results(List.of(codeService.submit(codeRequestDto, user.getMemberId())))
                 .build();
     }
 
+//    @PatchMapping("/codes/{codeId}")
+//    public BaseResponse modify(
+//            @PathVariable Long codeId,
+//            @RequestBody CodeRequestDto codeRequestDto
+//    ) {
+//        return BaseResponse.builder()
+//                .message("제출 성공")
+//                .results(List.of(codeService.modify(codeRequestDto, codeId)))
+//                .build();
+//    }
+
     @GetMapping("/codes/{algorithmId}")
-    public BaseResponse getMyCodeByAlgorithmId(
+    public BaseResponse getMyCode(
             @PathVariable Long algorithmId,
             @AuthenticationPrincipal SpocoUserDetails user
     ) {
         return BaseResponse.builder()
                 .message("내 코드 가져오기")
-                .results(List.of(codeService.getCodeByAlgorithmId(algorithmId, user.getMemberId())))
+                .results(List.of(codeService.getCode(algorithmId, user.getMemberId())))
                 .build();
     }
 }
