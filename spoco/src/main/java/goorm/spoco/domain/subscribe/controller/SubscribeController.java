@@ -1,6 +1,7 @@
 package goorm.spoco.domain.subscribe.controller;
 
 import goorm.spoco.domain.subscribe.controller.request.SubscribeRequestDto;
+import goorm.spoco.domain.subscribe.controller.request.SubscribeSubmitDto;
 import goorm.spoco.domain.subscribe.controller.response.SubscribeResponseDto;
 import goorm.spoco.domain.subscribe.service.SubscribeService;
 import goorm.spoco.global.common.auth.SpocoUserDetails;
@@ -8,6 +9,8 @@ import goorm.spoco.global.common.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,6 +35,14 @@ public class SubscribeController {
         subscribeService.cancel(subscribeId);
         return BaseResponse.builder()
                 .message("구독 취소 실행")
+                .build();
+    }
+
+    @GetMapping("/subscribes/submit")
+    public BaseResponse getSubmitMembers(@RequestBody SubscribeSubmitDto subscribeSubmitDto) {
+        return BaseResponse.builder()
+                .message("제출자 반환")
+                .results(List.of(subscribeService.getSubmitMembers(subscribeSubmitDto)))
                 .build();
     }
 

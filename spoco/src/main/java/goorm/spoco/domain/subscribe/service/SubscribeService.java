@@ -4,8 +4,15 @@ import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.algorithm.repository.AlgorithmRepository;
 import goorm.spoco.domain.category.domain.Category;
 import goorm.spoco.domain.category.repository.CategoryRepository;
+import goorm.spoco.domain.code.domain.Code;
+import goorm.spoco.domain.join.domain.Join;
+import goorm.spoco.domain.join.repository.JoinRepository;
+import goorm.spoco.domain.member.controller.response.MemberResponseDto;
+import goorm.spoco.domain.member.repository.MemberRepository;
+import goorm.spoco.domain.study.domain.Study;
+import goorm.spoco.domain.study.repository.StudyRepository;
+import goorm.spoco.domain.subscribe.controller.request.SubscribeSubmitDto;
 import goorm.spoco.domain.subscribe.controller.response.SubscribeResponseDto;
-import goorm.spoco.domain.subscribe.controller.response.SubscribeSubmitMemberDto;
 import goorm.spoco.domain.subscribe.domain.Subscribe;
 import goorm.spoco.domain.subscribe.repository.SubscribeRepository;
 import goorm.spoco.global.common.response.Status;
@@ -26,6 +33,7 @@ public class SubscribeService {
     private final SubscribeRepository subscribeRepository;
     private final CategoryRepository categoryRepository;
     private final AlgorithmRepository algorithmRepository;
+    private final JoinRepository joinRepository;
 
     @Transactional
     public void subscribe(Long categoryId, Long algorithmId) {
@@ -48,7 +56,20 @@ public class SubscribeService {
 
     public List<SubscribeResponseDto> getByCategoryId(Long categoryId) {
         return subscribeRepository.findAllByCategory_CategoryIdAndStatus(categoryId, Status.ACTIVE)
-                .stream().map(SubscribeResponseDto::from).collect(Collectors.toList());
+                .stream().map(SubscribeResponseDto::simple).collect(Collectors.toList());
+    }
+
+    public SubscribeResponseDto getSubmitMembers(SubscribeSubmitDto subscribeSubmitDto) {
+        Subscribe subscribe = subscribeRepository.findBySubscribeIdAndStatus(subscribeSubmitDto.subscribeId(), Status.ACTIVE)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "구독되어 있지 않습니다."));
+
+        List<MemberResponseDto> members = joinRepository.findAllByStudy_StudyIdAndStatus(subscribeSubmitDto.studyId(), Status.ACTIVE).stream()
+                .filter(join -> join.getMember().getCodes().stream()
+                        .anyMatch(code -> code.getAlgorithm().getAlgorithmId().equals(subscribe.getAlgorithm().getAlgorithmId())))
+                .map(join -> MemberResponseDto.from(join.getMember()))
+                .collect(Collectors.toList());
+
+        return SubscribeResponseDto.from(subscribe, members);
     }
 
 }

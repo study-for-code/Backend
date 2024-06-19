@@ -57,20 +57,8 @@ public class CodeService {
         return CodeResponseDto.submit(code, results);
     }
 
-//    @Transactional
-//    public CodeResponseDto modify(CodeRequestDto codeRequestDto, Long codeId) {
-//        // 알고리즘 조회
-//        Algorithm algorithm = existAlgorithmByAlgorithmId(codeRequestDto.algorithmId());
-//
-//        ResultListDto results = compilerService.submitCode(codeRequestDto, algorithm);
-//
-//
-//        return CodeResponseDto.submit(code, results);
-//    }
-
 
     public CodeResponseDto getCode(Long algorithmId, Long memberId) {
-
         Code code = codeRepository.findByAlgorithm_AlgorithmIdAndMember_MemberIdAndStatus(algorithmId, memberId, Status.ACTIVE)
                     .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "해당 코드를 찾을 수 없습니다."));
 
