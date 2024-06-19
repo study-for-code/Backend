@@ -4,6 +4,7 @@ import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.code.controller.request.CodeRequestDto;
 import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.review.domain.Review;
+import goorm.spoco.domain.subscribe.domain.Subscribe;
 import goorm.spoco.global.common.response.Status;
 import goorm.spoco.infra.compiler.dto.ResultDto;
 import goorm.spoco.infra.compiler.dto.ResultStatus;

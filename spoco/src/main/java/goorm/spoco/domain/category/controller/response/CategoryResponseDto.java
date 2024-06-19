@@ -24,7 +24,7 @@ public record CategoryResponseDto(
                 category.getTitle(),
                 category.getSubscribes().stream()
                         .filter(subscribe -> subscribe.getStatus().equals(Status.ACTIVE))
-                        .map(SubscribeResponseDto::from).collect(Collectors.toList())
+                        .map(SubscribeResponseDto::simple).collect(Collectors.toList())
         );
     }
 }
