@@ -5,6 +5,7 @@ import goorm.spoco.domain.algorithm.repository.AlgorithmRepository;
 import goorm.spoco.domain.category.domain.Category;
 import goorm.spoco.domain.category.repository.CategoryRepository;
 import goorm.spoco.domain.code.domain.Code;
+import goorm.spoco.domain.code.repository.CodeRepository;
 import goorm.spoco.domain.join.domain.Join;
 import goorm.spoco.domain.join.repository.JoinRepository;
 import goorm.spoco.domain.member.controller.response.MemberResponseDto;
@@ -22,7 +23,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +37,7 @@ public class SubscribeService {
     private final CategoryRepository categoryRepository;
     private final AlgorithmRepository algorithmRepository;
     private final JoinRepository joinRepository;
+    private final CodeRepository codeRepository;
 
     @Transactional
     public void subscribe(Long categoryId, Long algorithmId) {
@@ -63,13 +67,17 @@ public class SubscribeService {
         Subscribe subscribe = subscribeRepository.findBySubscribeIdAndStatus(subscribeSubmitDto.subscribeId(), Status.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "구독되어 있지 않습니다."));
 
-        List<MemberResponseDto> members = joinRepository.findAllByStudy_StudyIdAndStatus(subscribeSubmitDto.studyId(), Status.ACTIVE).stream()
-                .filter(join -> join.getMember().getCodes().stream()
-                        .anyMatch(code -> code.getAlgorithm().getAlgorithmId().equals(subscribe.getAlgorithm().getAlgorithmId())))
-                .map(join -> MemberResponseDto.from(join.getMember()))
+
+        List<Join> joins = joinRepository.findAllByStudy_StudyIdAndStatus(subscribeSubmitDto.studyId(), Status.ACTIVE);
+
+        List<MemberResponseDto> submitted = joins.stream()
+                .map(join -> {
+                    Optional<Code> OptionalCode = codeRepository.findByAlgorithm_AlgorithmIdAndMember_MemberIdAndStatus(subscribe.getAlgorithm().getAlgorithmId(), join.getMember().getMemberId(), Status.ACTIVE);
+                    return OptionalCode.map(code -> MemberResponseDto.review(join, code))
+                            .orElse(MemberResponseDto.review(join, null));
+                })
                 .collect(Collectors.toList());
 
-        return SubscribeResponseDto.from(subscribe, members);
+        return SubscribeResponseDto.from(subscribe, submitted);
     }
-
 }

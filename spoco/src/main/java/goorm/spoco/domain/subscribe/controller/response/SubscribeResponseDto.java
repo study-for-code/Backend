@@ -12,7 +12,7 @@ public record SubscribeResponseDto(
         Long subscribeId,
         AlgorithmResponseDto algorithm,
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        List<MemberResponseDto> submitMembers
+        List<MemberResponseDto> submit
 ) {
     public static SubscribeResponseDto simple(Subscribe subscribe) {
         return new SubscribeResponseDto(
@@ -22,11 +22,11 @@ public record SubscribeResponseDto(
         );
     }
 
-    public static SubscribeResponseDto from(Subscribe subscribe, List<MemberResponseDto> submitMembers) {
+    public static SubscribeResponseDto from(Subscribe subscribe, List<MemberResponseDto> submitted) {
         return new SubscribeResponseDto(
                 subscribe.getSubscribeId(),
                 AlgorithmResponseDto.detail(subscribe.getAlgorithm()),
-                submitMembers
+                submitted
         );
     }
 }
