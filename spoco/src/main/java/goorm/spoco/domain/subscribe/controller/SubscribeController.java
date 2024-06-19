@@ -3,8 +3,10 @@ package goorm.spoco.domain.subscribe.controller;
 import goorm.spoco.domain.subscribe.controller.request.SubscribeRequestDto;
 import goorm.spoco.domain.subscribe.controller.response.SubscribeResponseDto;
 import goorm.spoco.domain.subscribe.service.SubscribeService;
+import goorm.spoco.global.common.auth.SpocoUserDetails;
 import goorm.spoco.global.common.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

@@ -2,7 +2,6 @@ package goorm.spoco.infra.compiler.compiler;
 
 import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.testcase.controller.response.TestcaseResponseDto;
-import goorm.spoco.domain.testcase.service.TestcaseService;
 import goorm.spoco.infra.compiler.dto.ResultDto;
 import goorm.spoco.infra.compiler.dto.ResultStatus;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CppCompilerService {
+public class CppCompiler {
 
     public List<ResultDto> runCode(Algorithm algorithm, List<TestcaseResponseDto> testcase, String code) {
 

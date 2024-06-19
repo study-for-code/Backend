@@ -3,6 +3,7 @@ package goorm.spoco.domain.subscribe.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.category.domain.Category;
+import goorm.spoco.domain.code.domain.Code;
 import goorm.spoco.global.common.response.Status;
 import goorm.spoco.global.error.exception.CustomException;
 import goorm.spoco.global.error.exception.ErrorCode;
@@ -10,6 +11,9 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
 

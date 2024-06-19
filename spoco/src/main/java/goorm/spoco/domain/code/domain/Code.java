@@ -1,9 +1,11 @@
 package goorm.spoco.domain.code.domain;
 
 import goorm.spoco.domain.algorithm.domain.Algorithm;
+import goorm.spoco.domain.code.controller.request.CodeRequestDto;
 import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.review.domain.Review;
 import goorm.spoco.global.common.response.Status;
+import goorm.spoco.infra.compiler.dto.ResultDto;
 import goorm.spoco.infra.compiler.dto.ResultStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -24,7 +26,9 @@ public class Code {
 
     private String detail;
 
-    private String solveTime;
+    private Double solveMemory = 0.0;
+
+    private Double solveTime = 0.0;
 
     private String language;
 
@@ -45,8 +49,6 @@ public class Code {
     @OneToMany(mappedBy = "code", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
 
-    public Code() {
-    }
 
     //== 연관관계 메서드 ==//
     public void addMember(Member member) {
@@ -60,12 +62,15 @@ public class Code {
     }
 
     //== 생성 메서드 ==//
-    public static Code create(Member member, Algorithm algorithm, String detail, ResultStatus resultStatus) {
+    public static Code create(Member member, Algorithm algorithm, CodeRequestDto codeRequestDto, List<ResultDto> results) {
         Code code = new Code();
         code.addMember(member);
         code.addAlgorithm(algorithm);
-        code.detail = detail;
-        code.answerType = resultStatus;
+        code.language = codeRequestDto.language();
+        code.detail = codeRequestDto.detail();
+        code.solveMemory = getSolveMemory(results);
+        code.solveTime = getSolveTime(results);
+        code.answerType = getAnswerType(results);
 
         // 제출 수 증가
         code.getAlgorithm().increaseSubmit();
@@ -82,14 +87,43 @@ public class Code {
         this.status = Status.DELETE;
     }
 
-    public void update(String detail, ResultStatus resultStatus) {
-        this.detail = detail;
-        this.answerType = resultStatus;
+    public void update(CodeRequestDto codeRequestDto, List<ResultDto> results){
+        this.language = codeRequestDto.language();
+        this.detail = codeRequestDto.detail();
+        this.solveMemory = getSolveMemory(results);
+        this.solveTime = getSolveTime(results);
+        this.answerType = getAnswerType(results);
 
         this.getAlgorithm().increaseSubmit();
         if (this.answerType.equals(ResultStatus.PASS)) {
             this.getAlgorithm().increaseAnswer();
         }
+    }
+
+    private static double getSolveMemory(List<ResultDto> results) {
+        return results.stream()
+                .filter(result -> result.status() != ResultStatus.ERROR && result.status() != ResultStatus.FAIL)
+                .mapToDouble(ResultDto::usedMemory).average().orElse(0.0);
+    }
+
+    private static double getSolveTime(List<ResultDto> results) {
+        return results.stream()
+                .filter(result -> result.status() != ResultStatus.ERROR && result.status() != ResultStatus.FAIL)
+                .mapToDouble(ResultDto::executionTime).average().orElse(0.0);
+    }
+
+    private static ResultStatus getAnswerType(List<ResultDto> results) {
+        return results.stream().map(ResultDto::status)
+                .reduce(ResultStatus.PASS,
+                        (accStatus, currStatus) -> {
+                            if (currStatus.equals(ResultStatus.ERROR)) {
+                                return ResultStatus.ERROR;
+                            } else if (currStatus.equals(ResultStatus.FAIL) && !accStatus.equals(ResultStatus.ERROR)) {
+                                return ResultStatus.FAIL;
+                            } else {
+                                return accStatus;
+                            }
+                        });
     }
 
 

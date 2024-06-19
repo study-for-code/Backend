@@ -2,9 +2,6 @@ package goorm.spoco.infra.compiler.compiler;
 
 import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.testcase.controller.response.TestcaseResponseDto;
-import goorm.spoco.domain.testcase.service.TestcaseService;
-import goorm.spoco.global.error.exception.CustomException;
-import goorm.spoco.global.error.exception.ErrorCode;
 import goorm.spoco.infra.compiler.dto.ResultDto;
 import goorm.spoco.infra.compiler.dto.ResultStatus;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +17,7 @@ import java.util.concurrent.*;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class JavaCompilerService {
+public class JavaCompiler {
 
     public List<ResultDto> runCode(Algorithm algorithm, List<TestcaseResponseDto> testcase, String code) {
         List<ResultDto> results = new ArrayList<>();
@@ -29,17 +26,16 @@ public class JavaCompilerService {
             String input = testcase.get(i).input();
             String expectedOutput = testcase.get(i).output();
             StringBuilder output = new StringBuilder();
+            Double time = 0.0;
+            Double memory = 0.0;
 
             // 임시 파일 생성
             File javaFile = new File("Main.java");
             try (FileWriter writer = new FileWriter(javaFile)) {
                 writer.write(code);
             } catch (IOException e) {
-                javaFile.delete();
-                results.add(ResultDto.builder()
-                        .testNum(i+1)
-                        .errorMessage("파일 쓰기 에러 : " + e.getMessage())
-                        .status(ResultStatus.ERROR).build());
+                output.append("🚨ERROR: ").append(e.getMessage()).append("\n");
+                results.add(ResultDto.builder().testNum(i+1).actualResult(output.toString()).status(ResultStatus.ERROR).build());
                 continue;
             }
 
@@ -59,13 +55,13 @@ public class JavaCompilerService {
                             output.append(errorLine).append("\n");
                         }
                     }
+                    results.add(ResultDto.builder().testNum(i+1).actualResult(output.toString()).status(ResultStatus.ERROR).build());
+                    javaFile.delete();
+                    continue;
                 }
             } catch (IOException | InterruptedException e) {
-                javaFile.delete();
-                results.add(ResultDto.builder()
-                        .testNum(i+1)
-                        .errorMessage("컴파일 에러 : " + e.getMessage())
-                        .status(ResultStatus.ERROR).build());
+                output.append("🚨ERROR: ").append(e.getMessage()).append("\n");
+                results.add(ResultDto.builder().testNum(i+1).actualResult(output.toString()).status(ResultStatus.ERROR).build());
                 continue;
             }
 
@@ -110,29 +106,23 @@ public class JavaCompilerService {
                 } catch (TimeoutException e) {
                     runProcess.destroy();
                     future.cancel(true);  // Future 강제 취소
-                    results.add(ResultDto.builder()
-                            .testNum(i+1)
-                            .errorMessage("시간 초과 : : " + e.getMessage())
-                            .status(ResultStatus.FAIL).build());
-                   continue;
+                    result = "⌛️[ 시간 초과 ]\n";
+                    results.add(ResultDto.builder().testNum(i+1).actualResult(result).status(ResultStatus.FAIL).build());
+                    break;
 
                 } catch (ExecutionException e) {
                     if (e.getCause() instanceof OutOfMemoryError) {
                         runProcess.destroy();
                         future.cancel(true);  // Future 강제 취소
-                        results.add(ResultDto.builder()
-                                .testNum(i+1)
-                                .errorMessage("메모리 초과 : : " + e.getMessage())
-                                .status(ResultStatus.FAIL).build());
-                        continue;
+                        result = "🚫[ 메모리 초과 ]\n";
+                        results.add(ResultDto.builder().testNum(i+1).actualResult(result).status(ResultStatus.FAIL).build());
+                        break;
 
                     } else {
                         runProcess.destroy();
-                        results.add(ResultDto.builder()
-                                .testNum(i+1)
-                                .errorMessage("오류 : : " + e.getMessage())
-                                .status(ResultStatus.FAIL).build());
-                        continue;
+                        result = "🚨[ 오류 ]\n";
+                        results.add(ResultDto.builder().testNum(i+1).actualResult(result).status(ResultStatus.ERROR).build());
+                        break;
                     }
 
                 } finally {
@@ -143,14 +133,17 @@ public class JavaCompilerService {
                     javaFile.delete();
                     new File(javaFile.getAbsolutePath().replace(".java", ".class")).delete();
 
-                    long executionTime = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
-                    long usedMemory = endMemory - startMemory;
+                    Double executionTime = (double) TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
+                    long usedMemory = (endMemory - startMemory) / (1024 * 2);
 
-                    if (usedMemory > algorithm.getMemorySize() * 1024 * 1204) {
-                        results.add(ResultDto.builder()
-                                .testNum(i+1)
-                                .errorMessage("메모리 초과")
-                                .status(ResultStatus.FAIL).build());
+                    time = executionTime;
+                    memory = (double) usedMemory;
+
+                    // 메모리 초과 검사
+                    if (usedMemory > algorithm.getMemorySize() * 1024 * 1024) {
+                        output.append("🚫[ 메모리 초과 ]\n");
+                        results.add(ResultDto.builder().testNum(i+1).actualResult(output.toString()).status(ResultStatus.FAIL).build());
+                        break;
                     }
                 }
 
@@ -165,15 +158,15 @@ public class JavaCompilerService {
             // 양식의 사소한 오차가 있을 때에도 FAIL 로 할 것이라면 주석친 코드를 사용하면 됌.
             boolean isPass = compareOutput(output.toString(), expectedOutput);
 
-            ResultDto result = ResultDto.builder()
+            results.add(ResultDto.builder()
                     .testNum(i + 1)
                     .input(input)
                     .expectedResult(expectedOutput)
                     .actualResult(output.toString())
+                    .executionTime(time)
+                    .usedMemory(memory)
                     .status(isPass ? ResultStatus.PASS : ResultStatus.FAIL)
-                    .build();
-
-            results.add(result);
+                    .build());
         }
         return results;
     }
