@@ -16,7 +16,9 @@ public class Testcase {
     @Column(name = "TESTCASE_ID")
     private Long testcaseId;
 
+    @Lob
     private String input;
+    @Lob
     private String output;
 
     @Enumerated(EnumType.STRING)

@@ -2,6 +2,7 @@ package goorm.spoco.domain.algorithm.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import goorm.spoco.domain.algorithm.domain.Algorithm;
+import goorm.spoco.domain.member.controller.response.MemberResponseDto;
 
 import java.util.List;
 
@@ -23,12 +24,15 @@ public record AlgorithmResponseDto(
         @JsonInclude(JsonInclude.Include.NON_NULL)
         Integer answer,
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        Double answerRate
+        Double answerRate,
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        List<MemberResponseDto> solvedMembers
 ) {
     public static AlgorithmResponseDto simple(Algorithm algorithm) {
         return new AlgorithmResponseDto(
                 algorithm.getAlgorithmId(),
                 algorithm.getTitle(),
+                null,
                 null,
                 null,
                 null,
@@ -49,7 +53,8 @@ public record AlgorithmResponseDto(
                 algorithm.getTimeLimit(),
                 algorithm.getSubmit(),
                 algorithm.getAnswer(),
-                algorithm.getAnswerRate()
+                algorithm.getAnswerRate(),
+                null
         );
     }
 }

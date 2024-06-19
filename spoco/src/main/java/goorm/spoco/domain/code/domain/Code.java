@@ -25,6 +25,7 @@ public class Code {
     @Column(name = "CODE_ID")
     private Long codeId;
 
+    @Lob
     private String detail;
 
     private Double solveMemory = 0.0;

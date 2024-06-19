@@ -1,5 +1,7 @@
 package goorm.spoco.domain.algorithm.controller.request;
 
+import jakarta.persistence.Lob;
+
 import java.util.List;
 
 public record AlgorithmRequestDto(
