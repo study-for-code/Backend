@@ -38,6 +38,7 @@ public class SubscribeService {
     private final AlgorithmRepository algorithmRepository;
     private final JoinRepository joinRepository;
     private final CodeRepository codeRepository;
+    private final StudyRepository studyRepository;
 
     @Transactional
     public void subscribe(Long categoryId, Long algorithmId) {
@@ -47,7 +48,33 @@ public class SubscribeService {
         Algorithm algorithm = algorithmRepository.findByAlgorithmIdAndStatus(algorithmId, Status.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, algorithmId + "에 해당하는 알고리즘이 존재하지 않습니다."));
 
+        algorithmValidateDuplication(category, algorithm);
+
+
+//        for ( Category c : study.getCategories() ) {
+//
+//            for ( Subscribe s : c.getSubscribes() ) {
+//
+//                if (s.getAlgorithm().equals(algorithm)) {
+//                    throw new CustomException(ErrorCode.DUPLICATE_OBJECT, "이미 구독된 알고리즘입니다.");
+//                }
+//            }
+//        }
+
         subscribeRepository.save(Subscribe.subscribe(category, algorithm));
+    }
+
+    private void algorithmValidateDuplication(Category category, Algorithm algorithm) {
+        Study study = studyRepository.findByStudyIdAndStatus(category.getStudy().getStudyId(), Status.ACTIVE)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "해당 스터디가 존재하지 않습니다."));
+
+        study.getCategories().stream()
+                .map(c -> c.getSubscribes().stream()
+                        .filter(subscribe -> subscribe.getAlgorithm().equals(algorithm)))
+                .findFirst()
+                .ifPresent(subscribe -> {
+                    throw new CustomException(ErrorCode.DUPLICATE_OBJECT, "이미 구독된 알고리즘입니다.");
+                });
     }
 
     @Transactional
