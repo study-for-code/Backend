@@ -37,6 +37,7 @@ public class Algorithm {
 
     private Double answerRate;
 
+    @Lob
     private String explanation;
 
     @Enumerated(EnumType.STRING)
