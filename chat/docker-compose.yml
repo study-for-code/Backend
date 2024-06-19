@@ -1,76 +1,11 @@
-version: "3"
+version: "3.8"
 services:
-
-  h2:
-    image: oscarfonts/h2:latest
-    container_name: h2
-    ports:
-      - "1521:1521"
-    environment:
-      H2_OPTIONS: -ifNotExists
-    volumes:
-      - ./docker-log/h2-data:/data/h2
-    restart: always
-    networks:
-      - shared-network
-
-  # 서비스 명
-  mongodb:
-    # 사용할 이미지
-    image: mongo:latest
-    # 컨테이너명 설정
-    container_name: mongodb
-    # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
-    ports:
-      - "27017:27017"
-    # 환경 변수 설정
-    environment:
-      # MongoDB 계정 및 패스워드 설정 옵션
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
-    # 볼륨 설정
-    volumes:
-      - ./docker-log/mongo-data:/data/mongodb
-    networks:
-      - shared-network
-
-#  mongotestdb:
-#    # 사용할 이미지
-#    image: mongo:latest
-#    # 컨테이너명 설정
-#    container_name: mongotestdb
-#    # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
-#    ports:
-#      - "27019:27017"
-#    # 환경 변수 설정
-#    environment:
-#      # MongoDB 계정 및 패스워드 설정 옵션
-#      MONGO_INITDB_ROOT_USERNAME: root
-#      MONGO_INITDB_ROOT_PASSWORD: root
-#    # 볼륨 설정
-#    volumes:
-#      - ./docker-log/mongotest-data:/data/mongotestdb
-
-  spoco:
+  chat:
     build:
-      context: ../spoco
+      context: .
       dockerfile: Dockerfile
-    container_name: spoco
+    container_name: chat
     ports:
-      - "8080:8080"
+      - "8008:8008"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:h2:tcp://h2:1521/demo
-      SPRING_DATASOURCE_USERNAME: sa
-      SPRING_DATASOURCE_PASSWORD:
-      SPRING_DATA_MONGODB_URL: mongodb://mongodb:27017/mongodb
-      SPRING_DATA_MONGODB_USERNAME: root
-      SPRING_DATA_MONGODB_PASSWORD: root
-      SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
-    depends_on:
-      - h2
-      - mongodb
-    networks:
-      - shared-network
-
-networks:
-  shared-network:
+      SPRING_DATA_MONGODB_URI: mongodb://root:root@43.203.241.172:27017/mongodb?authSource=admin
