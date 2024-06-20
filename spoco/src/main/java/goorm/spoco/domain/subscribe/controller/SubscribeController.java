@@ -22,9 +22,9 @@ public class SubscribeController {
     public BaseResponse subscribe(
             @RequestBody SubscribeRequestDto subscribeRequestDto
     ) {
-        subscribeService.subscribe(subscribeRequestDto.categoryId(), subscribeRequestDto.algorithmId());
         return BaseResponse.builder()
                 .message("구독 서비스 실행")
+                .results(List.of(subscribeService.subscribe(subscribeRequestDto.categoryId(), subscribeRequestDto.algorithmId())))
                 .build();
     }
 
@@ -38,6 +38,14 @@ public class SubscribeController {
                 .build();
     }
 
+    @GetMapping("/subscribes/{subscribesId}/subscribe")
+    public BaseResponse getAlgorithmBySubscribeId(@PathVariable Long subscribesId) {
+        return BaseResponse.builder()
+                .message("구독된 단일 알고리즘 조회")
+                .results(List.of(subscribeService.getAlgorithmBySubscribeId(subscribesId)))
+                .build();
+    }
+
     @GetMapping("/subscribes/submit")
     public BaseResponse getSubmitMembers(@RequestBody SubscribeSubmitDto subscribeSubmitDto) {
         return BaseResponse.builder()
@@ -46,7 +54,7 @@ public class SubscribeController {
                 .build();
     }
 
-    @GetMapping("/subscribes/{categoryId}")
+    @GetMapping("/subscribes/{categoryId}/category")
     public BaseResponse getAllByCategoryId(
             @PathVariable Long categoryId
     ) {

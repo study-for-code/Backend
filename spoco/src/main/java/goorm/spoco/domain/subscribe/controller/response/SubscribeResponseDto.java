@@ -22,6 +22,14 @@ public record SubscribeResponseDto(
         );
     }
 
+    public static SubscribeResponseDto detail(Subscribe subscribe) {
+        return new SubscribeResponseDto(
+                subscribe.getSubscribeId(),
+                AlgorithmResponseDto.detail(subscribe.getAlgorithm()),
+                null
+        );
+    }
+
     public static SubscribeResponseDto from(Subscribe subscribe, List<MemberResponseDto> submitted) {
         return new SubscribeResponseDto(
                 subscribe.getSubscribeId(),
