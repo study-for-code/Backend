@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,8 @@ public class PythonCompiler {
             String input = testcase.get(i).input();
             String expectedOutput = testcase.get(i).output();
             StringBuilder output = new StringBuilder();
+            Double time = 0.0;
+            Double memory = 0.0;
 
             try {
                 // 임시 파일 생성
@@ -46,37 +49,77 @@ public class PythonCompiler {
                     processInput.flush();
                 }
 
-                // 실행 결과 받아오기
-                BufferedReader reader = new BufferedReader(new InputStreamReader(runProcess.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    output.append(line).append("\n");
-                }
+                // 타이머 시작 및 실행 결과 받아오기
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                Future<String> future = executor.submit(() -> {
+                    StringBuilder result = new StringBuilder();
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(runProcess.getInputStream()))) {
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            result.append(line).append("\n");
+                        }
+                    }
+                    return result.toString();
+                });
 
-                // 문법적 오류 발생시 에러 및 종료
-                BufferedReader errorReader = new BufferedReader(new InputStreamReader(runProcess.getErrorStream()));
-                StringBuilder errorOutput = new StringBuilder();
-                while ((line = errorReader.readLine()) != null) {
-                    errorOutput.append("ERROR: ").append(line).append("\n");
-                }
-                if (errorOutput.length() > 0) {
-//                    results.add(new Result(errorOutput.toString(), ResultStatus.ERROR));
-                    results.add(ResultDto.builder().actualResult(output.toString()).status(ResultStatus.ERROR).build());
+                long startTime = System.nanoTime();
+                long startMemory = getUsedMemory();
+
+                // 타임아웃 설정 (default는 테스트케이스마다 2초)
+                String result;
+                try {
+                    result = future.get(algorithm.getTimeLimit(), TimeUnit.SECONDS);
+
+                } catch (TimeoutException e) {
+                    runProcess.destroy();
+                    future.cancel(true);  // Future 강제 취소
+                    result = "⌛️[ 시간 초과 ]\n";
+                    results.add(ResultDto.builder().testNum(i+1).actualResult(result).status(ResultStatus.FAIL).build());
+                    break;
+
+                } catch (ExecutionException e) {
+                    if (e.getCause() instanceof OutOfMemoryError) {
+                        runProcess.destroy();
+                        future.cancel(true);  // Future 강제 취소
+                        result = "🚫[ 메모리 초과 ]\n";
+                        results.add(ResultDto.builder().testNum(i+1).actualResult(result).status(ResultStatus.FAIL).build());
+                        break;
+
+                    } else {
+                        runProcess.destroy();
+                        result = "🚨[ 오류 ]\n";
+                        results.add(ResultDto.builder().testNum(i+1).actualResult(result).status(ResultStatus.ERROR).build());
+                        break;
+                    }
+
+                } finally {
+                    long endTime = System.nanoTime();
+                    long endMemory = getUsedMemory();
+
+                    executor.shutdown();
                     pythonFile.delete();
-                    return results;
+
+                    Double executionTime = (double) TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
+                    long usedMemory = (endMemory - startMemory) / (1024 * 2);
+
+                    time = executionTime;
+                    memory = (double) usedMemory;
+
+                    // 메모리 초과 검사
+                    if (usedMemory > algorithm.getMemorySize() * 1024 * 1024) {
+                        output.append("🚫[ 메모리 초과 ]\n");
+                        results.add(ResultDto.builder().testNum(i+1).actualResult(output.toString()).status(ResultStatus.FAIL).build());
+                        break;
+                    }
                 }
 
-
-                pythonFile.delete();
+                output.append(result);
 
             } catch (Exception e) {
                 output.append("🚨ERROR : ").append(e.getMessage()).append("\n");
             }
 
             // 통과 여부
-            // 아래의 코드는 결과값에 스페이스바가 들어가거나 엔터키가 하나 더 들어가는 등 양식에 조금의 오차가 생기면 FAIL이 되는 문제가 발생함.
-            // 양식의 사소한 오차가 있을 때에도 FAIL 로 할 것이라면 주석친 코드를 사용하면 됌.
-//            boolean isPass = output.toString().trim().equals(expectedOutput.trim());
             boolean isPass = compareOutput(output.toString(), expectedOutput);
 
             ResultDto result = ResultDto.builder()
@@ -84,12 +127,19 @@ public class PythonCompiler {
                     .input(input)
                     .expectedResult(expectedOutput)
                     .actualResult(output.toString())
+                    .executionTime(time)
+                    .usedMemory(memory)
                     .status(isPass ? ResultStatus.PASS : ResultStatus.FAIL)
                     .build();
 
             results.add(result);
         }
         return results;
+    }
+
+    private long getUsedMemory() {
+        Runtime runtime = Runtime.getRuntime();
+        return runtime.totalMemory() - runtime.freeMemory();
     }
 
     private boolean compareOutput(String actual, String expected) {

@@ -12,6 +12,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.*;
 
 @Service
 @RequiredArgsConstructor
@@ -20,15 +21,20 @@ public class CppCompiler {
 
     public List<ResultDto> runCode(Algorithm algorithm, List<TestcaseResponseDto> testcase, String code) {
 
+        log.info("==== CppCompiler runCode ====");
         List<ResultDto> results = new ArrayList<>();
 
         for (int i = 0; i < testcase.size(); i++) {
+            log.info("=== Testcase {} init ===", i);
             String input = testcase.get(i).input();
             String expectedOutput = testcase.get(i).output();
             StringBuilder output = new StringBuilder();
+            Double time = 0.0;
+            Double memory = 0.0;
 
             try {
                 // 임시 파일 생성
+                log.debug("Creating temporary C++ file");
                 File cppFile = new File("Main.cpp");
                 try (FileWriter writer = new FileWriter(cppFile)) {
                     writer.write(code);
@@ -36,24 +42,26 @@ public class CppCompiler {
 
                 // 컴파일 및 Main 파일 생성
                 String cppCompiler = "g++";
+                log.debug("Compiling C++ file with g++ compiler");
                 ProcessBuilder compilePb = new ProcessBuilder(cppCompiler, cppFile.getAbsolutePath(), "-o", "Main");
                 Process compileProcess = compilePb.start();
                 compileProcess.waitFor();
 
-                // 컴파일에러 발생 시 에러 및 종료
+                // 컴파일 에러 발생 시 에러 및 종료
                 if (compileProcess.exitValue() != 0) {
+                    log.debug("C++ compilation failed");
                     BufferedReader errorReader = new BufferedReader(new InputStreamReader(compileProcess.getErrorStream()));
                     String errorLine;
                     while ((errorLine = errorReader.readLine()) != null) {
                         output.append(errorLine).append("\n");
                     }
-//                    results.add(new Result(output.toString(), ResultStatus.ERROR));
                     results.add(ResultDto.builder().actualResult(output.toString()).status(ResultStatus.ERROR).build());
                     cppFile.delete();
-                    return results;
+                    continue;
                 }
 
                 // 실행 파일 실행
+                log.debug("Running compiled C++ file");
                 ProcessBuilder runPb = new ProcessBuilder("./Main");
                 runPb.directory(cppFile.getParentFile()); // 실행 파일이 있는 디렉토리 설정
                 Process runProcess = runPb.start();
@@ -68,24 +76,78 @@ public class CppCompiler {
                     processInput.flush();
                 }
 
-                // 실행 결과 받아오기
-                BufferedReader reader = new BufferedReader(new InputStreamReader(runProcess.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    output.append(line).append("\n");
+                // 타이머 시작 및 실행 결과 받아오기
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                Future<String> future = executor.submit(() -> {
+                    StringBuilder result = new StringBuilder();
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(runProcess.getInputStream()))) {
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            result.append(line).append("\n");
+                        }
+                    }
+                    return result.toString();
+                });
+
+                long startTime = System.nanoTime();
+                long startMemory = getUsedMemory();
+
+                // 타임아웃 설정 (default는 테스트케이스마다 2초)
+                String result;
+                try {
+                    result = future.get(algorithm.getTimeLimit(), TimeUnit.SECONDS);
+
+                } catch (TimeoutException e) {
+                    runProcess.destroy();
+                    future.cancel(true);  // Future 강제 취소
+                    result = "⌛️[ 시간 초과 ]\n";
+                    results.add(ResultDto.builder().testNum(i+1).actualResult(result).status(ResultStatus.FAIL).build());
+                    break;
+
+                } catch (ExecutionException e) {
+                    if (e.getCause() instanceof OutOfMemoryError) {
+                        runProcess.destroy();
+                        future.cancel(true);  // Future 강제 취소
+                        result = "🚫[ 메모리 초과 ]\n";
+                        results.add(ResultDto.builder().testNum(i+1).actualResult(result).status(ResultStatus.FAIL).build());
+                        break;
+
+                    } else {
+                        runProcess.destroy();
+                        result = "🚨[ 오류 ]\n";
+                        results.add(ResultDto.builder().testNum(i+1).actualResult(result).status(ResultStatus.ERROR).build());
+                        break;
+                    }
+
+                } finally {
+                    long endTime = System.nanoTime();
+                    long endMemory = getUsedMemory();
+
+                    executor.shutdown();
+                    cppFile.delete();
+                    new File("Main").delete();
+
+                    Double executionTime = (double) TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
+                    long usedMemory = (endMemory - startMemory) / (1024 * 2);
+
+                    time = executionTime;
+                    memory = (double) usedMemory;
+
+                    // 메모리 초과 검사
+                    if (usedMemory > algorithm.getMemorySize() * 1024 * 1024) {
+                        output.append("🚫[ 메모리 초과 ]\n");
+                        results.add(ResultDto.builder().testNum(i+1).actualResult(output.toString()).status(ResultStatus.FAIL).build());
+                        break;
+                    }
                 }
 
-                cppFile.delete();
-                new File(cppFile.getAbsolutePath().replace(".cpp", "")).delete();
+                output.append(result);
 
             } catch (Exception e) {
                 output.append("🚨ERROR : ").append(e.getMessage()).append("\n");
             }
 
             // 통과 여부
-            // 아래의 코드는 결과값에 스페이스바가 들어가거나 엔터키가 하나 더 들어가는 등 양식에 조금의 오차가 생기면 FAIL이 되는 문제가 발생함.
-            // 양식의 사소한 오차가 있을 때에도 FAIL 로 할 것이라면 주석친 코드를 사용하면 됌.
-//            boolean isPass = output.toString().trim().equals(expectedOutput.trim());
             boolean isPass = compareOutput(output.toString(), expectedOutput);
 
             ResultDto result = ResultDto.builder()
@@ -93,6 +155,8 @@ public class CppCompiler {
                     .input(input)
                     .expectedResult(expectedOutput)
                     .actualResult(output.toString())
+                    .executionTime(time)
+                    .usedMemory(memory)
                     .status(isPass ? ResultStatus.PASS : ResultStatus.FAIL)
                     .build();
 
@@ -101,10 +165,14 @@ public class CppCompiler {
         return results;
     }
 
+    private long getUsedMemory() {
+        Runtime runtime = Runtime.getRuntime();
+        return runtime.totalMemory() - runtime.freeMemory();
+    }
+
     private boolean compareOutput(String actual, String expected) {
         String[] actualTokens = actual.trim().split("\\s+");
         String[] expectedTokens = expected.trim().split("\\s+");
         return Arrays.equals(actualTokens, expectedTokens);
     }
 }
-
