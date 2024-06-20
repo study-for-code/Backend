@@ -69,6 +69,7 @@ public class Subscribe {
     private static void subscribeValidateDuplicate(Category category, Algorithm algorithm) {
 
         boolean isDuplicate = category.getSubscribes().stream()
+                .filter(subscribe -> subscribe.status.equals(Status.ACTIVE))
                 .anyMatch(subscribe -> subscribe.getAlgorithm().getAlgorithmId().equals(algorithm.getAlgorithmId()));
 
         if (isDuplicate) {
