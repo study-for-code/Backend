@@ -41,7 +41,7 @@ public class SubscribeService {
     private final StudyRepository studyRepository;
 
     @Transactional
-    public void subscribe(Long categoryId, Long algorithmId) {
+    public SubscribeResponseDto subscribe(Long categoryId, Long algorithmId) {
         Category category = categoryRepository.findByCategoryIdAndStatus(categoryId, Status.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, categoryId + "에 해당하는 카테고리가 존재하지 않습니다."));
 
@@ -50,18 +50,15 @@ public class SubscribeService {
 
         algorithmValidateDuplication(category, algorithm);
 
+        Subscribe subscribe = subscribeRepository.save(Subscribe.subscribe(category, algorithm));
+        return SubscribeResponseDto.simple(subscribe);
+    }
 
-//        for ( Category c : study.getCategories() ) {
-//
-//            for ( Subscribe s : c.getSubscribes() ) {
-//
-//                if (s.getAlgorithm().equals(algorithm)) {
-//                    throw new CustomException(ErrorCode.DUPLICATE_OBJECT, "이미 구독된 알고리즘입니다.");
-//                }
-//            }
-//        }
+    public SubscribeResponseDto getAlgorithmBySubscribeId(Long subscribeId) {
+        Subscribe subscribe = subscribeRepository.findBySubscribeIdAndStatus(subscribeId, Status.ACTIVE)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "해당 구독이 존재하지 않습니다."));
 
-        subscribeRepository.save(Subscribe.subscribe(category, algorithm));
+        return SubscribeResponseDto.detail(subscribe);
     }
 
     private void algorithmValidateDuplication(Category category, Algorithm algorithm) {
@@ -69,11 +66,11 @@ public class SubscribeService {
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "해당 스터디가 존재하지 않습니다."));
 
         study.getCategories().stream()
-                .map(c -> c.getSubscribes().stream()
-                        .filter(subscribe -> subscribe.getAlgorithm().equals(algorithm)))
-                .findFirst()
-                .ifPresent(subscribe -> {
-                    throw new CustomException(ErrorCode.DUPLICATE_OBJECT, "이미 구독된 알고리즘입니다.");
+                .flatMap(c -> c.getSubscribes().stream()) // 각 카테고리의 구독을 하나의 스트림으로 평면화
+                .filter(s -> s.getAlgorithm().equals(algorithm)) // 알고리즘이 이미 구독되었는지 필터링
+                .findAny()
+                .ifPresent(s -> {
+                    throw new CustomException(ErrorCode.DUPLICATE_OBJECT, "해당 구독이 이미 존재합니다.");
                 });
     }
 
@@ -93,7 +90,6 @@ public class SubscribeService {
     public SubscribeResponseDto getSubmitMembers(SubscribeSubmitDto subscribeSubmitDto) {
         Subscribe subscribe = subscribeRepository.findBySubscribeIdAndStatus(subscribeSubmitDto.subscribeId(), Status.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "구독되어 있지 않습니다."));
-
 
         List<Join> joins = joinRepository.findAllByStudy_StudyIdAndStatus(subscribeSubmitDto.studyId(), Status.ACTIVE);
 

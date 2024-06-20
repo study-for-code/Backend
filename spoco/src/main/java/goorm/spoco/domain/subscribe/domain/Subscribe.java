@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -73,5 +74,17 @@ public class Subscribe {
         if (isDuplicate) {
             throw new CustomException(ErrorCode.DUPLICATE_OBJECT, "이미 구독되어 있는 알고리즘입니다.");
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Subscribe subscribe)) return false;
+        return Objects.equals(getSubscribeId(), subscribe.getSubscribeId()) && Objects.equals(getCategory(), subscribe.getCategory()) && Objects.equals(getAlgorithm(), subscribe.getAlgorithm()) && getStatus() == subscribe.getStatus();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSubscribeId(), getCategory(), getAlgorithm(), getStatus());
     }
 }
