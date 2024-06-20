@@ -63,32 +63,19 @@ public class AlgorithmService {
         return AlgorithmResponseDto.detail(algorithm);
     }
 
-    public List<AlgorithmResponseDto> getAllAlgorithmWithSubmitMember(AlgorithmSearchDto algorithmSearchDto) {
+    public List<AlgorithmResponseDto> getAll() {
+        return algorithmRepository.findAll().stream()
+                .map(AlgorithmResponseDto::detail).collect(Collectors.toList());
+    }
+
+    public List<AlgorithmResponseDto> getAllAlgorithm(AlgorithmSearchDto algorithmSearchDto) {
         List<Algorithm> algorithms = algorithmRepository.findAll();
 
-        List<Subscribe> subscribes = subscribeRepository.findAllByCategory_Study_StudyIdAndStatus(algorithmSearchDto.studyId(), Status.ACTIVE);
-
-        List<Join> joins = joinRepository.findAllByStudy_StudyIdAndStatus(algorithmSearchDto.studyId(), Status.ACTIVE);
-
-        List<AlgorithmResponseDto> result = algorithms.stream()
-                .map(algorithm -> {
-                    List<MemberResponseDto> solvedMembers = joins.stream()
-                            .map(join -> codeRepository.findByAlgorithm_AlgorithmIdAndMember_MemberIdAndStatus(algorithm.getAlgorithmId(), join.getMember().getMemberId(), Status.ACTIVE)
-                                    .map(code -> MemberResponseDto.from(join.getMember()))
-                                    .orElse(null)
-                            )
-                            .filter(Objects::nonNull)
-                            .collect(Collectors.toList());
-
-                    boolean check = subscribes.stream()
-                            .anyMatch(subscribe -> subscribe.getAlgorithm().getAlgorithmId().equals(algorithm.getAlgorithmId()));
-
-                    return AlgorithmResponseDto.all(algorithm, solvedMembers, check);
-                })
-                .collect(Collectors.toList());
+        List<AlgorithmResponseDto> result = getSolvedMembersAndSubStatus(algorithmSearchDto.studyId(), algorithms);
 
         return result;
     }
+
 
     //== 숫자로 면 문제번호로 검색. 제목이면 제목% 검색 이후 없다면, %제목% 으로 검색 ==//
     public List<AlgorithmResponseDto> searchAlgorithms(String title) {
@@ -115,6 +102,29 @@ public class AlgorithmService {
     private Algorithm existByAlgorithmId(Long algorithmId) {
         return algorithmRepository.findByAlgorithmIdAndStatus(algorithmId, Status.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, algorithmId + "에 해당하는 알고리즘이 존재하지 않습니다."));
+    }
+    private List<AlgorithmResponseDto> getSolvedMembersAndSubStatus(Long studyId, List<Algorithm> algorithms) {
+        List<Subscribe> subscribes = subscribeRepository.findAllByCategory_Study_StudyIdAndStatus(studyId, Status.ACTIVE);
+
+        List<Join> joins = joinRepository.findAllByStudy_StudyIdAndStatus(studyId, Status.ACTIVE);
+
+        List<AlgorithmResponseDto> result = algorithms.stream()
+                .map(algorithm -> {
+                    List<MemberResponseDto> solvedMembers = joins.stream()
+                            .map(join -> codeRepository.findByAlgorithm_AlgorithmIdAndMember_MemberIdAndStatus(algorithm.getAlgorithmId(), join.getMember().getMemberId(), Status.ACTIVE)
+                                    .map(code -> MemberResponseDto.from(join.getMember()))
+                                    .orElse(null)
+                            )
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toList());
+
+                    boolean check = subscribes.stream()
+                            .anyMatch(subscribe -> subscribe.getAlgorithm().getAlgorithmId().equals(algorithm.getAlgorithmId()));
+
+                    return AlgorithmResponseDto.all(algorithm, solvedMembers, check);
+                })
+                .collect(Collectors.toList());
+        return result;
     }
 
 }

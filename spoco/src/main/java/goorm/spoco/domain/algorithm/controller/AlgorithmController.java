@@ -46,10 +46,18 @@ public class AlgorithmController {
     }
 
     @GetMapping("/algorithms")
-    public BaseResponse getAllAlgorithm(@RequestBody AlgorithmSearchDto algorithmSearchDto) {
+    public BaseResponse getAll() {
         return BaseResponse.<AlgorithmResponseDto>builder()
                 .message("알고리즘 전체 조회")
-                .results(algorithmService.getAllAlgorithmWithSubmitMember(algorithmSearchDto))
+                .results(algorithmService.getAll())
+                .build();
+    }
+
+    @GetMapping("/algorithms/solved")
+    public BaseResponse getAllAlgorithm(@RequestBody AlgorithmSearchDto algorithmSearchDto) {
+        return BaseResponse.<AlgorithmResponseDto>builder()
+                .message("알고리즘 전체 조회 by 스터디 멤버")
+                .results(algorithmService.getAllAlgorithm(algorithmSearchDto))
                 .build();
     }
 
