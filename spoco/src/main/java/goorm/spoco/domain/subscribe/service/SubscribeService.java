@@ -67,6 +67,7 @@ public class SubscribeService {
 
         study.getCategories().stream()
                 .flatMap(c -> c.getSubscribes().stream()) // 각 카테고리의 구독을 하나의 스트림으로 평면화
+                .filter(s -> s.getStatus().equals(Status.ACTIVE))
                 .filter(s -> s.getAlgorithm().equals(algorithm)) // 알고리즘이 이미 구독되었는지 필터링
                 .findAny()
                 .ifPresent(s -> {

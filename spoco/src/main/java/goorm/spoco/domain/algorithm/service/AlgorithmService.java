@@ -65,12 +65,12 @@ public class AlgorithmService {
     }
 
     public List<AlgorithmResponseDto> getAll() {
-        return algorithmRepository.findAll().stream()
+        return algorithmRepository.findAllByStatus(Status.ACTIVE).stream()
                 .map(AlgorithmResponseDto::detail).collect(Collectors.toList());
     }
 
     public List<AlgorithmResponseDto> getAllWithSolvedMember(Long studyId) {
-        List<Algorithm> algorithms = algorithmRepository.findAll();
+        List<Algorithm> algorithms = algorithmRepository.findAllByStatus(Status.ACTIVE);
 
         return getSolvedMembersAndSubStatus(studyId, algorithms);
     }

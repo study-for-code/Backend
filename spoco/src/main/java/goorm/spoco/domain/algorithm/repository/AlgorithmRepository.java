@@ -12,6 +12,8 @@ import java.util.Optional;
 @Repository
 public interface AlgorithmRepository extends JpaRepository<Algorithm, Long> {
 
+    List<Algorithm> findAllByStatus(Status status);
+
     Optional<Algorithm> findByAlgorithmIdAndStatus(Long id, Status status);
 
     //== 제목% 으로 검색 ==//
