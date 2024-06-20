@@ -16,9 +16,10 @@ public class Testcase {
     @Column(name = "TESTCASE_ID")
     private Long testcaseId;
 
-    @Lob
+    @Column(length = 10000)
     private String input;
-    @Lob
+
+    @Column(length = 10000)
     private String output;
 
     @Enumerated(EnumType.STRING)

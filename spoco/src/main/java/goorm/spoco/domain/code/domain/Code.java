@@ -26,7 +26,7 @@ public class Code {
     private Long codeId;
 
 //    @Lob
-    @Column(length = 5000)
+    @Column(length = 10000)
     private String detail;
 
     private Double solveMemory = 0.0;
