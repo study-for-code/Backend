@@ -1,6 +1,7 @@
 package goorm.spoco.domain.review.domain;
 
 import goorm.spoco.domain.code.domain.Code;
+import goorm.spoco.global.common.response.Status;
 import goorm.spoco.global.error.exception.CustomException;
 import goorm.spoco.global.error.exception.ErrorCode;
 import jakarta.persistence.*;
@@ -23,7 +24,7 @@ public class Review {
     private Integer codeLine;
 
     @Enumerated(EnumType.STRING)
-    private ReviewStatus reviewStatus;
+    private Status status;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "CODE_ID")
@@ -41,13 +42,13 @@ public class Review {
         Review review = new Review();
         review.addCode(code);
         review.codeLine = codeLine;
-        review.reviewStatus = ReviewStatus.OPEN;
+        review.status = Status.ACTIVE;
         return review;
     }
 
     //== 비즈니스 로직 ==//
     public void delete() {
-        this.reviewStatus = ReviewStatus.CLOSE;
+        this.status = Status.DELETE;
     }
 
     //== 중복 검증 메서드 ==//

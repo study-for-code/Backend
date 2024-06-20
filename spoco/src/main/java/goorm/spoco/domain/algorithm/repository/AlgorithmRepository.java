@@ -15,8 +15,8 @@ public interface AlgorithmRepository extends JpaRepository<Algorithm, Long> {
     Optional<Algorithm> findByAlgorithmIdAndStatus(Long id, Status status);
 
     //== 제목% 으로 검색 ==//
-    @Query(value = "SELECT * FROM Algorithm a WHERE a.title LIKE CONCAT('%-', ?1) AND a.algorithm_status = ?2 ORDER BY a.title", nativeQuery = true)
-    List<Algorithm> findAlgorithmsByOnlyTitle(String title, String status);
+    @Query("SELECT a FROM Algorithm a WHERE a.title LIKE CONCAT('%-', :title) AND a.status = :status ORDER BY a.title")
+    List<Algorithm> findAlgorithmsByOnlyTitle(String title, Status status);
 
     //== 번호% or %제목% 검색 , 추후에  ==//
     List<Algorithm> findAlgorithmsByTitleLikeAndStatus(String Title, Status status);

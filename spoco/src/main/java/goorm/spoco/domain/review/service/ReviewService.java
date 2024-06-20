@@ -37,12 +37,12 @@ public class ReviewService {
         Review review = Review.review(code, codeLine);
         reviewRepository.save(review);
 
-        return new ReviewResponseDto(review.getReviewId(), review.getCodeLine(), review.getReviewStatus().name());
+        return new ReviewResponseDto(review.getReviewId(), review.getCodeLine());
     }
 
     @Transactional
     public ReviewResponseDto deleteReview(Long reviewId, Long memberId) {
-        Review review = reviewRepository.findByReviewId(reviewId)
+        Review review = reviewRepository.findByReviewIdAndStatus(reviewId, Status.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "해당 리뷰(" + reviewId + ")가 존재하지 않습니다."));
 
         //== 추후 스프링 시큐리티로 처리
@@ -57,12 +57,12 @@ public class ReviewService {
         }
         //==
 
-        return new ReviewResponseDto(review.getReviewId(), review.getCodeLine(), review.getReviewStatus().name());
+        return ReviewResponseDto.from(review);
     }
 
     public List<ReviewResponseDto> getAllByCodeId(Long codeId) {
-        return reviewRepository.findAllByCode_CodeIdAndReviewStatus(codeId, ReviewStatus.OPEN)
-                .stream().map(review -> new ReviewResponseDto(review.getReviewId(), review.getCodeLine(), null))
+        return reviewRepository.findAllByCode_CodeIdAndStatus(codeId, Status.ACTIVE)
+                .stream().map(ReviewResponseDto::from)
                 .collect(Collectors.toList());
     }
 }
