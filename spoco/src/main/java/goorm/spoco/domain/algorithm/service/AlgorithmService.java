@@ -10,6 +10,7 @@ import goorm.spoco.domain.code.repository.CodeRepository;
 import goorm.spoco.domain.join.domain.Join;
 import goorm.spoco.domain.join.repository.JoinRepository;
 import goorm.spoco.domain.member.controller.response.MemberResponseDto;
+import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.study.repository.StudyRepository;
 import goorm.spoco.domain.subscribe.domain.Subscribe;
 import goorm.spoco.domain.subscribe.repository.SubscribeRepository;
@@ -68,41 +69,38 @@ public class AlgorithmService {
                 .map(AlgorithmResponseDto::detail).collect(Collectors.toList());
     }
 
-    public List<AlgorithmResponseDto> getAllAlgorithm(AlgorithmSearchDto algorithmSearchDto) {
+    public List<AlgorithmResponseDto> getAllWithSolvedMember(Long studyId) {
         List<Algorithm> algorithms = algorithmRepository.findAll();
 
-        List<AlgorithmResponseDto> result = getSolvedMembersAndSubStatus(algorithmSearchDto.studyId(), algorithms);
-
-        return result;
+        return getSolvedMembersAndSubStatus(studyId, algorithms);
     }
 
 
     //== 숫자로 면 문제번호로 검색. 제목이면 제목% 검색 이후 없다면, %제목% 으로 검색 ==//
-    public List<AlgorithmResponseDto> searchAlgorithms(String title) {
+    public List<AlgorithmResponseDto> searchAlgorithms(String title, Long studyId) {
         // 들어온 title 이 숫자로만 이루어져 있으면 true
         if (title.matches("\\d+")) {
-            return algorithmRepository.findAlgorithmsByTitleLikeAndStatus(title + "%", Status.ACTIVE)
-                    .stream().map(AlgorithmResponseDto::simple).collect(Collectors.toList());
+            List<Algorithm> algorithms = algorithmRepository.findAlgorithmsByTitleLikeAndStatus(title + "%", Status.ACTIVE);
+            return getSolvedMembersAndSubStatus(studyId, algorithms);
+
         } else {
             // title% 이 존재하지 않는다면 %title% 로 반환. 그래도 없으면 빈 List 반환
-            if (algorithmRepository.findAlgorithmsByOnlyTitle(title + "%", "ACTIVE").isEmpty()) {
-                return algorithmRepository.findAlgorithmsByTitleLikeAndStatus("%" + title + "%", Status.ACTIVE)
-                        .stream().map(AlgorithmResponseDto::simple).collect(Collectors.toList());
+            if (algorithmRepository.findAlgorithmsByOnlyTitle(title + "%", Status.ACTIVE).isEmpty()) {
+                List<Algorithm> algorithms = algorithmRepository.findAlgorithmsByTitleLikeAndStatus("%" + title + "%", Status.ACTIVE);
+                return getSolvedMembersAndSubStatus(studyId, algorithms);
+
             } else {
-                return algorithmRepository.findAlgorithmsByOnlyTitle(title + "%", "ACTIVE")
-                        .stream().map(AlgorithmResponseDto::simple).collect(Collectors.toList());
+                List<Algorithm> algorithms = algorithmRepository.findAlgorithmsByOnlyTitle(title + "%", Status.ACTIVE);
+                return getSolvedMembersAndSubStatus(studyId, algorithms);
             }
         }
-    }
-
-    public List<Algorithm> searchAlgorithmsByNum(String num) {
-        return algorithmRepository.findAlgorithmsByTitleLikeAndStatus(num + "%", Status.ACTIVE);
     }
 
     private Algorithm existByAlgorithmId(Long algorithmId) {
         return algorithmRepository.findByAlgorithmIdAndStatus(algorithmId, Status.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, algorithmId + "에 해당하는 알고리즘이 존재하지 않습니다."));
     }
+
     private List<AlgorithmResponseDto> getSolvedMembersAndSubStatus(Long studyId, List<Algorithm> algorithms) {
         List<Subscribe> subscribes = subscribeRepository.findAllByCategory_Study_StudyIdAndStatus(studyId, Status.ACTIVE);
 
@@ -126,5 +124,4 @@ public class AlgorithmService {
                 .collect(Collectors.toList());
         return result;
     }
-
 }

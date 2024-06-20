@@ -1,12 +1,17 @@
 package goorm.spoco.domain.review.controller.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import goorm.spoco.domain.review.domain.Review;
 
 public record ReviewResponseDto(
 
         Long reviewId,
-        Integer codeLine,
-        @JsonInclude(JsonInclude.Include.NON_NULL)
-        String reviewStatus
+        Integer codeLine
 ) {
+
+        public static ReviewResponseDto from(Review review) {
+                return new ReviewResponseDto(
+                        review.getReviewId(),
+                        review.getCodeLine()
+                );
+        }
 }

@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import goorm.spoco.domain.algorithm.domain.Algorithm;
 import goorm.spoco.domain.member.controller.response.MemberResponseDto;
 import goorm.spoco.domain.subscribe.domain.Subscribe;
+import lombok.Builder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 public record AlgorithmResponseDto(
         @JsonInclude(JsonInclude.Include.NON_NULL)
         Long algorithmId,

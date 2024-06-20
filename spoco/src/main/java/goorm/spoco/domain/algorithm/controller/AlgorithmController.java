@@ -54,26 +54,29 @@ public class AlgorithmController {
     }
 
     @GetMapping("/algorithms/solved")
-    public BaseResponse getAllAlgorithm(@RequestBody AlgorithmSearchDto algorithmSearchDto) {
+    public BaseResponse getAllWithSolvedMember(@RequestParam Long studyId) {
         return BaseResponse.<AlgorithmResponseDto>builder()
                 .message("알고리즘 전체 조회 by 스터디 멤버")
-                .results(algorithmService.getAllAlgorithm(algorithmSearchDto))
+                .results(algorithmService.getAllWithSolvedMember(studyId))
                 .build();
     }
 
     @GetMapping("/algorithms/{algorithmId}")
     public BaseResponse getAlgorithm(@PathVariable Long algorithmId) {
         return BaseResponse.builder()
-                .message("알고리즘 검색")
+                .message("단일 알고리즘 검색")
                 .results(List.of(algorithmService.getByAlgorithmId(algorithmId)))
                 .build();
     }
 
     @GetMapping("/algorithms/search")
-    public BaseResponse getAlgorithmsListByTitle(@RequestParam String title) {
+    public BaseResponse getAlgorithmsListByTitle(
+            @RequestParam Long studyId,
+            @RequestParam String title
+    ) {
         return BaseResponse.<AlgorithmResponseDto>builder()
                 .message("알고리즘 리스트 검색 by title")
-                .results(algorithmService.searchAlgorithms(title))
+                .results(algorithmService.searchAlgorithms(title, studyId))
                 .build();
     }
 }
