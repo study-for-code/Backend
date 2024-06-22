@@ -40,11 +40,11 @@ public class CodeController {
     @GetMapping("/codes/{algorithmId}")
     public BaseResponse getMyCode(
             @PathVariable Long algorithmId,
-            @AuthenticationPrincipal SpocoUserDetails user
+            @RequestParam Long memberId
     ) {
         return BaseResponse.builder()
                 .message("내 코드 가져오기")
-                .results(List.of(codeService.getCode(algorithmId, user.getMemberId())))
+                .results(List.of(codeService.getCode(algorithmId, memberId)))
                 .build();
     }
 }
