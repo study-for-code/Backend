@@ -67,7 +67,7 @@ public class JavaCompiler {
 
             // 자바 파일 실행
             String javaRunner = "java";
-            ProcessBuilder javaProcess = new ProcessBuilder(javaRunner, "-Xmx64m", "Main");
+            ProcessBuilder javaProcess = new ProcessBuilder(javaRunner, "-Xmx" + algorithm.getMemorySize() * 2 + "m", "Main");
             javaProcess.directory(javaFile.getParentFile()); // 클래스 파일이 있는 디렉토리 설정
             try {
                 Process runProcess = javaProcess.start();
@@ -134,7 +134,7 @@ public class JavaCompiler {
                     new File(javaFile.getAbsolutePath().replace(".java", ".class")).delete();
 
                     Double executionTime = (double) TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
-                    long usedMemory = (endMemory - startMemory) / (1024 * 2);
+                    long usedMemory = (endMemory - startMemory) / (1024 * 1024);
 
                     time = executionTime;
                     memory = (double) usedMemory;
