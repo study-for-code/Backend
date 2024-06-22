@@ -88,11 +88,11 @@ public class SubscribeService {
                 .stream().map(SubscribeResponseDto::simple).collect(Collectors.toList());
     }
 
-    public SubscribeResponseDto getSubmitMembers(SubscribeSubmitDto subscribeSubmitDto) {
-        Subscribe subscribe = subscribeRepository.findBySubscribeIdAndStatus(subscribeSubmitDto.subscribeId(), Status.ACTIVE)
+    public SubscribeResponseDto getSubmitMembers(Long subscribeId, Long studyId) {
+        Subscribe subscribe = subscribeRepository.findBySubscribeIdAndStatus(subscribeId, Status.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "구독되어 있지 않습니다."));
 
-        List<Join> joins = joinRepository.findAllByStudy_StudyIdAndStatus(subscribeSubmitDto.studyId(), Status.ACTIVE);
+        List<Join> joins = joinRepository.findAllByStudy_StudyIdAndStatus(studyId, Status.ACTIVE);
 
         List<MemberResponseDto> submitted = joins.stream()
                 .map(join -> {
