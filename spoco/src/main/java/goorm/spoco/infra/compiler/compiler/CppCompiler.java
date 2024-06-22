@@ -21,11 +21,9 @@ public class CppCompiler {
 
     public List<ResultDto> runCode(Algorithm algorithm, List<TestcaseResponseDto> testcase, String code) {
 
-        log.info("==== CppCompiler runCode ====");
         List<ResultDto> results = new ArrayList<>();
 
         for (int i = 0; i < testcase.size(); i++) {
-            log.info("=== Testcase {} init ===", i);
             String input = testcase.get(i).input();
             String expectedOutput = testcase.get(i).output();
             StringBuilder output = new StringBuilder();
@@ -34,7 +32,6 @@ public class CppCompiler {
 
             try {
                 // 임시 파일 생성
-                log.debug("Creating temporary C++ file");
                 File cppFile = new File("Main.cpp");
                 try (FileWriter writer = new FileWriter(cppFile)) {
                     writer.write(code);
@@ -42,14 +39,12 @@ public class CppCompiler {
 
                 // 컴파일 및 Main 파일 생성
                 String cppCompiler = "g++";
-                log.debug("Compiling C++ file with g++ compiler");
                 ProcessBuilder compilePb = new ProcessBuilder(cppCompiler, cppFile.getAbsolutePath(), "-o", "Main");
                 Process compileProcess = compilePb.start();
                 compileProcess.waitFor();
 
                 // 컴파일 에러 발생 시 에러 및 종료
                 if (compileProcess.exitValue() != 0) {
-                    log.debug("C++ compilation failed");
                     BufferedReader errorReader = new BufferedReader(new InputStreamReader(compileProcess.getErrorStream()));
                     String errorLine;
                     while ((errorLine = errorReader.readLine()) != null) {
@@ -61,7 +56,6 @@ public class CppCompiler {
                 }
 
                 // 실행 파일 실행
-                log.debug("Running compiled C++ file");
                 ProcessBuilder runPb = new ProcessBuilder("./Main");
                 runPb.directory(cppFile.getParentFile()); // 실행 파일이 있는 디렉토리 설정
                 Process runProcess = runPb.start();
@@ -128,7 +122,7 @@ public class CppCompiler {
                     new File("Main").delete();
 
                     Double executionTime = (double) TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
-                    long usedMemory = (endMemory - startMemory) / (1024 * 2);
+                    long usedMemory = (endMemory - startMemory) / (1024 * 1024);
 
                     time = executionTime;
                     memory = (double) usedMemory;

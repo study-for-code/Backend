@@ -100,7 +100,7 @@ public class PythonCompiler {
                     pythonFile.delete();
 
                     Double executionTime = (double) TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
-                    long usedMemory = (endMemory - startMemory) / (1024 * 2);
+                    long usedMemory = (endMemory - startMemory) / (1024 * 1024);
 
                     time = executionTime;
                     memory = (double) usedMemory;

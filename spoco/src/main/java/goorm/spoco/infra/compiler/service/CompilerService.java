@@ -5,9 +5,7 @@ import goorm.spoco.domain.code.controller.request.CodeRequestDto;
 import goorm.spoco.domain.testcase.controller.response.TestcaseResponseDto;
 import goorm.spoco.domain.testcase.repository.TestcaseRepository;
 import goorm.spoco.global.common.response.Status;
-import goorm.spoco.infra.compiler.compiler.CppCompiler;
-import goorm.spoco.infra.compiler.compiler.JavaCompiler;
-import goorm.spoco.infra.compiler.compiler.PythonCompiler;
+import goorm.spoco.infra.compiler.compiler.*;
 import goorm.spoco.infra.compiler.dto.ResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,10 +33,8 @@ public class CompilerService {
         List<ResultDto> results = null;
         if (codeRequestDto.language().equals("java")) {
             results = javaCompiler.runCode(algorithm, testcase, codeRequestDto.detail());
-
         } else if (codeRequestDto.language().equals("c++")) {
             results = cppCompiler.runCode(algorithm, testcase, codeRequestDto.detail());
-
         } else if (codeRequestDto.language().equals("python")) {
             results = pythonCompiler.runCode(algorithm, testcase, codeRequestDto.detail());
         }
