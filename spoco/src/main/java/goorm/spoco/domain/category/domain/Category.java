@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -58,7 +59,11 @@ public class Category {
     //== 카테고리 MAX LIMIT 메서드 ==//
     private static void categoryCheckMaxValue(Study study) {
         int maxSize = 10;
-        if (study.getCategories().size() >= maxSize) {
+        List<Category> categories = study.getCategories().stream()
+                .filter(category -> category.status.equals(Status.ACTIVE))
+                .collect(Collectors.toList());
+
+        if (categories.size() >= maxSize) {
             throw new CustomException(ErrorCode.LIMIT_CATEGORY, "카테고리는 " + maxSize + "개 이상 만들 수 없습니다.");
         }
     }
