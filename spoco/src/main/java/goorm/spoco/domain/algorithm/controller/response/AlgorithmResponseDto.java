@@ -16,7 +16,7 @@ public record AlgorithmResponseDto(
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String algorithmTitle,
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        String content,
+        String explanation,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         List<String> restrictions,
         @JsonInclude(JsonInclude.Include.NON_NULL)
