@@ -16,10 +16,10 @@ public class Testcase {
     @Column(name = "TESTCASE_ID")
     private Long testcaseId;
 
-    @Column(length = 10000)
+    @Column(columnDefinition = "TEXT")
     private String input;
 
-    @Column(length = 10000)
+    @Column(columnDefinition = "TEXT")
     private String output;
 
     @Enumerated(EnumType.STRING)

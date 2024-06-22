@@ -38,7 +38,7 @@ public class Algorithm {
 
     private Double answerRate;
 
-    @Column(length = 10000)
+    @Column(columnDefinition = "TEXT")
     private String explanation;
 
     @Enumerated(EnumType.STRING)
