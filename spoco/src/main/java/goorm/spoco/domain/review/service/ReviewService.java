@@ -7,7 +7,6 @@ import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.member.repository.MemberRepository;
 import goorm.spoco.domain.review.controller.response.ReviewResponseDto;
 import goorm.spoco.domain.review.domain.Review;
-import goorm.spoco.domain.review.domain.ReviewStatus;
 import goorm.spoco.global.common.response.Status;
 import goorm.spoco.global.error.exception.CustomException;
 import goorm.spoco.domain.review.repository.ReviewRepository;

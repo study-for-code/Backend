@@ -1,7 +1,6 @@
 package goorm.spoco.domain.review.repository;
 
 import goorm.spoco.domain.review.domain.Review;
-import goorm.spoco.domain.review.domain.ReviewStatus;
 import goorm.spoco.global.common.response.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

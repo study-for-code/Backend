@@ -47,10 +47,13 @@ public class SubscribeController {
     }
 
     @GetMapping("/subscribes/submit")
-    public BaseResponse getSubmitMembers(@RequestBody SubscribeSubmitDto subscribeSubmitDto) {
+    public BaseResponse getSubmitMembers(
+            @RequestParam Long subscribeId,
+            @RequestParam Long studyId
+    ) {
         return BaseResponse.builder()
                 .message("제출자 반환")
-                .results(List.of(subscribeService.getSubmitMembers(subscribeSubmitDto)))
+                .results(List.of(subscribeService.getSubmitMembers(subscribeId, studyId)))
                 .build();
     }
 
