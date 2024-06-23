@@ -39,7 +39,7 @@ public record StudyResponseDto (
                 study.getTitle(),
                 study.getOwner().getMemberId(),
                 study.getJoinCode(),
-                ImageResponseDto.from(study.getImage()),
+                study.getImage() == null ? null : ImageResponseDto.from(study.getImage()),
                 study.getCategories().stream().map(CategoryResponseDto::from).collect(Collectors.toList()),
                 study.getJoins().stream()
                         .filter(join -> join.getStatus().equals(Status.ACTIVE))
@@ -55,7 +55,7 @@ public record StudyResponseDto (
                 study.getTitle(),
                 study.getOwner().getMemberId(),
                 study.getJoinCode(),
-                ImageResponseDto.from(study.getImage()),
+                study.getImage() == null ? null : ImageResponseDto.from(study.getImage()),
                 study.getCategories().stream().map(CategoryResponseDto::from).collect(Collectors.toList()),
                 null,
                 study.getCreateAt()

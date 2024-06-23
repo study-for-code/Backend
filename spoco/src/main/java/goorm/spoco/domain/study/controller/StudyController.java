@@ -23,7 +23,7 @@ public class StudyController {
     @PostMapping("/studies")
     public BaseResponse createStudy(
             @RequestPart StudyRequestDto studyRequestDto,
-            @RequestPart MultipartFile multipartFile,
+            @RequestPart(required = false) MultipartFile multipartFile,
             @AuthenticationPrincipal SpocoUserDetails user
     ){
         return BaseResponse.builder()
