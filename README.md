@@ -24,6 +24,7 @@ Study For Code는 알고리즘 스터디에서 필요한 고충들을 보완하�
 
 ### 협업 도구 🧑‍💻
 ![Jira](https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=jira&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
 
 ## 개발 환경 / Development Environment 🛠️
 - **프로그래밍 언어 / Programming Language**: Java 17
@@ -54,9 +55,43 @@ Study For Code는 알고리즘 스터디에서 필요한 고충들을 보완하�
 - Bouncy Castle Provider 1.69
 
 ## 시스템 구상도 📊
+### 프로젝트 구조 🗒️
+```
+main
+└── java
+    └── goorm
+        └── message
+            ├── controller
+            ├── domain
+            ├── repository
+            └── service
+    └── spoco
+        └── domain
+            ├── algorithm
+            ├── auth
+            ├── category
+            ├── code
+            ├── join
+            ├── member
+            ├── review
+            ├── study
+            ├── subscribe
+            └── testcase
+        └── global
+            ├── common
+            ├── config
+            ├── error
+            └── util
+        └── infra
+            ├── compiler
+                ├── compiler
+                ├── dto
+                └── service
+        └── SpocoApplication
+```
 
 ### 스포코 ERD 🗂️
-![ERD](https://drive.google.com/uc?export=view&id=1xjI7_KKNE5sPyaCgNmlDwvN_KOwnnKrc)
+![스포코 ERD](https://drive.google.com/uc?export=view&id=1CZgm5Y-UtrQ_aCh8ycadnAFhYQdKz2Mr)
 
 ### 아키텍처 🏗️
 ![이미지링크]
@@ -110,11 +145,4 @@ Study For Code는 알고리즘 스터디에서 필요한 고충들을 보완하�
   </ul>
 </details>
 
-## 빌드 및 배포 🚀
-(여기에 빌드 및 배포 방법을 작성하세요)
 
-## 버전 정보 🗒️
-(여기에 버전 정보를 작성하세요)
-
-## DB 정보 🗄️
-(여기에 데이터베이스 정보를 작성하세요)
