@@ -19,17 +19,25 @@ public class Image {
     @Column(name = "IMAGE_ID")
     private Long imageId;
 
-    private Long studyId;
-
-    private String title;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "STUDY_ID")
+    private Study study;
 
     private String imageFileUrl;
 
-    public static Image create(ImageRequestDto imageRequestDto, String imageFileName) {
+    public void addStudy(Study study) {
+        this.study = study;
+        study.setImage(this);
+    }
+
+    public static Image create(Study study, String imageFileName) {
         Image image = new Image();
-        image.studyId = imageRequestDto.studyId();
-        image.title = imageRequestDto.title();
+        image.addStudy(study);
         image.imageFileUrl = imageFileName;
         return image;
+    }
+
+    public void updateUrl(String imageFileUrl) {
+        this.imageFileUrl = imageFileUrl;
     }
 }

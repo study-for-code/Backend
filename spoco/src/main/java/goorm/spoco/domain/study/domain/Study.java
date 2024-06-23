@@ -1,6 +1,7 @@
 package goorm.spoco.domain.study.domain;
 
 import goorm.spoco.domain.category.domain.Category;
+import goorm.spoco.domain.image.domain.Image;
 import goorm.spoco.domain.join.domain.Join;
 import goorm.spoco.domain.member.domain.Member;
 import goorm.spoco.domain.study.controller.request.StudyModifyDto;
@@ -41,6 +42,10 @@ public class Study {
     @JoinColumn(name = "MEMBER_ID")
     private Member owner;
 
+    @OneToOne
+    @JoinColumn(name = "IMAGE_ID")
+    private Image image;
+
     @OneToMany(mappedBy = "study", cascade = CascadeType.ALL)
     private List<Join> joins = new ArrayList<>();
 
@@ -52,6 +57,7 @@ public class Study {
         this.owner = member;
     }
 
+    public void setImage(Image image) { this.image = image; }
     //== 비즈니스 로직 ==//
     public void updateInfo(StudyModifyDto studyModifyDto) {
         this.title = studyModifyDto.title();
