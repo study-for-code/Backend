@@ -54,7 +54,7 @@ public class StudyService {
         Study study = studyRepository.save(Study.create(title, owner, joinCode));
 
         // 이미지 생성
-        if (!file.isEmpty()) {
+        if (file != null) {
             imageService.imageUpload(study.getStudyId(), file);
         }
 
