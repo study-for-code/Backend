@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -53,6 +54,13 @@ public class ImageService {
             throw new CustomException(ErrorCode.GENERAL_ERROR, "이미지 파일 저장에 실패했습니다.");
         }
 
+        imageRepository.findByStudy_StudyId(studyId)
+                .ifPresent(
+                        existingImage -> {
+                            deleteImage(existingImage.getImageFileUrl());
+                        }
+                );
+
         Image image = imageRepository.findByStudy_StudyId(studyId)
                         .orElseGet(() -> Image.create(study, imageFileName));
 
@@ -65,6 +73,7 @@ public class ImageService {
         return ImageResponseDto.from(save);
     }
 
+
     public ImageResponseDto getImageByStudyId(Long studyId) {
         Image image = imageRepository.findByStudy_StudyId(studyId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, studyId + "에 해당하는 이미지가 존재하지 않습니다."));
@@ -72,5 +81,14 @@ public class ImageService {
         return ImageResponseDto.from(image);
     }
 
+    private void deleteImage(String imageFileUrl) {
+        try {
+            Path imagePath = Paths.get(folder + imageFileUrl);
+            Files.deleteIfExists(imagePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new CustomException(ErrorCode.COMPILE_ERROR, "이미지 파일 삭제에 실패했습니다.");
+        }
+    }
 
 }

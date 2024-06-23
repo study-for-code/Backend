@@ -17,6 +17,7 @@ import goorm.spoco.domain.subscribe.repository.SubscribeRepository;
 import goorm.spoco.global.common.response.Status;
 import goorm.spoco.global.error.exception.CustomException;
 import goorm.spoco.global.error.exception.ErrorCode;
+import goorm.spoco.infra.compiler.dto.ResultStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,6 +111,7 @@ public class AlgorithmService {
                 .map(algorithm -> {
                     List<MemberResponseDto> solvedMembers = joins.stream()
                             .map(join -> codeRepository.findByAlgorithm_AlgorithmIdAndMember_MemberIdAndStatus(algorithm.getAlgorithmId(), join.getMember().getMemberId(), Status.ACTIVE)
+                                    .filter(code -> code.getAnswerType().equals(ResultStatus.PASS))
                                     .map(code -> MemberResponseDto.from(join.getMember()))
                                     .orElse(null)
                             )

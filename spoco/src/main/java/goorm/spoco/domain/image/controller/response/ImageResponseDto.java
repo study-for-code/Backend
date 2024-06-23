@@ -10,14 +10,12 @@ import jakarta.persistence.OneToOne;
 
 public record ImageResponseDto(
         Long imageId,
-        Long studyId,
         String imageFileUrl
 ) {
 
     public static ImageResponseDto from(Image image) {
         return new ImageResponseDto(
             image.getImageId(),
-            image.getStudy().getStudyId(),
             image.getImageFileUrl()
         );
     }

@@ -43,7 +43,7 @@ public class CodeController {
             @RequestParam Long memberId
     ) {
         return BaseResponse.builder()
-                .message("내 코드 가져오기")
+                .message("코드 가져오기")
                 .results(List.of(codeService.getCode(algorithmId, memberId)))
                 .build();
     }
