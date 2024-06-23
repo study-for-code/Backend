@@ -11,6 +11,7 @@ import goorm.spoco.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,13 +29,13 @@ public class ImageService {
     @Value("${image.file.path}")
     private String folder;
 
-    public Image imageUpload(ImageRequestDto imageRequestDto) {
+    public Image imageUpload(ImageRequestDto imageRequestDto, MultipartFile multipartFile) {
         Study study = studyRepository.findByStudyIdAndStatus(imageRequestDto.studyId(), Status.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "해당 스터디를 찾을 수 없습니다."));
 
         // 파일 이름
         UUID uuid = UUID.randomUUID();
-        String imageFileName = uuid + "_" + imageRequestDto.file().getOriginalFilename();
+        String imageFileName = uuid + "_" + multipartFile.getOriginalFilename();
 
         // 스터디 이름에 맞게 파일경로에 파일 생성
         Path imageFilePath = Paths.get(folder + study.getTitle() + "/" + imageFileName);
@@ -44,7 +45,7 @@ public class ImageService {
             if (!Files.exists(Paths.get(folder))) {
                 Files.createDirectories(Paths.get(folder));
             }
-            Files.write(imageFilePath, imageRequestDto.file().getBytes());
+            Files.write(imageFilePath, multipartFile.getBytes());
         } catch (Exception e) {
             e.printStackTrace();
             throw new CustomException(ErrorCode.GENERAL_ERROR, "이미지 파일 저장에 실패했습니다.");

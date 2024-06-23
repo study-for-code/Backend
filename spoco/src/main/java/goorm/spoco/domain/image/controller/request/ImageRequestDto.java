@@ -8,13 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Builder
 public record ImageRequestDto(
-        MultipartFile file,
         Long studyId,
         String title
 ) {
-    public ImageRequestDto {
-        if (file.isEmpty()) {
-            throw new CustomException(ErrorCode.BAD_REQUEST, "이미지가 첨부되지 않았습니다.");
-        }
-    }
 }
