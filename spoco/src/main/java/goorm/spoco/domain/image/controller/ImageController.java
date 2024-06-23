@@ -18,11 +18,11 @@ public class ImageController {
 
     @PostMapping("/images")
     public BaseResponse upload(
-            @RequestPart MultipartFile multipartFile,
-            @RequestPart ImageRequestDto imageRequestDto) {
+            @RequestParam MultipartFile multipartFile,
+            @RequestParam Long studyId) {
         return BaseResponse.builder()
                 .message("이미지 업로드 성공")
-                .results(List.of(imageService.imageUpload(imageRequestDto, multipartFile)))
+                .results(List.of(imageService.imageUpload(studyId, multipartFile)))
                 .build();
     }
 
