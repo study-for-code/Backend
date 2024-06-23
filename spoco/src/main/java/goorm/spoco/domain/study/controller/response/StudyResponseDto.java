@@ -3,6 +3,8 @@ package goorm.spoco.domain.study.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import goorm.spoco.domain.category.controller.response.CategoryResponseDto;
+import goorm.spoco.domain.image.controller.response.ImageResponseDto;
+import goorm.spoco.domain.image.domain.Image;
 import goorm.spoco.domain.member.controller.response.MemberResponseDto;
 import goorm.spoco.domain.study.domain.Study;
 import goorm.spoco.global.common.response.Status;
@@ -21,6 +23,8 @@ public record StudyResponseDto (
         Long ownerId,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String joinCode,
+
+        ImageResponseDto image,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         List<CategoryResponseDto> categories,
         @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -35,6 +39,7 @@ public record StudyResponseDto (
                 study.getTitle(),
                 study.getOwner().getMemberId(),
                 study.getJoinCode(),
+                ImageResponseDto.from(study.getImage()),
                 study.getCategories().stream().map(CategoryResponseDto::from).collect(Collectors.toList()),
                 study.getJoins().stream()
                         .filter(join -> join.getStatus().equals(Status.ACTIVE))
@@ -50,6 +55,7 @@ public record StudyResponseDto (
                 study.getTitle(),
                 study.getOwner().getMemberId(),
                 study.getJoinCode(),
+                ImageResponseDto.from(study.getImage()),
                 study.getCategories().stream().map(CategoryResponseDto::from).collect(Collectors.toList()),
                 null,
                 study.getCreateAt()

@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @RestController
@@ -20,12 +22,13 @@ public class StudyController {
 
     @PostMapping("/studies")
     public BaseResponse createStudy(
-            @RequestBody StudyRequestDto studyRequestDto,
+            @RequestPart StudyRequestDto studyRequestDto,
+            @RequestPart MultipartFile multipartFile,
             @AuthenticationPrincipal SpocoUserDetails user
     ){
         return BaseResponse.builder()
                 .message("스터디 생성 성공")
-                .results(List.of(studyService.createStudy(studyRequestDto.title(), user.getMemberId())))
+                .results(List.of(studyService.createStudy(studyRequestDto.title(), multipartFile, user.getMemberId())))
                 .build();
     }
 

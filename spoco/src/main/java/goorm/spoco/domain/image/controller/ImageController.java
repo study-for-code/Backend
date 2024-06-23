@@ -26,7 +26,7 @@ public class ImageController {
                 .build();
     }
 
-    @GetMapping("images/{studyId}")
+    @GetMapping("/images/{studyId}")
     public BaseResponse getImage(@PathVariable Long studyId) {
         return BaseResponse.builder()
                 .message("이미지 조회 성공")

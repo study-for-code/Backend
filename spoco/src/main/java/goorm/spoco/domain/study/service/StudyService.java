@@ -1,5 +1,8 @@
 package goorm.spoco.domain.study.service;
 
+import goorm.spoco.domain.image.controller.response.ImageResponseDto;
+import goorm.spoco.domain.image.repository.ImageRepository;
+import goorm.spoco.domain.image.service.ImageService;
 import goorm.spoco.domain.join.domain.Join;
 import goorm.spoco.domain.join.repository.JoinRepository;
 import goorm.spoco.domain.member.controller.response.MemberResponseDto;
@@ -20,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,8 +39,10 @@ public class StudyService {
     private final JoinRepository joinRepository;
     private final MemberRepository memberRepository;
 
+    private final ImageService imageService;
+
     @Transactional
-    public StudyResponseDto createStudy(String title, Long memberId) {
+    public StudyResponseDto createStudy(String title, MultipartFile file, Long memberId) {
         Member owner = existsByMemberId(memberId);
 
         String joinCode = RandomCodeGenerator.generateCode();
@@ -46,6 +52,9 @@ public class StudyService {
 
         // 스터디 생성
         Study study = studyRepository.save(Study.create(title, owner, joinCode));
+
+        // 이미지 생성
+        imageService.imageUpload(study.getStudyId(), file);
 
         // 스터디 접속
         joinRepository.save(Join.join(owner, study));
