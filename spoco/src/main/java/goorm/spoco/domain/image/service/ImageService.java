@@ -1,6 +1,7 @@
 package goorm.spoco.domain.image.service;
 
 import goorm.spoco.domain.image.controller.request.ImageRequestDto;
+import goorm.spoco.domain.image.controller.response.ImageResponseDto;
 import goorm.spoco.domain.image.domain.Image;
 import goorm.spoco.domain.image.repository.ImageRepository;
 import goorm.spoco.domain.study.domain.Study;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ImageService {
 
@@ -32,7 +34,7 @@ public class ImageService {
     private String folder;
 
     @Transactional
-    public Image imageUpload(Long studyId, MultipartFile multipartFile) {
+    public ImageResponseDto imageUpload(Long studyId, MultipartFile multipartFile) {
         Study study = studyRepository.findByStudyIdAndStatus(studyId, Status.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "해당 스터디를 찾을 수 없습니다."));
 
@@ -51,15 +53,23 @@ public class ImageService {
             throw new CustomException(ErrorCode.GENERAL_ERROR, "이미지 파일 저장에 실패했습니다.");
         }
 
-        imageRepository.findByStudyId(studyId)
-                .ifPresent(image -> {
-                    Path existingImagePath = Paths.get(folder + image.getImageFileUrl());
-                });
+        Image image = imageRepository.findByStudy_StudyId(studyId)
+                        .orElseGet(() -> Image.create(study, imageFileName));
+
+        if (image.getImageId() != null) {
+            image.updateUrl(imageFileName);
+        }
+
+        Image save = imageRepository.save(image);
+
+        return ImageResponseDto.from(save);
     }
 
-    public Image getImageByImageId(Long imageId) {
-        return imageRepository.findById(imageId)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, imageId + "에 해당하는 이미지가 존재하지 않습니다."));
+    public ImageResponseDto getImageByStudyId(Long studyId) {
+        Image image = imageRepository.findByStudy_StudyId(studyId)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, studyId + "에 해당하는 이미지가 존재하지 않습니다."));
+
+        return ImageResponseDto.from(image);
     }
 
 

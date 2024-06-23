@@ -26,21 +26,11 @@ public class ImageController {
                 .build();
     }
 
-    @GetMapping("/images/study/{studyId}")
-    public BaseResponse getImageList(Long studyId) {
-        List<Image> imageList = imageService.getAllImagesByStudyId(studyId);
-        return BaseResponse.<Image>builder()
-                .message("이미지 리스트 조회 성공")
-                .results(imageList)
-                .build();
-    }
-
-    @GetMapping("images/{imageId}")
-    public BaseResponse getImage(Long imageId) {
-        Image image = imageService.getImageByImageId(imageId);
+    @GetMapping("images/{studyId}")
+    public BaseResponse getImage(@PathVariable Long studyId) {
         return BaseResponse.builder()
                 .message("이미지 조회 성공")
-                .results(List.of(image))
+                .results(List.of(imageService.getImageByStudyId(studyId)))
                 .build();
     }
 }
