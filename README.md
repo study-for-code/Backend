@@ -94,7 +94,7 @@ main
 ![스포코 ERD](https://drive.google.com/uc?export=view&id=1CZgm5Y-UtrQ_aCh8ycadnAFhYQdKz2Mr)
 
 ### 아키텍처 🏗️
-![이미지링크]
+![스포코 Architecture](https://drive.google.com/uc?export=view&id=1ndkpqpW_Dhov7-sVhqmSmw2OqYAfoS0c)
 
 ## 주요 기능 💡
 
