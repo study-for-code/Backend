@@ -36,8 +36,8 @@ Study For Code는 알고리즘 스터디에서 필요한 고충들을 보완하�
 
 ### 데이터베이스 / Database 💾
 - H2 (테스트용 인메모리 데이터베이스 / In-memory database for testing)
-- MySQL (운영 데이터베이스 / Operational database)
-- MongoDB (NoSQL 데이터베이스 / NoSQL database)
+- MySQL : Ver 5.7.44 for Linux on x86_64
+- MongoDB : Ver. 4.4 for Linux on x86_64
 - ORM: Spring Data JPA
 
 ### 보안 / Security 🔒
@@ -112,19 +112,15 @@ main
 <details>
   <summary> 이호성 [BE]</summary>
   <ul>
-    <li>팀장</li>
-    <li>Database</li>
-    <li>Login API / JWT</li>
-    <li>동영상 제작</li>
+    <li> BackEnd Main Reader </li>
   </ul>
 </details>
 
 <details>
   <summary> 홍진석 [BE]</summary>
   <ul>
-    <li>Kurento 코드 포팅/수정</li>
-    <li>시그널링 서버 구축</li>
-    <li>User API</li>
+    <li> BackEnd Main supporter </li>
+    <li> Architecture 구현 </li>
   </ul>
 </details>
 
@@ -133,7 +129,7 @@ main
   <ul>
     <li>Kurento 코드 포팅/수정</li>
     <li>시그널링 서버 구축</li>
-    <li>Conference API</li>
+    <li> API 명세서 작성</li>
   </ul>
 </details>
 
@@ -142,6 +138,8 @@ main
   <ul>
     <li> 회원가입 및 로그인 </li>
     <li> Jira Confluence 관리 </li>
+    <li> Architecture Diagrams 제작 </li>
+    <li> Github ReadMe 작성(BackEnd 부분) </li>
   </ul>
 </details>
 
