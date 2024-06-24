@@ -110,6 +110,29 @@ SpocoProject ├── Dockerfile
         └── templates
 ```
 
+```
+[ Chat ]
+├── Dockerfile
+├── build.gradle
+├── docker-compose.yml
+├── settings.gradle
+└── src
+    ├── main
+       ├── java
+        │   └── goorm
+        │       └── chat
+        │           ├── config
+        │           ├── controller
+        │           ├── domain
+        │           ├── dto
+        │           ├── repository
+        │           └── service
+        └── resources
+            ├── application.properties
+            └── templates
+                └── index.html 
+```
+
 ### 스포코 ERD 🗂️
 ![스포코 ERD](https://drive.google.com/uc?export=view&id=1CZgm5Y-UtrQ_aCh8ycadnAFhYQdKz2Mr)
 
