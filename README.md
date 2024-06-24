@@ -35,7 +35,7 @@ Study For Code는 알고리즘 스터디에서 필요한 고충들을 보완하�
 ## 주요 기능 / Key Features 🌟
 
 ### 데이터베이스 / Database 💾
-- H2 (테스트용 인메모리 데이터베이스 / In-memory database for testing)
+- H2 : Version 2.2.224 (2023-09-17)
 - MySQL : Ver 5.7.44 for Linux on x86_64
 - MongoDB : Ver. 4.4 for Linux on x86_64
 - ORM: Spring Data JPA
@@ -57,37 +57,336 @@ Study For Code는 알고리즘 스터디에서 필요한 고충들을 보완하�
 ## 시스템 구상도 📊
 ### 프로젝트 구조 🗒️
 ```
-main
-└── java
-    └── goorm
-        └── message
-            ├── controller
-            ├── domain
-            ├── repository
-            └── service
-    └── spoco
-        └── domain
-            ├── algorithm
-            ├── auth
-            ├── category
-            ├── code
-            ├── join
-            ├── member
-            ├── review
-            ├── study
-            ├── subscribe
-            └── testcase
-        └── global
-            ├── common
-            ├── config
-            ├── error
-            └── util
-        └── infra
-            ├── compiler
-                ├── compiler
-                ├── dto
-                └── service
-        └── SpocoApplication
+.
+├── README.md
+├── chat
+│   ├── Dockerfile
+│   ├── build
+│   │   ├── classes
+│   │   │   └── java
+│   │   │       ├── main
+│   │   │       │   └── goorm
+│   │   │       │       └── chat
+│   │   │       │           ├── config
+│   │   │       │           ├── controller
+│   │   │       │           ├── domain
+│   │   │       │           ├── dto
+│   │   │       │           ├── repository
+│   │   │       │           └── service
+│   │   │       └── test
+│   │   │           └── goorm
+│   │   │               └── chat
+│   │   │                   ├── config
+│   │   │                   └── service
+│   │   ├── generated
+│   │   │   └── sources
+│   │   │       ├── annotationProcessor
+│   │   │       │   └── java
+│   │   │       │       └── main
+│   │   │       └── headers
+│   │   │           └── java
+│   │   │               └── main
+│   │   ├── libs
+│   │   ├── reports
+│   │   │   └── tests
+│   │   │       └── test
+│   │   ├── resolvedMainClassName
+│   │   ├── resources
+│   │   │   └── main
+│   │   ├── test-results
+│   │   │   └── test
+│   │   │       └── binary
+│   │   │           ├── output.bin
+│   │   │           ├── output.bin.idx
+│   │   │           └── results.bin
+│   │   └── tmp
+│   │       ├── bootJar
+│   │       │   └── MANIFEST.MF
+│   │       ├── compileJava
+│   │       │   ├── compileTransaction
+│   │       │   │   └── stash-dir
+│   │       │   │       ├── Message.class.uniqueId0
+│   │       │   │       ├── MessageController.class.uniqueId3
+│   │       │   │       ├── MessageDto.class.uniqueId2
+│   │       │   │       ├── MessageRepository.class.uniqueId5
+│   │       │   │       ├── MessageService.class.uniqueId4
+│   │       │   │       └── MessageStatus.class.uniqueId1
+│   │       │   └── previous-compilation-data.bin
+│   │       └── compileTestJava
+│   │           ├── compileTransaction
+│   │           │   └── stash-dir
+│   │           │       └── MessageServiceTest.class.uniqueId0
+│   │           └── previous-compilation-data.bin
+│   ├── build.gradle
+│   ├── docker-compose.yml
+│   ├── gradle
+│   │   └── wrapper
+│   │       ├── gradle-wrapper.jar
+│   │       └── gradle-wrapper.properties
+│   ├── gradlew
+│   ├── gradlew.bat
+│   ├── settings.gradle
+│   └── src
+│       ├── main
+│       │   ├── java
+│       │   │   └── goorm
+│       │   │       └── chat
+│       │   │           ├── config
+│       │   │           ├── controller
+│       │   │           ├── domain
+│       │   │           ├── dto
+│       │   │           ├── repository
+│       │   │           └── service
+│       │   └── resources
+│       │       ├── application.properties
+│       │       └── templates
+│       │           └── index.html
+│       └── test
+│           └── java
+│               └── goorm
+│                   └── chat
+└── spoco
+    ├── Dockerfile
+    ├── build
+    │   ├── classes
+    │   │   └── java
+    │   │       └── main
+    │   │           └── goorm
+    │   │               ├── message
+    │   │               │   ├── controller
+    │   │               │   │   ├── request
+    │   │               │   │   └── response
+    │   │               │   ├── domain
+    │   │               │   ├── repository
+    │   │               │   └── service
+    │   │               └── spoco
+    │   │                   ├── SpocoApplication.class
+    │   │                   ├── domain
+    │   │                   │   ├── algorithm
+    │   │                   │   │   ├── controller
+    │   │                   │   │   │   ├── request
+    │   │                   │   │   │   └── response
+    │   │                   │   │   ├── domain
+    │   │                   │   │   ├── repository
+    │   │                   │   │   └── service
+    │   │                   │   ├── auth
+    │   │                   │   │   ├── controller
+    │   │                   │   │   │   ├── request
+    │   │                   │   │   │   └── response
+    │   │                   │   │   └── service
+    │   │                   │   ├── category
+    │   │                   │   │   ├── controller
+    │   │                   │   │   │   ├── request
+    │   │                   │   │   │   └── response
+    │   │                   │   │   ├── domain
+    │   │                   │   │   ├── repository
+    │   │                   │   │   └── service
+    │   │                   │   ├── code
+    │   │                   │   │   ├── controller
+    │   │                   │   │   │   ├── request
+    │   │                   │   │   │   └── response
+    │   │                   │   │   ├── domain
+    │   │                   │   │   ├── repository
+    │   │                   │   │   └── service
+    │   │                   │   ├── image
+    │   │                   │   │   ├── controller
+    │   │                   │   │   │   ├── request
+    │   │                   │   │   │   └── response
+    │   │                   │   │   ├── domain
+    │   │                   │   │   ├── repository
+    │   │                   │   │   └── service
+    │   │                   │   ├── join
+    │   │                   │   │   ├── controller
+    │   │                   │   │   ├── domain
+    │   │                   │   │   └── repository
+    │   │                   │   ├── member
+    │   │                   │   │   ├── controller
+    │   │                   │   │   │   ├── request
+    │   │                   │   │   │   └── response
+    │   │                   │   │   ├── domain
+    │   │                   │   │   ├── repository
+    │   │                   │   │   └── service
+    │   │                   │   ├── review
+    │   │                   │   │   ├── controller
+    │   │                   │   │   │   └── response
+    │   │                   │   │   ├── domain
+    │   │                   │   │   ├── exception
+    │   │                   │   │   ├── repository
+    │   │                   │   │   └── service
+    │   │                   │   ├── study
+    │   │                   │   │   ├── controller
+    │   │                   │   │   │   ├── request
+    │   │                   │   │   │   └── response
+    │   │                   │   │   ├── domain
+    │   │                   │   │   ├── repository
+    │   │                   │   │   └── service
+    │   │                   │   ├── subscribe
+    │   │                   │   │   ├── controller
+    │   │                   │   │   │   ├── request
+    │   │                   │   │   │   └── response
+    │   │                   │   │   ├── domain
+    │   │                   │   │   ├── repository
+    │   │                   │   │   └── service
+    │   │                   │   └── testcase
+    │   │                   │       ├── controller
+    │   │                   │       │   ├── request
+    │   │                   │       │   └── response
+    │   │                   │       ├── domain
+    │   │                   │       ├── dto
+    │   │                   │       ├── repository
+    │   │                   │       └── service
+    │   │                   ├── global
+    │   │                   │   ├── common
+    │   │                   │   │   ├── auth
+    │   │                   │   │   └── response
+    │   │                   │   ├── config
+    │   │                   │   ├── error
+    │   │                   │   │   └── exception
+    │   │                   │   └── util
+    │   │                   └── infra
+    │   │                       └── compiler
+    │   │                           ├── compiler
+    │   │                           ├── dto
+    │   │                           └── service
+    │   ├── generated
+    │   │   └── sources
+    │   │       ├── annotationProcessor
+    │   │       │   └── java
+    │   │       │       └── main
+    │   │       └── headers
+    │   │           └── java
+    │   │               └── main
+    │   ├── libs
+    │   │   └── spoco-0.0.1-SNAPSHOT.jar
+    │   ├── resolvedMainClassName
+    │   ├── resources
+    │   │   └── main
+    │   │       ├── application.properties
+    │   │       └── templates
+    │   └── tmp
+    │       ├── bootJar
+    │       │   └── MANIFEST.MF
+    │       └── compileJava
+    │           ├── compileTransaction
+    │           │   ├── backup-dir
+    │           │   └── stash-dir
+    │           └── previous-compilation-data.bin
+    ├── build.gradle
+    ├── docker-compose.yml
+    ├── gradle
+    │   └── wrapper
+    │       ├── gradle-wrapper.jar
+    │       └── gradle-wrapper.properties
+    ├── gradlew
+    ├── gradlew.bat
+    ├── settings.gradle
+    └── src
+        ├── main
+        │   ├── java
+        │   │   └── goorm
+        │   │       ├── message
+        │   │       │   ├── controller
+        │   │       │   │   ├── request
+        │   │       │   │   └── response
+        │   │       │   ├── domain
+        │   │       │   ├── repository
+        │   │       │   └── service
+        │   │       └── spoco
+        │   │           ├── domain
+        │   │           │   ├── algorithm
+        │   │           │   │   ├── controller
+        │   │           │   │   │   ├── request
+        │   │           │   │   │   └── response
+        │   │           │   │   ├── domain
+        │   │           │   │   ├── repository
+        │   │           │   │   └── service
+        │   │           │   ├── auth
+        │   │           │   │   ├── controller
+        │   │           │   │   │   ├── request
+        │   │           │   │   │   └── response
+        │   │           │   │   └── service
+        │   │           │   ├── category
+        │   │           │   │   ├── controller
+        │   │           │   │   │   ├── request
+        │   │           │   │   │   └── response
+        │   │           │   │   ├── domain
+        │   │           │   │   ├── repository
+        │   │           │   │   └── service
+        │   │           │   ├── code
+        │   │           │   │   ├── controller
+        │   │           │   │   │   ├── request
+        │   │           │   │   │   └── response
+        │   │           │   │   ├── domain
+        │   │           │   │   ├── repository
+        │   │           │   │   └── service
+        │   │           │   ├── image
+        │   │           │   │   ├── controller
+        │   │           │   │   │   ├── request
+        │   │           │   │   │   └── response
+        │   │           │   │   ├── domain
+        │   │           │   │   ├── repository
+        │   │           │   │   └── service
+        │   │           │   ├── join
+        │   │           │   │   ├── controller
+        │   │           │   │   ├── domain
+        │   │           │   │   └── repository
+        │   │           │   ├── member
+        │   │           │   │   ├── controller
+        │   │           │   │   │   ├── request
+        │   │           │   │   │   └── response
+        │   │           │   │   ├── domain
+        │   │           │   │   ├── repository
+        │   │           │   │   └── service
+        │   │           │   ├── review
+        │   │           │   │   ├── controller
+        │   │           │   │   │   └── response
+        │   │           │   │   ├── domain
+        │   │           │   │   │   ├── Review.java
+        │   │           │   │   ├── exception
+        │   │           │   │   ├── repository
+        │   │           │   │   └── service
+        │   │           │   ├── study
+        │   │           │   │   ├── controller
+        │   │           │   │   │   ├── request
+        │   │           │   │   │   └── response
+        │   │           │   │   ├── domain
+        │   │           │   │   ├── repository
+        │   │           │   │   └── service
+        │   │           │   ├── subscribe
+        │   │           │   │   ├── controller
+        │   │           │   │   │   ├── request
+        │   │           │   │   │   └── response
+        │   │           │   │   ├── domain
+        │   │           │   │   ├── repository
+        │   │           │   │   └── service
+        │   │           │   └── testcase
+        │   │           │       ├── controller
+        │   │           │       │   ├── request
+        │   │           │       │   └── response
+        │   │           │       ├── domain
+        │   │           │       ├── dto
+        │   │           │       ├── repository
+        │   │           │       └── service
+        │   │           ├── global
+        │   │           │   ├── common
+        │   │           │   │   ├── auth
+        │   │           │   │   └── response
+        │   │           │   ├── config
+        │   │           │   ├── error
+        │   │           │   │   └── exception
+        │   │           │   └── util
+        │   │           └── infra
+        │   │               └── compiler
+        │   │                   ├── compiler
+        │   │                   ├── dto
+        │   │                   └── service
+        │   └── resources
+        │       ├── application.properties
+        │       └── templates
+        └── test
+            └── java
+                └── goorm
+                    └── spoco
 ```
 
 ### 스포코 ERD 🗂️
