@@ -62,7 +62,7 @@ public class ImageService {
                 );
 
         Image image = imageRepository.findByStudy_StudyId(studyId)
-                        .orElseGet(() -> Image.create(study, folder + imageFileName));
+                        .orElseGet(() -> Image.create(study, imageFileName));
 
         if (image.getImageId() != null) {
             image.updateUrl(folder + imageFileName);
@@ -83,7 +83,7 @@ public class ImageService {
 
     private void deleteImage(String imageFileUrl) {
         try {
-            Path imagePath = Paths.get(folder + imageFileUrl);
+            Path imagePath = Paths.get(imageFileUrl);
             Files.deleteIfExists(imagePath);
         } catch (IOException e) {
             e.printStackTrace();
