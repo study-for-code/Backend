@@ -62,10 +62,10 @@ public class ImageService {
                 );
 
         Image image = imageRepository.findByStudy_StudyId(studyId)
-                        .orElseGet(() -> Image.create(study, imageFileName));
+                        .orElseGet(() -> Image.create(study, folder + imageFileName));
 
         if (image.getImageId() != null) {
-            image.updateUrl(imageFileName);
+            image.updateUrl(folder + imageFileName);
         }
 
         Image save = imageRepository.save(image);
