@@ -158,6 +158,7 @@ Study For Code는 알고리즘 스터디에서 필요한 고충들을 보완하�
   <ul>
     <li> Jira 작업 </li>
     <li> GitHub 작업 </li>
+    <li> 시스템 아키텍처, ERD 계획 및 작성 담당 </li>
     <li> 채팅 기능 구현 (Chat – Backend) </li>
     <li> Spring Security 적용 (Spoco – Backend) </li>
     <li> 코드 리뷰 관리 기능 (Spoco – Backend) </li>
