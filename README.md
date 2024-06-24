@@ -9,7 +9,6 @@ Study For Code는 알고리즘 스터디에서 필요한 고충들을 보완하�
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
 ![Spring Security](https://img.shields.io/badge/Spring%20Security-6DB33F?style=for-the-badge&logo=spring-security&logoColor=white)
 ![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white)
-![Apache Maven](https://img.shields.io/badge/Apache%20Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![H2](https://img.shields.io/badge/H2-00758F?style=for-the-badge&logo=h2&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
@@ -29,27 +28,40 @@ Study For Code는 알고리즘 스터디에서 필요한 고충들을 보완하�
 ## 개발 환경 / Development Environment 🛠️
 - **프로그래밍 언어 / Programming Language**: Java 17
 - **빌드 도구 / Build Tool**: Gradle
-- **프레임워크 / Framework**: Spring Boot 3.3.0
+- **프레임워크 / Framework**: Spring Framework : 6.1.8
+- - **Spring Boot** : Spring Boot 3.3.0
 - **라이브러리 및 종속성 관리 / Library and Dependency Management**: Spring Dependency Management Plugin 1.1.5
 
 ## 주요 기능 / Key Features 🌟
 
 ### 데이터베이스 / Database 💾
-- H2 : Version 2.2.224 (2023-09-17)
+- H2 : Version 2.2.224
 - MySQL : Ver 5.7.44 for Linux on x86_64
 - MongoDB : Ver. 4.4 for Linux on x86_64
 - ORM: Spring Data JPA 3.3.0
+- Hibernate
+  - hibernate-core : 6.5.2.Final
+  - hibernate-validator: 8.0.1.Final
+  - hibernate-commons-annotations: 6.0.6.Final
 
 ### 보안 / Security 🔒
-- Spring Security
+- Spring Security : 6.3.0
 
 ### 유효성 검사 / Validation ✅
-- Spring-boot-starter-data-jpa/3.3.0
+- Spring-boot-starter-data-jpa : 3.3.0
+- Validation : 3.0.2
 
 ### JWT 인증 / JWT Authentication 🔑
 - jjwt-api 0.11.5
 - jjwt-impl 0.11.5
 - jjwt-jackson 0.11.5
+
+### 추가 라이브러리
+- **Lombok**: 1.18.32
+- **MongoDB**: 5.0.1
+- **Jackson**: 2.17.1
+- **h2** : 2.2.224
+- **Tomcat**: 10.1.24
 
 ### 암호화 / Encryption 🔐
 - Bouncy Castle Provider 1.69
