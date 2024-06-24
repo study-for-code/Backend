@@ -35,9 +35,9 @@ Study For Code는 알고리즘 스터디에서 필요한 고충들을 보완하�
 ## 주요 기능 / Key Features 🌟
 
 ### 데이터베이스 / Database 💾
-- H2 : Version 2.2.224
-- MySQL : Ver 5.7.44 for Linux on x86_64
-- MongoDB : Ver. 4.4 for Linux on x86_64
+- H2 : Ver 2.2.224
+- MySQL : Ver 5.7.44 for
+- MongoDB : Ver 5.0.1
 - ORM: Spring Data JPA 3.3.0
 - Hibernate
   - hibernate-core : 6.5.2.Final
@@ -58,9 +58,7 @@ Study For Code는 알고리즘 스터디에서 필요한 고충들을 보완하�
 
 ### 추가 라이브러리
 - **Lombok**: 1.18.32
-- **MongoDB**: 5.0.1
 - **Jackson**: 2.17.1
-- **h2** : 2.2.224
 - **Tomcat**: 10.1.24
 
 ### 암호화 / Encryption 🔐
