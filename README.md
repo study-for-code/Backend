@@ -57,7 +57,8 @@ Study For Code는 알고리즘 스터디에서 필요한 고충들을 보완하�
 ## 시스템 구상도 📊
 ### 프로젝트 구조 🗒️
 ```
-SpocoProject ├── Dockerfile
+**[ SpocoProject ]**
+├── Dockerfile
 ├── build.gradle
 ├── docker-compose.yml
 ├── settings.gradle
@@ -111,7 +112,7 @@ SpocoProject ├── Dockerfile
 ```
 
 ```
-[ Chat ]
+**[ Chat ]**
 ├── Dockerfile
 ├── build.gradle
 ├── docker-compose.yml
