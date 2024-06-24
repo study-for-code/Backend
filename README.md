@@ -425,27 +425,32 @@ Study For Code는 알고리즘 스터디에서 필요한 고충들을 보완하�
 <details>
   <summary> 홍진석 [BE]</summary>
   <ul>
-    <li> BackEnd Main supporter </li>
     <li> Architecture 구현 </li>
+    <li> 채팅 서버 연결 (Chat – Backend) </li>
+    <li> 카테고리 관리 기능 (Spoco – Backend) </li>
+    <li> IDE 관련 기능 (Spoco – Backend) </li>
+    <li> 알고리즘 관리 기능 (Spoco – Backend) </li>
+    <li> 관리자 기능 (Spoco – Backend) </li>
+    <li> 프로젝트 배포 (Backend) </li>
   </ul>
 </details>
 
 <details>
   <summary> 김현회 [BE]</summary>
   <ul>
-    <li>Kurento 코드 포팅/수정</li>
-    <li>시그널링 서버 구축</li>
     <li> API 명세서 작성</li>
+    <li> 스터디 관리 기능 (Spoco – Backend) </li>
+    <li> 관리자 기능 (Spoco – Backend) </li>
   </ul>
 </details>
 
 <details>
   <summary> 김태우 [BE]</summary>
   <ul>
-    <li> 회원가입 및 로그인 </li>
-    <li> Jira Confluence 관리 </li>
-    <li> Architecture Diagrams 제작 </li>
-    <li> Github ReadMe 작성(BackEnd 부분) </li>
+    <li> Jira Confluence 작성 </li>
+    <li> 회의록 작성 </li>
+    <li> 사용자 관리 기능 (Spoco – Backend) </li>
+    <li> GitHub ReadMe 작성 </li>
   </ul>
 </details>
 
