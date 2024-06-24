@@ -38,13 +38,13 @@ Study For Code는 알고리즘 스터디에서 필요한 고충들을 보완하�
 - H2 : Version 2.2.224 (2023-09-17)
 - MySQL : Ver 5.7.44 for Linux on x86_64
 - MongoDB : Ver. 4.4 for Linux on x86_64
-- ORM: Spring Data JPA
+- ORM: Spring Data JPA 3.3.0
 
 ### 보안 / Security 🔒
 - Spring Security
 
 ### 유효성 검사 / Validation ✅
-- Spring Boot Starter Validation
+- Spring-boot-starter-data-jpa/3.3.0
 
 ### JWT 인증 / JWT Authentication 🔑
 - jjwt-api 0.11.5
