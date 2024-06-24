@@ -411,7 +411,14 @@ Study For Code는 알고리즘 스터디에서 필요한 고충들을 보완하�
 <details>
   <summary> 이호성 [BE]</summary>
   <ul>
-    <li> BackEnd Main Reader </li>
+    <li> Jira 작업 </li>
+    <li> GitHub 작업 </li>
+    <li> 채팅 기능 구현 (Chat – Backend) </li>
+    <li> Spring Security 적용 (Spoco – Backend) </li>
+    <li> 코드 리뷰 관리 기능 (Spoco – Backend) </li>
+    <li> 사용자 초대 기능 (Spoco – Backend) </li>
+    <li> 이미지 등록 및 조회 (Spoco – Backend) </li> 
+    <li> 백엔드 코드 리팩토링 및 global 에러 처리 (Backend) </li>
   </ul>
 </details>
 
