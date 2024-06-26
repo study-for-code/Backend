@@ -16,6 +16,7 @@ Study For Code는 알고리즘 스터디를 진행하면서 어려웠던 문제�
 |:-:|:-:|:-:|:-:|
 |BE_이호성<br/>[@githublees](https://github.com/githublees)|BE_홍진석<br/>[@Hong-JinSuk](https://github.com/Hong-JinSuk)|BE_김태우<br/>[@anothercod](https://github.com/anothercod)|BE_김현회<br/>[@hyeonhoi11](https://github.com/hyeonhoi11)|
 
+▶ _토글을 눌러 역할을 확인해보세요!_
 <details>
   <summary>이호성 [BE]</summary>
   <ul>
