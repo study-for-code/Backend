@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  chat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chat
+    ports:
+      - "8008:8008"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://root:root@43.203.241.172:27017/mongodb?authSource=admin

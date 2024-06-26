@@ -1,9 +1,9 @@
 HELP.md
 .gradle
-build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+**/build/
 
 ### STS ###
 .apt_generated
@@ -22,6 +22,7 @@ bin/
 *.iws
 *.iml
 *.ipr
+*.class.uniqueId*
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/

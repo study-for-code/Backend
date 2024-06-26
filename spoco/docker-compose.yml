@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  spoco:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spoco
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://3.36.126.207:3306/spoco
+      SPRING_DATASOURCE_USERNAME: spoco_user
+      SPRING_DATASOURCE_PASSWORD: Spoco123!
+      SPRING_DATA_MONGODB_URI: mongodb://root:root@43.203.241.172:27017/mongodb?authSource=admin
+    depends_on:
+      - database
+      - spoco-mongodb
