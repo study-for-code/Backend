@@ -19,6 +19,7 @@ import goorm.spoco.domain.subscribe.repository.SubscribeRepository;
 import goorm.spoco.global.common.response.Status;
 import goorm.spoco.global.error.exception.CustomException;
 import goorm.spoco.global.error.exception.ErrorCode;
+import goorm.spoco.infra.compiler.dto.ResultStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,6 +74,18 @@ public class SubscribeService {
                 .ifPresent(s -> {
                     throw new CustomException(ErrorCode.DUPLICATE_OBJECT, "해당 구독이 이미 존재합니다.");
                 });
+
+//        study.getCategories().stream()
+//                .map(c -> c.getSubscribes().stream()
+//                        .filter(s -> s.getStatus().equals(Status.ACTIVE))
+//                        .filter(s -> s.getAlgorithm().equals(algorithm))
+//                        .findAny())// 각 카테고리의 구독을 하나의 스트림으로 평면화
+//                .filter(Optional::isPresent)
+//                .map(Optional::get)// 알고리즘이 이미 구독되었는지 필터링
+//                .findAny()
+//                .ifPresent(s -> {
+//                    throw new CustomException(ErrorCode.DUPLICATE_OBJECT, "해당 구독이 이미 존재합니다.");
+//                });
     }
 
     @Transactional
@@ -92,15 +105,21 @@ public class SubscribeService {
         Subscribe subscribe = subscribeRepository.findBySubscribeIdAndStatus(subscribeId, Status.ACTIVE)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "구독되어 있지 않습니다."));
 
-        List<Join> joins = joinRepository.findAllByStudy_StudyIdAndStatus(studyId, Status.ACTIVE);
+//        List<Join> joins = joinRepository.findAllByStudy_StudyIdAndStatus(studyId, Status.ACTIVE);
 
-        List<MemberResponseDto> submitted = joins.stream()
-                .map(join -> {
-                    Optional<Code> OptionalCode = codeRepository.findByAlgorithm_AlgorithmIdAndMember_MemberIdAndStatus(subscribe.getAlgorithm().getAlgorithmId(), join.getMember().getMemberId(), Status.ACTIVE);
-                    return OptionalCode.map(code -> MemberResponseDto.review(join, code))
-                            .orElse(MemberResponseDto.review(join, null));
-                })
+        List<MemberResponseDto> submitted = codeRepository.findAllWithSubmitMembers(subscribe.getAlgorithm().getAlgorithmId(), studyId).stream()
+                .map(code -> MemberResponseDto.review(code.getMember(), code))
                 .collect(Collectors.toList());
+
+
+        // 이 부분을 패치조인으로
+//        List<MemberResponseDto> submitted = joins.stream()
+//                .map(join -> {
+//                    Optional<Code> OptionalCode = codeRepository.findByAlgorithm_AlgorithmIdAndMember_MemberIdAndStatus(subscribe.getAlgorithm().getAlgorithmId(), join.getMember().getMemberId(), Status.ACTIVE);
+//                    return OptionalCode.map(code -> MemberResponseDto.review(join.getMember(), code))
+//                            .orElse(MemberResponseDto.review(join.getMember(), null));
+//                })
+//                .collect(Collectors.toList());
 
         return SubscribeResponseDto.from(subscribe, submitted);
     }

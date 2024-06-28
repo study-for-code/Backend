@@ -32,11 +32,11 @@ public record MemberResponseDto(
         );
     }
 
-    public static MemberResponseDto review(Join join, Code code) {
+    public static MemberResponseDto review(Member member, Code code) {
         return new MemberResponseDto(
-                join.getMember().getMemberId(),
-                join.getMember().getEmail(),
-                join.getMember().getNickname(),
+                member.getMemberId(),
+                member.getEmail(),
+                member.getNickname(),
                 null,
                 code == null ? null : code.getCodeId().equals(ResultStatus.PASS) ? code.getCodeId() : null,
                 code == null ? "UNFINISHED" : code.getAnswerType().equals(ResultStatus.PASS) ? "FINISHED" : "UNFINISHED"

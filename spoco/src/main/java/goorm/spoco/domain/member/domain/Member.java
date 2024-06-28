@@ -7,6 +7,7 @@ import goorm.spoco.domain.member.controller.request.MemberSignUpDto;
 import goorm.spoco.global.common.response.Status;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +16,8 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Member {
 
     @Id
@@ -40,6 +42,14 @@ public class Member {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Code> codes = new ArrayList<>();
+
+    public Member(String email, String nickname, String password, Role role, Status status) {
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
+        this.role = role;
+        this.status = status;
+    }
 
     //== 생성 메서드 ==//
     public static Member create(MemberSignUpDto memberSignUpDto) {
